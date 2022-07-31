@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_navigation_graph"
+    app:startDestination="@id/assemble_day">
+
+    <fragment
+        android:id="@+id/assemble_day"
+        android:name="com.example.assemble_day.ui.assembleDay.AssembleDayFragment"
+        android:label="fragment_assemble_day"
+        tools:layout="@layout/fragment_assemble_day" />
+</navigation>
