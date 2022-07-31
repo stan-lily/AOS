@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:background="@color/light_blue"
-    android:theme="@style/ToolbarTheme"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:menu="@menu/toolbar_menu"
-    app:navigationIcon="@drawable/ic_back"
-    app:titleTextAppearance="@style/Headline6"
-    app:titleTextColor="@color/white"
-    tools:title="Assemble Day" />
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="passBy"
+            type="String" />
+    </data>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tl_main"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/light_blue"
+            android:text=""
+            android:theme="@style/ToolbarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/toolbar_menu"
+            app:navigationIcon="@drawable/ic_back"
+            app:titleTextAppearance="@style/Headline6"
+            app:titleTextColor="@color/white" />
+</layout>
