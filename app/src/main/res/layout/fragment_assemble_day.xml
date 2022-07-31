@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,10 +13,18 @@
         android:layout_height="match_parent"
         tools:context=".ui.assembleDay.AssembleDayFragment">
 
-        <include
+        <com.example.assemble_day.ui.common.CustomToolbar
             android:id="@+id/tl_assemble_day"
-            layout="@layout/view_toolbar"
-            app:passBy="@{@string/app_name}" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/ToolbarTheme"
+            app:firstActionText="@string/action_item_reset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:secondActionText="@string/action_item_apply"
+            app:toolbarNavigationIcon="@drawable/ic_back"
+            app:toolbarTitle="@string/title_assemble_day" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_day_of_week"
@@ -27,7 +35,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="4dp"
             android:letterSpacing="3"
-            android:text="@string/calndar_day_of_the_week"
+            android:text="@string/calendar_day_of_the_week"
             app:layout_constraintBottom_toTopOf="@id/rv_assemble_day_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
