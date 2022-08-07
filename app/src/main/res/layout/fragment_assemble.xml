@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.assemble.AssembleDayFragment">
+
+        <com.example.assemble_day.ui.common.CustomToolbar
+            android:id="@+id/tl_assemble_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/ToolbarTheme"
+            app:firstActionText="@string/action_item_reset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:secondActionText="@string/action_item_apply"
+            app:toolbarNavigationIcon="@drawable/ic_back"
+            app:toolbarTitle="@string/title_assemble" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_day_of_week"
+            style="@style/Subtitle2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:letterSpacing="3"
+            android:text="@string/calendar_day_of_the_week"
+            app:layout_constraintBottom_toTopOf="@id/rv_assemble_day_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_assemble_day" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_assemble_day_month"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_day_of_week"
+            tools:listitem="@layout/item_calendar_month" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

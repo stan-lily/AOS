@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="month"
+            type="java.time.LocalDate" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_calendar_month"
+            style="@style/Subtitle2.Bold"
+            updateMonth="@{month}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:paddingVertical="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2022년 8월" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_calendar_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintEnd_toEndOf="@+id/tv_calendar_month"
+            app:layout_constraintStart_toStartOf="@+id/tv_calendar_month"
+            app:layout_constraintTop_toBottomOf="@id/tv_calendar_month"
+            app:spanCount="7"
+            tools:listitem="@layout/item_calendar_day" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
