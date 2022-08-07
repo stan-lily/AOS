@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_assemble_day">Assemble Day</string>
     <string name="calendar_day_of_the_week">월화수목금토일</string>
-    <string name="title_assemble_day">Assemble Day</string>
+    <string name="title_assemble">Assemble</string>
     <string name="action_item_reset">초기화</string>
     <string name="action_item_apply">적용</string>
 </resources>

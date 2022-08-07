@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/assemble_day"
-        android:name="com.example.assemble_day.ui.assembleDay.AssembleDayFragment"
+        android:name="com.example.assemble_day.ui.assemble.AssembleDayFragment"
         android:label="fragment_assemble_day"
-        tools:layout="@layout/fragment_assemble_day" />
+        tools:layout="@layout/fragment_assemble" />
 </navigation>

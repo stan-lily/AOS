@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.assembleDay.AssembleDayFragment">
+        tools:context=".ui.assemble.AssembleDayFragment">
 
         <com.example.assemble_day.ui.common.CustomToolbar
             android:id="@+id/tl_assemble_day"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:secondActionText="@string/action_item_apply"
             app:toolbarNavigationIcon="@drawable/ic_back"
-            app:toolbarTitle="@string/title_assemble_day" />
+            app:toolbarTitle="@string/title_assemble" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_day_of_week"
