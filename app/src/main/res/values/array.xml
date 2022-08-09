@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="label_font_color_array" >
+        <item>Black</item>
+        <item>White</item>
+    </string-array>
+</resources>
