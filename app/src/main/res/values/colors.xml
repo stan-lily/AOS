@@ -13,4 +13,5 @@
     <color name="grey03">#FFE5E5EA</color>
     <color name="grey03_alpha_10">#1AE5E5EA</color>
     <color name="red">#FFFF3B30</color>
+    <color name="blue">#FF0000FF</color>
 </resources>

@@ -2,7 +2,7 @@ package com.example.assemble_day.common
 
 object Constants {
     const val SUNDAY_DAY_OF_WEEK = 7
-    const val SATURDAY_DAY_OF_WEEK = 7
+    const val SATURDAY_DAY_OF_WEEK = 6
 
     const val CALENDAR_DAY_OF_MONTH_RANGE_START = 2
     const val CALENDAR_DAY_OF_MONTH_RANGE_END = 43
@@ -19,6 +19,4 @@ object Constants {
     const val LABEL_FONT_COLOR_BLACK_STRING = "Black"
     const val LABEL_FONT_COLOR_WHITE_HEX = "#FFFFFF"
     const val LABEL_FONT_COLOR_WHITE_STRING = "White"
-
-    const val FONT_COLOR_STANDARD = 500
 }

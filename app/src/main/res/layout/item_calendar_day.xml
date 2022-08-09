@@ -4,21 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name="day"
-            type="String" />
+            name="calendarDay"
+            type="com.example.assemble_day.domain.model.CalendarDay" />
 
     </data>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_calendar_day"
         style="@style/Subtitle2"
+        isSaturday="@{calendarDay.isSaturday}"
+        isSunday="@{calendarDay.isSunday}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingHorizontal="12dp"
         android:paddingVertical="14dp"
-        android:text="@{day}"
+        android:text="@{calendarDay.day}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1" />

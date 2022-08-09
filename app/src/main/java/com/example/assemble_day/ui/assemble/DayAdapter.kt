@@ -22,7 +22,7 @@ class DayAdapter : ListAdapter<CalendarDay, DayAdapter.DayViewHolder>(DayDiffUti
     class DayViewHolder(private val binding: ItemCalendarDayBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(day: CalendarDay) {
-            binding.day = day.day
+            binding.calendarDay = day
         }
 
     }
