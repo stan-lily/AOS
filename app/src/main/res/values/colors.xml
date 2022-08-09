@@ -10,5 +10,7 @@
     <color name="light_blue">#FF007AFF</color>
     <color name="grey01">#FF87878D</color>
     <color name="grey02">#FFF2F2F7</color>
+    <color name="grey03">#FFE5E5EA</color>
+    <color name="grey03_alpha_10">#1AE5E5EA</color>
     <color name="red">#FFFF3B30</color>
 </resources>

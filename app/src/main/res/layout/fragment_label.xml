@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.label.LabelFragment">
+
+        <com.example.assemble_day.ui.common.CustomToolbar
+            android:id="@+id/tl_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/ToolbarTheme"
+            app:firstActionText="@string/action_item_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:toolbarNavigationIcon="@drawable/ic_back"
+            app:toolbarTitle="@string/title_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_label_title"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/label_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tl_label" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_label_title"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/label_hint_title"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_label_title"
+            app:layout_constraintTop_toTopOf="@id/tv_label_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_label_description"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="@string/label_description"
+            app:layout_constraintStart_toStartOf="@id/tv_label_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_title" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_label_description"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/label_hint_description"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_label_description"
+            app:layout_constraintTop_toTopOf="@id/tv_label_description" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_label_background_font_color"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="@string/label_font_color"
+            app:layout_constraintStart_toStartOf="@id/tv_label_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_description" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/sp_label_background_font_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_background_font_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_label_background_font_color"
+            app:layout_constraintTop_toTopOf="@id/tv_label_background_font_color" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_label_background_color"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="@string/label_background"
+            app:layout_constraintStart_toStartOf="@id/tv_label_background_font_color"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_background_font_color" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_label_background_color"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_background_color"
+            app:layout_constraintEnd_toStartOf="@id/btn_label_background_color"
+            app:layout_constraintStart_toEndOf="@id/tv_label_background_color"
+            app:layout_constraintTop_toTopOf="@id/tv_label_background_color" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_label_background_color"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ic_random"
+            android:backgroundTint="@color/grey01"
+            app:layout_constraintBottom_toBottomOf="@id/et_label_background_color"
+            app:layout_constraintDimensionRatio="22:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_label_background_color" />
+
+        <View
+            android:id="@+id/divider_label"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/grey03"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_background_color" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_label_background_color_frame"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/background_grey_r20"
+            app:layout_constraintDimensionRatio="328:160"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_label_background_color_preview"
+            style="@style/Body2.Grey03.Alpha10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_r16"
+            android:backgroundTint="@color/grey03_alpha_10"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="@string/label_background_color_preview"
+            app:layout_constraintBottom_toBottomOf="@id/tv_label_background_color_frame"
+            app:layout_constraintEnd_toEndOf="@id/tv_label_background_color_frame"
+            app:layout_constraintStart_toStartOf="@id/tv_label_background_color_frame"
+            app:layout_constraintTop_toTopOf="@id/tv_label_background_color_frame" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

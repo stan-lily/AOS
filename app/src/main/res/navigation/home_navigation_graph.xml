@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_navigation_graph"
-    app:startDestination="@id/assemble_day">
+    app:startDestination="@id/labelFragment">
 
     <fragment
-        android:id="@+id/assemble_day"
-        android:name="com.example.assemble_day.ui.assemble.AssembleDayFragment"
-        android:label="fragment_assemble_day"
-        tools:layout="@layout/fragment_assemble" />
+        android:id="@+id/labelFragment"
+        android:name="com.example.assemble_day.ui.label.LabelFragment"
+        android:label="fragment_label"
+        tools:layout="@layout/fragment_label" />
 </navigation>
