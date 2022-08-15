@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="day"
             type="String" />
@@ -17,6 +18,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_calendar_day"
         style="@style/Subtitle2"
+        isAssembleDay="@{calendarDay.isAssembleDay}"
         isSaturday="@{calendarDay.isSaturday}"
         isSelectable="@{calendarDay.isSelectable}"
         isSunday="@{calendarDay.isSunday}"

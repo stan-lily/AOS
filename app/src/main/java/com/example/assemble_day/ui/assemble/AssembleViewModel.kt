@@ -62,6 +62,8 @@ class AssembleViewModel : ViewModel() {
         _startDayStateFlow.value.date?.let { startDay ->
             val selectableMinDay = startDay.plusDays(ASSEMBLE_DAY_MIN_SELECTABLE_DAY)
             if (selectableMinDay <= calendarDay.date) {
+                calendarDay.isAssembleDay = true
+                _assembleDayStateFlow.value.isAssembleDay = false
                 _assembleDayStateFlow.value = calendarDay
                 _resetActionFlagStateFlow.value = true
             }
@@ -100,6 +102,7 @@ class AssembleViewModel : ViewModel() {
     }
 
     fun resetAssembleDay() {
+        _assembleDayStateFlow.value.isAssembleDay = false
         _assembleDayStateFlow.value = initialCalendarDay
         _startDayStateFlow.value = initialCalendarDay
         _resetActionFlagStateFlow.value = false

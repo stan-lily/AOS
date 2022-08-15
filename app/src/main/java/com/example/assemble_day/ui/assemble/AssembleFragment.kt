@@ -49,26 +49,6 @@ class AssembleFragment : Fragment() {
         }
     }
 
-    private suspend fun setOnStartDay() {
-        assembleViewModel.startDayStateFlow.collect {
-            binding.startDate = it.date
-            monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
-        }
-    }
-
-    private suspend fun setOnAssembleDay() {
-        assembleViewModel.assembleDayStateFlow.collect {
-            binding.endDate = it.date
-        }
-    }
-
-    private suspend fun setOnResetAction() {
-        assembleViewModel.resetActionFlagStateFlow.collect { resetActionEnable ->
-            binding.tlAssemble.firstActionItem.isEnabled = resetActionEnable
-            if (!resetActionEnable) monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
-        }
-    }
-
     private fun initCalendar() {
         monthAdapter = MonthAdapter { calendarDay ->
             selectAssembleDay(calendarDay)
@@ -78,17 +58,14 @@ class AssembleFragment : Fragment() {
         }
     }
 
-    private suspend fun showAssembleDayTitle() {
-        assembleViewModel.startDayFlagStateFlow.collect { isStartDay ->
-            binding.clAssembleDayTitle.isVisible = !isStartDay
-            binding.etAssembleDayTitle.isEnabled = !isStartDay
-        }
-    }
-
     private fun setOnInputTextEventListener() {
         binding.etAssembleDayTitle.doAfterTextChanged { text ->
-            text?.let {
-                assembleViewModel.setAssembleDayTitle(it.toString())
+            if (text.isNullOrEmpty() || text.isNullOrBlank()) {
+                binding.btnAssembleDayTitle.isEnabled = false
+            } else {
+                assembleViewModel.setAssembleDayTitle(text.toString())
+                binding.btnAssembleDayTitle.isEnabled = true
+                // TODO: 상세 보기 화면 이동
             }
         }
     }
@@ -105,6 +82,34 @@ class AssembleFragment : Fragment() {
 
     private fun selectAssembleDay(calendarDay: CalendarDay) {
         assembleViewModel.selectCalendarDay(calendarDay)
+    }
+
+    private suspend fun showAssembleDayTitle() {
+        assembleViewModel.startDayFlagStateFlow.collect { isStartDay ->
+            binding.clAssembleDayTitle.isVisible = !isStartDay
+            binding.etAssembleDayTitle.isEnabled = !isStartDay
+        }
+    }
+
+    private suspend fun setOnStartDay() {
+        assembleViewModel.startDayStateFlow.collect {
+            binding.startDate = it.date
+            monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
+        }
+    }
+
+    private suspend fun setOnAssembleDay() {
+        assembleViewModel.assembleDayStateFlow.collect {
+            binding.endDate = it.date
+            monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
+        }
+    }
+
+    private suspend fun setOnResetAction() {
+        assembleViewModel.resetActionFlagStateFlow.collect { resetActionEnable ->
+            binding.tlAssemble.firstActionItem.isEnabled = resetActionEnable
+            if (!resetActionEnable) monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
+        }
     }
 
 }

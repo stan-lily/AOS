@@ -44,3 +44,11 @@ fun updateEndDateText(view: TextView, date: LocalDate?) {
         view.text = ""
     }
 }
+
+@BindingAdapter("isAssembleDay")
+fun updateAssembleDayBackground(view: TextView, isAssembleDay: Boolean) {
+    if (isAssembleDay) {
+        view.background =
+            ContextCompat.getDrawable(view.context, R.drawable.background_storke_red_r20)
+    }
+}

@@ -11,7 +11,7 @@ import com.example.assemble_day.domain.model.CalendarDay
 class DayAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) : ListAdapter<CalendarDay, DayAdapter.DayViewHolder>(DayDiffUtil) {
 
     private var startDay: CalendarDay? = null
-    private var endDay: CalendarDay? = null
+    private var assembleDay: CalendarDay? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val binding = ItemCalendarDayBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -42,7 +42,7 @@ class DayAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) : Li
 
     companion object DayDiffUtil : DiffUtil.ItemCallback<CalendarDay>() {
         override fun areItemsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
-            return oldItem.isSelectable == newItem.isSelectable
+            return oldItem.date == newItem.date || oldItem.isAssembleDay == newItem.isAssembleDay
         }
 
         override fun areContentsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
