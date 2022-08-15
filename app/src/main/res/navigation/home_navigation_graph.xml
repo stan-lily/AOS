@@ -6,6 +6,6 @@
     app:startDestination="@id/assembleFragment">
     <fragment
         android:id="@+id/assembleFragment"
-        android:name="com.example.assemble_day.ui.assemble.AssembleDayFragment"
+        android:name="com.example.assemble_day.ui.assemble.AssembleFragment"
         android:label="AssembleFragment" />
 </navigation>

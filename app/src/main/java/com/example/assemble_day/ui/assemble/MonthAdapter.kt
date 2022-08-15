@@ -7,10 +7,12 @@ import com.example.assemble_day.databinding.ItemCalendarMonthBinding
 import com.example.assemble_day.domain.model.CalendarDay
 import java.time.LocalDate
 
-class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
+class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
 
     private val monthList = mutableListOf<LocalDate>()
     private val calendarData = mutableMapOf<LocalDate, List<CalendarDay>>()
+    private var startDay: CalendarDay? = null
+    private var endDay: CalendarDay? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val binding =
@@ -32,7 +34,7 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
         fun bind(month: LocalDate) {
             binding.month = month
 
-            val dayAdapter = DayAdapter()
+            val dayAdapter = DayAdapter(itemClick)
             binding.rvCalendarMonth.adapter = dayAdapter
             calendarData[month]?.let {
                 dayAdapter.submitList(it)
@@ -42,8 +44,13 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
     }
 
     fun submitCalendarData(calendarDataMap: Map<LocalDate, List<CalendarDay>>) {
+        monthList.removeAll(monthList)
         calendarData.putAll(calendarDataMap)
         monthList.addAll(calendarDataMap.keys)
+    }
+
+    fun submitList(calendarDataMap: Map<LocalDate, List<CalendarDay>>) {
+
     }
 
 

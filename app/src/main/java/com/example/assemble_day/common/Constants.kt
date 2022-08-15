@@ -4,8 +4,12 @@ object Constants {
     const val SUNDAY_DAY_OF_WEEK = 7
     const val SATURDAY_DAY_OF_WEEK = 6
 
+    const val FIRST_DAY_OF_MONTH = 1
+    const val CALENDAR_DAY_SIZE = 6
     const val CALENDAR_DAY_OF_MONTH_RANGE_START = 2
     const val CALENDAR_DAY_OF_MONTH_RANGE_END = 43
+    const val ASSEMBLE_DAY_MIN_SELECTABLE_DAY = 2L
+    const val ASSEMBLE_DAY_MAX_SELECTABLE_WEEK = 3L
 
     const val LEAP_YEAR_STANDARD_FOUR_YEAR = 4
     const val LEAP_YEAR_STANDARD_HUNDRED_YEAR = 100
@@ -19,4 +23,9 @@ object Constants {
     const val LABEL_FONT_COLOR_BLACK_STRING = "Black"
     const val LABEL_FONT_COLOR_WHITE_HEX = "#FFFFFF"
     const val LABEL_FONT_COLOR_WHITE_STRING = "White"
+
+    const val FIRST_ACTION = 0
+    const val SECOND_ACTION = 1
+
+    const val NULL_VALUE = "null"
 }

@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.assemble_day.databinding.ItemCalendarDayBinding
 import com.example.assemble_day.domain.model.CalendarDay
 
-class DayAdapter : ListAdapter<CalendarDay, DayAdapter.DayViewHolder>(DayDiffUtil) {
+class DayAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) : ListAdapter<CalendarDay, DayAdapter.DayViewHolder>(DayDiffUtil) {
+
+    private var startDay: CalendarDay? = null
+    private var endDay: CalendarDay? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val binding = ItemCalendarDayBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,17 +22,27 @@ class DayAdapter : ListAdapter<CalendarDay, DayAdapter.DayViewHolder>(DayDiffUti
         holder.bind(getItem(position))
     }
 
-    class DayViewHolder(private val binding: ItemCalendarDayBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class DayViewHolder(private val binding: ItemCalendarDayBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(day: CalendarDay) {
             binding.calendarDay = day
+            day.date?.let { date ->
+                binding.day = date.dayOfMonth.toString()
+            }
+            setOnItemClickEventListener(day)
+        }
+
+        private fun setOnItemClickEventListener(day: CalendarDay) {
+            binding.tvCalendarDay.setOnClickListener {
+                if (day.isSelectable) itemClick.invoke(day)
+            }
         }
 
     }
 
     companion object DayDiffUtil : DiffUtil.ItemCallback<CalendarDay>() {
         override fun areItemsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
-            return oldItem.day == newItem.day
+            return oldItem.isSelectable == newItem.isSelectable
         }
 
         override fun areContentsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {

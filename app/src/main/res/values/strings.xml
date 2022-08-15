@@ -3,6 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="menu_assemble">Assemble</string>
     <string name="calendar_day_of_the_week">월화수목금토일</string>
+    <string name="calendar_day">#d</string>
     <string name="title_assemble">Assemble</string>
     <string name="action_item_reset">초기화</string>
     <string name="action_item_apply">적용</string>
@@ -15,4 +16,7 @@
     <string name="label_hint_title">필수 입력</string>
     <string name="label_background_color_preview">label</string>
     <string name="label_font_color">글씨색</string>
+    <string name="assemble_day_title_hint">Assemble 타이틀을 입력하세요</string>
+    <string name="assemble_day_period">일정</string>
+    <string name="assemble_day_period_end">&#160;&#160;-&#160;&#160;%s</string>
 </resources>
