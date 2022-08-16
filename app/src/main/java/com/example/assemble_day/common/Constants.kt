@@ -10,6 +10,7 @@ object Constants {
     const val CALENDAR_DAY_OF_MONTH_RANGE_END = 43
     const val ASSEMBLE_DAY_MIN_SELECTABLE_DAY = 2L
     const val ASSEMBLE_DAY_MAX_SELECTABLE_WEEK = 3L
+    const val CALENDAR_DAY_FORMAT = "yyyy년 MM월"
 
     const val LEAP_YEAR_STANDARD_FOUR_YEAR = 4
     const val LEAP_YEAR_STANDARD_HUNDRED_YEAR = 100

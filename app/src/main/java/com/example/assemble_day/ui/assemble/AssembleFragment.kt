@@ -16,6 +16,7 @@ import com.example.assemble_day.R
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
 import com.example.assemble_day.databinding.FragmentAssembleBinding
 import com.example.assemble_day.domain.model.CalendarDay
+import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
 import kotlinx.coroutines.launch
 
 
@@ -99,16 +100,19 @@ class AssembleFragment : Fragment() {
     }
 
     private suspend fun setOnAssembleDay() {
-        assembleViewModel.assembleDayStateFlow.collect {
-            binding.endDate = it.date
-            monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
+        assembleViewModel.assembleDayStateFlow.collect { selectedAssebleDay ->
+            binding.endDate = selectedAssebleDay.date
+            monthAdapter.submitNewCalendarDateList(
+                selectedAssebleDay.toFormattedString(),
+                assembleViewModel.copiedCalendarDayList
+            )
         }
     }
 
     private suspend fun setOnResetAction() {
         assembleViewModel.resetActionFlagStateFlow.collect { resetActionEnable ->
             binding.tlAssemble.firstActionItem.isEnabled = resetActionEnable
-            if (!resetActionEnable) monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
+            if (!resetActionEnable) monthAdapter.submitCalendarData(assembleViewModel.calendarDataMap)
         }
     }
 

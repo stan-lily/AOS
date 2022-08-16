@@ -124,7 +124,7 @@
                 android:hint="@string/assemble_day_title_hint"
                 android:maxLines="1"
                 android:padding="10dp"
-                android:textColorHint="@color/white_alpha_50"
+                android:textColorHint="@color/white_alpha_30"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_assemble_day_title"
                 app:layout_constraintStart_toStartOf="parent" />

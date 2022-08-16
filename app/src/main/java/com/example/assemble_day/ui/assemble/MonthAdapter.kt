@@ -5,14 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assemble_day.databinding.ItemCalendarMonthBinding
 import com.example.assemble_day.domain.model.CalendarDay
-import java.time.LocalDate
 
-class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
+class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) :
+    RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
 
-    private val monthList = mutableListOf<LocalDate>()
-    private val calendarData = mutableMapOf<LocalDate, List<CalendarDay>>()
-    private var startDay: CalendarDay? = null
-    private var endDay: CalendarDay? = null
+    private val monthList = mutableListOf<String>()
+    private val calendarData = mutableMapOf<String, DayAdapter>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val binding =
@@ -31,27 +29,28 @@ class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) : 
     inner class MonthViewHolder(private val binding: ItemCalendarMonthBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(month: LocalDate) {
+        fun bind(month: String) {
             binding.month = month
 
-            val dayAdapter = DayAdapter(itemClick)
-            binding.rvCalendarMonth.adapter = dayAdapter
             calendarData[month]?.let {
-                dayAdapter.submitList(it)
+                binding.rvCalendarMonth.adapter = it
             }
         }
 
     }
 
-    fun submitCalendarData(calendarDataMap: Map<LocalDate, List<CalendarDay>>) {
+    fun submitCalendarData(calendarDataMap: Map<String, List<CalendarDay>>) {
         monthList.removeAll(monthList)
-        calendarData.putAll(calendarDataMap)
+        calendarDataMap.forEach {
+            val dayAdapter = DayAdapter(itemClick)
+            calendarData[it.key] = dayAdapter.apply {
+                submitList(it.value)
+            }
+        }
         monthList.addAll(calendarDataMap.keys)
     }
 
-    fun submitList(calendarDataMap: Map<LocalDate, List<CalendarDay>>) {
-
+    fun submitNewCalendarDateList(month: String, list: List<CalendarDay>) {
+        calendarData[month]?.submitList(list.toList())
     }
-
-
 }

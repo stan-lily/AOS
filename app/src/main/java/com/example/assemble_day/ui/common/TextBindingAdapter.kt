@@ -7,11 +7,6 @@ import com.example.assemble_day.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@BindingAdapter("updateMonth")
-fun updateMonthText(view: TextView, month: LocalDate) {
-    val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월")
-    view.text = month.format(formatter)
-}
 
 @BindingAdapter("isSaturday", "isSunday", "isSelectable")
 fun updateDayColor(view: TextView, isSaturday: Boolean, isSunday: Boolean, isSelectable: Boolean) {
@@ -21,6 +16,8 @@ fun updateDayColor(view: TextView, isSaturday: Boolean, isSunday: Boolean, isSel
         view.setTextColor(ContextCompat.getColor(view.context, R.color.blue))
     } else if (isSunday) {
         view.setTextColor(ContextCompat.getColor(view.context, R.color.red))
+    } else {
+        view.setTextColor(ContextCompat.getColor(view.context, R.color.black))
     }
 }
 
@@ -50,5 +47,8 @@ fun updateAssembleDayBackground(view: TextView, isAssembleDay: Boolean) {
     if (isAssembleDay) {
         view.background =
             ContextCompat.getDrawable(view.context, R.drawable.background_storke_red_r20)
+    } else {
+        view.background =
+            ContextCompat.getDrawable(view.context, R.color.white)
     }
 }

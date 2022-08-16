@@ -1,5 +1,6 @@
 package com.example.assemble_day.ui.common
 
+import com.example.assemble_day.common.Constants.CALENDAR_DAY_FORMAT
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_OF_MONTH_RANGE_END
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_OF_MONTH_RANGE_START
 import com.example.assemble_day.common.Constants.FIRST_DAY_OF_MONTH
@@ -9,7 +10,8 @@ import com.example.assemble_day.common.Constants.LEAP_YEAR_STANDARD_HUNDRED_YEAR
 import com.example.assemble_day.common.Constants.SATURDAY_DAY_OF_WEEK
 import com.example.assemble_day.common.Constants.SUNDAY_DAY_OF_WEEK
 import com.example.assemble_day.domain.model.CalendarDay
-import java.time.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object CalendarUtil {
 
@@ -132,6 +134,19 @@ object CalendarUtil {
             }
         }
         return dayList
+    }
+
+    fun CalendarDay.toFormattedString(): String {
+        val formatter = DateTimeFormatter.ofPattern(CALENDAR_DAY_FORMAT)
+        this.date?.let {
+            return it.format(formatter)
+        }
+        return ""
+    }
+
+    fun LocalDate.toFormattedString(): String {
+        val formatter = DateTimeFormatter.ofPattern(CALENDAR_DAY_FORMAT)
+        return this.format(formatter)
     }
 
 

@@ -6,6 +6,7 @@ import com.example.assemble_day.common.Constants.ASSEMBLE_DAY_MIN_SELECTABLE_DAY
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.ui.common.CalendarUtil
+import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
@@ -15,14 +16,17 @@ class AssembleViewModel : ViewModel() {
     private val initialCalendarDay = CalendarDay()
     private var assembleDayTitle = ""
 
-    private val _calendarDataMap = mutableMapOf<LocalDate, List<CalendarDay>>()
-    val calendarDataMap: Map<LocalDate, List<CalendarDay>> = _calendarDataMap
+    private val _calendarDataMap = mutableMapOf<String, List<CalendarDay>>()
+    val calendarDataMap: Map<String, List<CalendarDay>> = _calendarDataMap
 
     private val _resetActionFlagStateFlow = MutableStateFlow(false)
     val resetActionFlagStateFlow = _resetActionFlagStateFlow.asStateFlow()
 
     private val _assembleDayStateFlow = MutableStateFlow(initialCalendarDay)
     val assembleDayStateFlow = _assembleDayStateFlow.asStateFlow()
+
+    private val _copiedCalendarDayList = mutableListOf<CalendarDay>()
+    val copiedCalendarDayList: List<CalendarDay> = _copiedCalendarDayList
 
     private val _startDayStateFlow = MutableStateFlow(initialCalendarDay)
     val startDayStateFlow = _startDayStateFlow.asStateFlow()
@@ -35,9 +39,10 @@ class AssembleViewModel : ViewModel() {
     }
 
     private fun createCalendarData() {
-        val calendarData = Array<LocalDate>(CALENDAR_DAY_SIZE) { LocalDate.now().plusMonths(it.toLong()) }
-        calendarData.forEach {
-            _calendarDataMap[it] = CalendarUtil.createDayList(it)
+        val calendarData =
+            Array<LocalDate>(CALENDAR_DAY_SIZE) { LocalDate.now().plusMonths(it.toLong()) }
+        calendarData.forEach { date ->
+            _calendarDataMap[date.toFormattedString()] = CalendarUtil.createDayList(date)
         }
     }
 
@@ -62,22 +67,34 @@ class AssembleViewModel : ViewModel() {
         _startDayStateFlow.value.date?.let { startDay ->
             val selectableMinDay = startDay.plusDays(ASSEMBLE_DAY_MIN_SELECTABLE_DAY)
             if (selectableMinDay <= calendarDay.date) {
-                calendarDay.isAssembleDay = true
-                _assembleDayStateFlow.value.isAssembleDay = false
+                val selectedDay = calendarDay.toFormattedString()
+                val previousSelectedDay = _assembleDayStateFlow.value
+                _copiedCalendarDayList.removeAll(_copiedCalendarDayList)
+                _calendarDataMap[selectedDay]?.forEach { originalDay ->
+                    when (originalDay) {
+                        calendarDay -> _copiedCalendarDayList.add(originalDay.copy(isAssembleDay = true))
+                        previousSelectedDay -> _copiedCalendarDayList.add(
+                            originalDay.copy(
+                                isAssembleDay = false
+                            )
+                        )
+                        else -> _copiedCalendarDayList.add(originalDay.copy())
+                    }
+                }
                 _assembleDayStateFlow.value = calendarDay
                 _resetActionFlagStateFlow.value = true
+            } else {
+                _startDayFlagStateFlow.value = true
             }
-            println(selectableMinDay)
         }
     }
 
     private fun selectStartDay(calendarDay: CalendarDay) {
         if (_startDayStateFlow.value.date == null) {
-            _startDayStateFlow.value = calendarDay
             _resetActionFlagStateFlow.value = true
             calendarDay.date?.let { selectedDay ->
                 val selectableMaxDay = selectedDay.plusWeeks(ASSEMBLE_DAY_MAX_SELECTABLE_WEEK)
-                _calendarDataMap.forEach { (_, dateList) ->
+                _calendarDataMap.values.forEach { dateList ->
                     dateList.forEach { calendarDay ->
                         calendarDay.date?.let { day ->
                             if (day < selectedDay || day >= selectableMaxDay)
@@ -86,7 +103,7 @@ class AssembleViewModel : ViewModel() {
                     }
                 }
             }
-            println("시작일 : ${calendarDay}")
+            _startDayStateFlow.value = calendarDay
         }
     }
 
