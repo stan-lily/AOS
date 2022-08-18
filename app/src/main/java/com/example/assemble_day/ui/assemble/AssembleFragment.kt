@@ -17,6 +17,7 @@ import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
 import com.example.assemble_day.databinding.FragmentAssembleBinding
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 
@@ -36,21 +37,22 @@ class AssembleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initCalendar()
+        displayInitialCalendar()
         setOnInputTextEventListener()
         setOnResetEventListener()
+        setOnSaveAssembleDayEventListener()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { setOnResetAction() }
                 launch { setOnAssembleDay() }
                 launch { setOnStartDay() }
-                launch { showAssembleDayTitle() }
+                launch { showToastMessage() }
+                launch { setOnAssembleDayTitle() }
             }
         }
     }
 
-    private fun initCalendar() {
+    private fun displayInitialCalendar() {
         monthAdapter = MonthAdapter { calendarDay ->
             selectAssembleDay(calendarDay)
         }
@@ -61,13 +63,8 @@ class AssembleFragment : Fragment() {
 
     private fun setOnInputTextEventListener() {
         binding.etAssembleDayTitle.doAfterTextChanged { text ->
-            if (text.isNullOrEmpty() || text.isNullOrBlank()) {
-                binding.btnAssembleDayTitle.isEnabled = false
-            } else {
-                assembleViewModel.setAssembleDayTitle(text.toString())
-                binding.btnAssembleDayTitle.isEnabled = true
-                // TODO: 상세 보기 화면 이동
-            }
+            binding.btnAssembleDayTitle.isEnabled = !(text.isNullOrEmpty() || text.isNullOrBlank())
+            assembleViewModel.setAssembleDayTitle(text.toString())
         }
     }
 
@@ -85,34 +82,68 @@ class AssembleFragment : Fragment() {
         assembleViewModel.selectCalendarDay(calendarDay)
     }
 
-    private suspend fun showAssembleDayTitle() {
-        assembleViewModel.startDayFlagStateFlow.collect { isStartDay ->
-            binding.clAssembleDayTitle.isVisible = !isStartDay
-            binding.etAssembleDayTitle.isEnabled = !isStartDay
-        }
+    private fun showAssembleDayTitleEditText(isStartDay: Boolean) {
+        binding.clAssembleDayTitle.isVisible = !isStartDay
+        binding.etAssembleDayTitle.isEnabled = !isStartDay
     }
 
     private suspend fun setOnStartDay() {
-        assembleViewModel.startDayStateFlow.collect {
-            binding.startDate = it.date
-            monthAdapter.notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
-        }
-    }
-
-    private suspend fun setOnAssembleDay() {
-        assembleViewModel.assembleDayStateFlow.collect { selectedAssebleDay ->
-            binding.endDate = selectedAssebleDay.date
-            monthAdapter.submitNewCalendarDateList(
-                selectedAssebleDay.toFormattedString(),
-                assembleViewModel.copiedCalendarDayList
+        assembleViewModel.startDayStateFlow.collect { selectedStartDay ->
+            binding.startDate = selectedStartDay.date
+            setOnResetAction(selectedStartDay.date != null)
+            if (!selectedStartDay.isAssembleDay) monthAdapter.notifyItemRangeChanged(
+                0,
+                CALENDAR_DAY_SIZE - 1
             )
         }
     }
 
-    private suspend fun setOnResetAction() {
-        assembleViewModel.resetActionFlagStateFlow.collect { resetActionEnable ->
-            binding.tlAssemble.firstActionItem.isEnabled = resetActionEnable
-            if (!resetActionEnable) monthAdapter.submitCalendarData(assembleViewModel.calendarDataMap)
+    private suspend fun setOnAssembleDay() {
+        assembleViewModel.assembleDayStateFlow.collect { selectedAssembleDay ->
+            binding.endDate = selectedAssembleDay.date
+            showAssembleDayTitleEditText(selectedAssembleDay.date == null)
+            if (!selectedAssembleDay.isAssembleDay) updateSelectedAssembleDay(selectedAssembleDay)
+        }
+    }
+
+    private fun updateSelectedAssembleDay(selectedAssembleDay: CalendarDay) {
+        val isSelectedDifferentMonth = assembleViewModel.isSelectedDifferentMonth
+        if (isSelectedDifferentMonth) {
+            monthAdapter.submitNewCalendarDateList(
+                assembleViewModel.previousAssembleDay.toFormattedString(),
+                assembleViewModel.copiedPreviousCalendarDayList
+            )
+        }
+        monthAdapter.submitNewCalendarDateList(
+            selectedAssembleDay.toFormattedString(),
+            assembleViewModel.copiedCalendarDayList
+        )
+    }
+
+    private fun setOnResetAction(doesStartDayExist: Boolean) {
+        binding.tlAssemble.firstActionItem.isEnabled = doesStartDayExist
+        if (!doesStartDayExist) monthAdapter.submitCalendarData(assembleViewModel.calendarDataMap)
+    }
+
+    private suspend fun showToastMessage() {
+        assembleViewModel.selectableAssembleDayFlagSharedFlow.collect { selectableDay ->
+            if (!selectableDay) Snackbar.make(
+                this.requireView(),
+                R.string.snack_bar_unable_select,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private suspend fun setOnAssembleDayTitle() {
+        assembleViewModel.assembleDayTitleStateFlow.collect { assembleDayTitle ->
+            binding.assembleDayTitle = assembleDayTitle
+        }
+    }
+
+    private fun setOnSaveAssembleDayEventListener() {
+        binding.btnAssembleDayTitle.setOnClickListener {
+            assembleViewModel.saveAssembleDay()
         }
     }
 

@@ -8,7 +8,24 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_alpha_30">#4DFFFFFF</color>
-    <color name="light_blue">#FF007AFF</color>
+<!--    살구색 -->
+<!--    <color name="light_blue">#FFFFBE88</color>-->
+<!--    녹색-->
+<!--    <color name="light_blue">#FF455054</color>-->
+<!--    올리브그린-->
+    <color name="olive_green">#FF5D5C19</color>
+    <color name="green">#FF008000</color>
+<!--    핑크-->
+<!--    <color name="light_blue">#FFF28482</color>-->
+<!--    라이트블루-->
+<!--    <color name="light_blue">#FF007AFF</color>-->
+<!--    <color name="light_blue">#FF0000CD</color>-->
+<!--    <color name="light_blue">#FF00008B</color>-->
+<!--    <color name="light_blue">#FF000080</color>-->
+<!--    <color name="light_blue">#FF4B0082</color>-->
+<!--    <color name="light_blue">#FF8A2BE2</color>-->
+    <color name="royal_blue">#FF4169E1</color>
+<!--    <color name="light_blue">#FF1E90FF</color>-->
     <color name="grey01">#FF87878D</color>
     <color name="grey02">#FFF2F2F7</color>
     <color name="grey03">#FFE5E5EA</color>

@@ -2,10 +2,8 @@ package com.example.assemble_day.ui.common
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MenuItem
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.assemble_day.R
@@ -74,7 +72,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
     }
 
     private fun initToolbarUI() {
-        this.setBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
+        this.setBackgroundColor(ContextCompat.getColor(context, R.color.royal_blue))
         this.setTitleTextAppearance(context, R.style.Headline6)
         this.setTitleTextColor(ContextCompat.getColor(context, R.color.white))
     }

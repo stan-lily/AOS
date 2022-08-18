@@ -30,11 +30,24 @@ class DayAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) :
                 binding.day = date.dayOfMonth.toString()
             }
             setOnItemClickEventListener(day)
+            setOnItemLongClickEventListener(day)
         }
 
         private fun setOnItemClickEventListener(day: CalendarDay) {
             binding.tvCalendarDay.setOnClickListener {
-                if (day.isSelectable) itemClick.invoke(day)
+                if (day.isSelectable || day.isAssembleDay) itemClick.invoke(day)
+                if (day.isSelected && day.isAssembleDay) {
+                    // TODO 상세 보기 화면 이동
+                }
+            }
+        }
+
+        private fun setOnItemLongClickEventListener(day: CalendarDay) {
+            binding.tvCalendarDay.setOnLongClickListener {
+                if (day.isSelected && day.isAssembleDay) {
+                    // TODO 기능 네비게이션(슬라이드) 보여주기
+                }
+                true
             }
         }
 

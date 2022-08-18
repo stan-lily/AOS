@@ -18,5 +18,7 @@ data class CalendarDay(
     var isSelectable: Boolean = false,
     val isSaturday: Boolean = false,
     val isSunday: Boolean = false,
+    var isSelected: Boolean = false,
     var isAssembleDay: Boolean = false,
+    var assembleDay: AssembleDay? = null,
 )

@@ -19,4 +19,5 @@
     <string name="assemble_day_title_hint">Assemble 타이틀을 입력하세요</string>
     <string name="assemble_day_period">일정</string>
     <string name="assemble_day_period_end">&#160;&#160;-&#160;&#160;%s</string>
+    <string name="snack_bar_unable_select">시작일 2일 이내에는 Assemble Day 를 설정할 수 없습니다</string>
 </resources>

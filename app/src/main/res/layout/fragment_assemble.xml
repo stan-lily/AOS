@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
+        
         <variable
             name="endDate"
             type="java.time.LocalDate" />
@@ -13,6 +14,10 @@
         <variable
             name="startDate"
             type="java.time.LocalDate" />
+
+        <variable
+            name="assembleDayTitle"
+            type="String" />
 
     </data>
 
@@ -39,7 +44,7 @@
             android:id="@+id/tl_assemble_period"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/light_blue"
+            android:background="@color/royal_blue"
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +81,21 @@
                 app:layout_constraintTop_toTopOf="@id/tv_assemble_period_start"
                 tools:text="  -  8월 18일" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_assemble_day_title"
+                style="@style/Subtitle1.White"
+                android:layout_width="0dp"
+                android:text="@{assembleDayTitle}"
+                android:visibility='@{assembleDayTitle.equals("") ? View.GONE : View.VISIBLE}'
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_assemble_period_start"
+                app:layout_constraintTop_toBottomOf="@id/tv_assemble_period_start"
+                tools:text="어셈블 데이트 제목입니다" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -109,7 +129,7 @@
             android:id="@+id/cl_assemble_day_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/light_blue"
+            android:background="@color/royal_blue"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
