@@ -5,16 +5,30 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+        
+        <variable
+            name="endDate"
+            type="java.time.LocalDate" />
+
+        <variable
+            name="startDate"
+            type="java.time.LocalDate" />
+
+        <variable
+            name="assembleDayTitle"
+            type="String" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.assemble.AssembleDayFragment">
+        tools:context=".ui.assemble.AssembleFragment">
 
         <com.example.assemble_day.ui.common.CustomToolbar
-            android:id="@+id/tl_assemble_day"
+            android:id="@+id/tl_assemble"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:theme="@style/ToolbarTheme"
@@ -25,6 +39,64 @@
             app:secondActionText="@string/action_item_apply"
             app:toolbarNavigationIcon="@drawable/ic_back"
             app:toolbarTitle="@string/title_assemble" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tl_assemble_period"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/royal_blue"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tl_assemble">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_assemble_period_title"
+                style="@style/Overline.White"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:text="@string/assemble_day_period"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_assemble_period_start"
+                style="@style/Subtitle1.White"
+                updateStartDate="@{startDate}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="@id/tv_assemble_period_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_assemble_period_title"
+                tools:text="8월 10일" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_assemble_period_end"
+                style="@style/Subtitle1.White"
+                updateEndDate="@{endDate}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/tv_assemble_period_start"
+                app:layout_constraintTop_toTopOf="@id/tv_assemble_period_start"
+                tools:text="  -  8월 18일" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_assemble_day_title"
+                style="@style/Subtitle1.White"
+                android:layout_width="0dp"
+                android:text="@{assembleDayTitle}"
+                android:visibility='@{assembleDayTitle.equals("") ? View.GONE : View.VISIBLE}'
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_assemble_period_start"
+                app:layout_constraintTop_toBottomOf="@id/tv_assemble_period_start"
+                tools:text="어셈블 데이트 제목입니다" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_day_of_week"
@@ -39,7 +111,7 @@
             app:layout_constraintBottom_toTopOf="@id/rv_assemble_day_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tl_assemble_day" />
+            app:layout_constraintTop_toBottomOf="@id/tl_assemble_period" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_assemble_day_month"
@@ -47,11 +119,51 @@
             android:layout_height="0dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/cl_assemble_day_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_day_of_week"
             tools:listitem="@layout/item_calendar_month" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_assemble_day_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/royal_blue"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_assemble_day_title"
+                style="@style/Subtitle1.White"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="@string/assemble_day_title_hint"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textColorHint="@color/white_alpha_30"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_assemble_day_title"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_assemble_day_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_create"
+                android:backgroundTint="@color/tab_selector_icon_white"
+                android:enabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/et_assemble_day_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

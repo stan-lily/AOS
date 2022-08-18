@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
+import com.example.assemble_day.common.Constants.NULL_VALUE
 import com.example.assemble_day.domain.model.Label
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +22,7 @@ class LabelViewModel : ViewModel() {
     val saveActionStateFlow = _saveActionStateFlow.asStateFlow()
 
     fun setTitle(inputText: String) {
-        nameFlag = inputText.isNotEmpty() && inputText != "null" && inputText.isNotBlank()
+        nameFlag = inputText.isNotEmpty() && inputText != NULL_VALUE && inputText.isNotBlank()
         if (nameFlag) name = inputText
         validateActionFlag()
     }
@@ -32,7 +33,7 @@ class LabelViewModel : ViewModel() {
 
     fun setBackgroundColor(inputText: String) {
         backgroundColorFlag =
-            inputText.isNotEmpty() && inputText != "null" && inputText.isNotBlank()
+            inputText.isNotEmpty() && inputText != NULL_VALUE && inputText.isNotBlank()
         if (backgroundColorFlag) backgroundColor = inputText
         validateActionFlag()
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Headline4" parent="TextAppearance.MaterialComponents.Headline4" />
 
     <style name="Headline5" parent="TextAppearance.MaterialComponents.Headline5" />
@@ -8,21 +9,42 @@
 
     <style name="Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1" />
 
+    <style name="Subtitle1.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2" />
-    <style name="Subtitle2.Grey01" >
+
+    <style name="Subtitle2.Grey01">
         <item name="android:textColor">@color/grey01</item>
     </style>
-    <style name="Subtitle2.Bold" >
+
+    <style name="Subtitle2.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Subtitle2.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Subtitle2.Bold.Royal_Blue">
+        <item name="android:textColor">@color/royal_blue</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Body1" parent="TextAppearance.MaterialComponents.Body1" />
 
     <style name="Body2" parent="TextAppearance.MaterialComponents.Body2" />
-    <style name="Body2.Grey03" >
+
+    <style name="Body2.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Body2.Grey03">
         <item name="android:textColor">@color/grey03</item>
     </style>
-    <style name="Body2.Grey03.Alpha10" >
+
+    <style name="Body2.Grey03.Alpha10">
         <item name="android:textColor">@color/grey03_alpha_10</item>
     </style>
 
@@ -31,6 +53,10 @@
     <style name="Caption" parent="TextAppearance.MaterialComponents.Caption" />
 
     <style name="Overline" parent="TextAppearance.MaterialComponents.Overline" />
+
+    <style name="Overline.White" >
+        <item name="android:textColor">@color/white</item>
+    </style>
 
     <style name="ToolbarTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:tint">@color/white</item>

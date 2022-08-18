@@ -2,13 +2,13 @@ package com.example.assemble_day.ui.common
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MenuItem
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.example.assemble_day.R
+import com.example.assemble_day.common.Constants.FIRST_ACTION
+import com.example.assemble_day.common.Constants.SECOND_ACTION
 
 class CustomToolbar(context: Context, attrs: AttributeSet?) :
     Toolbar(context, attrs) {
@@ -65,14 +65,14 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
 
     private fun setMenu() {
         inflateMenu(R.menu.toolbar_menu)
-        firstActionItem = menu.getItem(0)
-        secondActionItem = menu.getItem(1)
+        firstActionItem = menu.getItem(FIRST_ACTION)
+        secondActionItem = menu.getItem(SECOND_ACTION)
         firstActionItem.isEnabled = false
         secondActionItem.isEnabled = false
     }
 
     private fun initToolbarUI() {
-        this.setBackgroundColor(ContextCompat.getColor(context, R.color.light_blue))
+        this.setBackgroundColor(ContextCompat.getColor(context, R.color.royal_blue))
         this.setTitleTextAppearance(context, R.style.Headline6)
         this.setTitleTextColor(ContextCompat.getColor(context, R.color.white))
     }
