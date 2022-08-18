@@ -91,10 +91,12 @@ class AssembleFragment : Fragment() {
         assembleViewModel.startDayStateFlow.collect { selectedStartDay ->
             binding.startDate = selectedStartDay.date
             setOnResetAction(selectedStartDay.date != null)
-            if (!selectedStartDay.isAssembleDay) monthAdapter.notifyItemRangeChanged(
-                0,
-                CALENDAR_DAY_SIZE - 1
-            )
+            if (!selectedStartDay.isAssembleDay && !assembleViewModel.didPreviouslySelectAssembleDay) {
+                monthAdapter.notifyItemRangeChanged(
+                    0,
+                    CALENDAR_DAY_SIZE - 1
+                )
+            }
         }
     }
 
@@ -102,7 +104,9 @@ class AssembleFragment : Fragment() {
         assembleViewModel.assembleDayStateFlow.collect { selectedAssembleDay ->
             binding.endDate = selectedAssembleDay.date
             showAssembleDayTitleEditText(selectedAssembleDay.date == null)
-            if (!selectedAssembleDay.isAssembleDay) updateSelectedAssembleDay(selectedAssembleDay)
+            if (!selectedAssembleDay.isAssembleDay) {
+                updateSelectedAssembleDay(selectedAssembleDay)
+            }
         }
     }
 

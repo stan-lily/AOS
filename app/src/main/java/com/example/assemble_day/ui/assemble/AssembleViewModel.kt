@@ -18,6 +18,7 @@ class AssembleViewModel : ViewModel() {
 
     private val initialCalendarDay = CalendarDay()
     private val assembleDayList = mutableListOf<AssembleDay>()
+    private var startDayAfterLastAssembleDay = initialCalendarDay
 
     private var _calendarDataMap = mutableMapOf<String, List<CalendarDay>>()
     val calendarDataMap: Map<String, List<CalendarDay>> = _calendarDataMap
@@ -27,6 +28,9 @@ class AssembleViewModel : ViewModel() {
 
     private val _assembleDayStateFlow = MutableStateFlow(initialCalendarDay)
     val assembleDayStateFlow = _assembleDayStateFlow.asStateFlow()
+
+    private var _didPreviouslySelectAssembleDay = false
+    val didPreviouslySelectAssembleDay: Boolean get() = _didPreviouslySelectAssembleDay
 
     private val _copiedCalendarDayList = mutableListOf<CalendarDay>()
     val copiedCalendarDayList: List<CalendarDay> = _copiedCalendarDayList
@@ -64,9 +68,9 @@ class AssembleViewModel : ViewModel() {
     private fun loadAssembleDays() {
         assembleDayList.removeAll(assembleDayList)
         val dummyAssembleDayList = listOf<AssembleDay>(
-//            AssembleDay("기획 2차 수정", LocalDate.of(2022, 8, 1), LocalDate.of(2022, 8, 5)),
-//            AssembleDay("레이블 기능", LocalDate.of(2022, 8, 8), LocalDate.of(2022, 8, 17)),
-//            AssembleDay("assembles", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 26)),
+            AssembleDay("기획 2차 수정", LocalDate.of(2022, 8, 1), LocalDate.of(2022, 8, 5)),
+            AssembleDay("레이블 기능", LocalDate.of(2022, 8, 8), LocalDate.of(2022, 8, 17)),
+            AssembleDay("assembles", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 26)),
         )
         assembleDayList.addAll(dummyAssembleDayList)
     }
@@ -77,7 +81,8 @@ class AssembleViewModel : ViewModel() {
             val loadedStartDayMonth = loadedStartDay.toFormattedString()
             val loadedAssembleDay = assembleDay.end
             val loadedAssembleDayMonth = loadedAssembleDay.toFormattedString()
-            val startDayAfterLastAssembleDay = assembleDayList.last().end.plusDays(1)
+            val startLocalDateAfterLastAssembleDay = assembleDayList.last().end.plusDays(1)
+            startDayAfterLastAssembleDay = CalendarDay(date = startLocalDateAfterLastAssembleDay)
 
             if (loadedStartDayMonth < loadedAssembleDayMonth) {
                 _calendarDataMap[loadedStartDayMonth]?.forEach { calendarDay ->
@@ -95,7 +100,7 @@ class AssembleViewModel : ViewModel() {
                         calendarDay.isAssembleDay = true
                         calendarDay.assembleDay = assembleDay
                     }
-                    if (originalDay == startDayAfterLastAssembleDay) {
+                    if (originalDay == startLocalDateAfterLastAssembleDay) {
                         selectStartDay(calendarDay)
                     }
                 }
@@ -110,13 +115,19 @@ class AssembleViewModel : ViewModel() {
     fun selectCalendarDay(calendarDay: CalendarDay) {
         if (calendarDay.isAssembleDay) {
             _assembleDayStateFlow.value = calendarDay
+//            selectAssembleDay(calendarDay)
             setAssembleDayTitle(calendarDay.assembleDay?.title ?: "")
             calendarDay.assembleDay?.let { assembleDay ->
                 _startDayStateFlow.value = CalendarDay(date = assembleDay.start)
             }
+            _didPreviouslySelectAssembleDay = true
         } else if (_startDayStateFlow.value == initialCalendarDay) {
             selectStartDay(calendarDay)
         } else {
+            if (didPreviouslySelectAssembleDay) {
+                _startDayStateFlow.value = startDayAfterLastAssembleDay
+                _didPreviouslySelectAssembleDay = false
+            }
             selectAssembleDay(calendarDay)
         }
     }
@@ -130,6 +141,7 @@ class AssembleViewModel : ViewModel() {
                 val previousSelectedMonth = previousSelectedDay.toFormattedString()
                 _isSelectedDifferentMonth = false
 
+                if (selectedDay.date == previousSelectedDay.date) return
                 if (selectedMonth != previousSelectedMonth) {
                     selectAssembleDayWithDifferentMonth(previousSelectedDay, previousSelectedMonth)
                 }
@@ -151,11 +163,13 @@ class AssembleViewModel : ViewModel() {
         _calendarDataMap[selectedMonth]?.forEach { originalDay ->
             when (originalDay) {
                 selectedDay -> _copiedCalendarDayList.add(originalDay.copy(isSelected = true))
-                previousSelectedDay -> _copiedCalendarDayList.add(
-                    originalDay.copy(
-                        isSelected = false
+                previousSelectedDay -> {
+                    _copiedCalendarDayList.add(
+                        originalDay.copy(
+                            isSelected = false
+                        )
                     )
-                )
+                }
                 else -> _copiedCalendarDayList.add(originalDay.copy())
             }
         }
@@ -181,20 +195,21 @@ class AssembleViewModel : ViewModel() {
     }
 
     private fun selectStartDay(calendarDay: CalendarDay) {
-        if (_startDayStateFlow.value == initialCalendarDay) {
-            calendarDay.date?.let { selectedDay ->
-                val selectableMaxDay = selectedDay.plusWeeks(ASSEMBLE_DAY_MAX_SELECTABLE_WEEK)
-                _calendarDataMap.values.forEach { dateList ->
-                    dateList.forEach { calendarDay ->
-                        calendarDay.date?.let { day ->
-                            if (day < selectedDay || day >= selectableMaxDay)
-                                calendarDay.isSelectable = false
-                        }
+//        if (_startDayStateFlow.value == initialCalendarDay) {
+//        calendarDay.isSelected = true
+        calendarDay.date?.let { selectedDay ->
+            val selectableMaxDay = selectedDay.plusWeeks(ASSEMBLE_DAY_MAX_SELECTABLE_WEEK)
+            _calendarDataMap.values.forEach { dateList ->
+                dateList.forEach { calendarDay ->
+                    calendarDay.date?.let { day ->
+                        if (day < selectedDay || day >= selectableMaxDay)
+                            calendarDay.isSelectable = false
                     }
                 }
             }
-            _startDayStateFlow.value = calendarDay
         }
+        _startDayStateFlow.value = calendarDay
+//        }
     }
 
     private fun resetCalendarDataWhenAssembleDayListEmpty() {
