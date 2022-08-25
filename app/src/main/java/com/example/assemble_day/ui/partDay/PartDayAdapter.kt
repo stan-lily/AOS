@@ -36,7 +36,6 @@ class PartDayAdapter :
         fun bind(assembleDayUnit: PartDay) {
             val formatter = DateTimeFormatter.ofPattern("dd")
             binding.date = assembleDayUnit.date.format(formatter)
-            println("바인드됨")
         }
 
     }

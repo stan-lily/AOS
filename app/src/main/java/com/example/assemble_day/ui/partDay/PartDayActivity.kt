@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.assemble_day.R
 import com.example.assemble_day.databinding.ActivityPartDayBinding
+import com.example.assemble_day.domain.model.Label
+import com.example.assemble_day.ui.labelFilter.LabelFilterBottomSheet
 
 class PartDayActivity : AppCompatActivity() {
 
@@ -19,15 +21,39 @@ class PartDayActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val partdayAdapter = PartDayAdapter()
+        val partDayAdapter = PartDayAdapter()
         val partDayDetailAdapter = PartDayDetailAdapter()
-
-        binding.rvPartDay.adapter = partdayAdapter.apply {
-            submitList(partDayViewModel.loadedAssembleDayUnit)
+        val labelFilterDialogFragment = LabelFilterBottomSheet { selectedLabel ->
+            filterLabel(selectedLabel)
         }
+
+        setPartDayView(partDayAdapter)
+        setPartDayDetailView(partDayDetailAdapter)
+        setChipLabel(labelFilterDialogFragment)
+    }
+
+    private fun setChipLabel(labelFilterDialogFragment: LabelFilterBottomSheet) {
+        binding.chipPartDayLabel.setOnClickListener {
+            labelFilterDialogFragment.show(supportFragmentManager, null)
+        }
+    }
+
+    private fun setPartDayDetailView(partDayDetailAdapter: PartDayDetailAdapter) {
         binding.rvPartDayDetail.adapter = partDayDetailAdapter.apply {
             submitList(partDayViewModel.dummyTargets)
         }
+    }
+
+    private fun setPartDayView(partDayAdapter: PartDayAdapter) {
+        binding.rvPartDay.adapter = partDayAdapter.apply {
+            submitList(partDayViewModel.loadedAssembleDayUnit)
+        }
+    }
+
+    private fun filterLabel(selectedLabel: Label?) {
+        binding.chipPartDayLabel.text =
+            selectedLabel?.name ?: resources.getString(R.string.label_filter_default)
+        partDayViewModel.filterLabel(selectedLabel)
     }
 
 }

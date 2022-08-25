@@ -34,7 +34,6 @@ class PartDayDetailAdapter :
 
         fun bind(target: PartDayTarget) {
             binding.target = target
-            println("바인드됨")
         }
 
     }

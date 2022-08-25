@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="CustomToolbar" >
+    <declare-styleable name="CustomToolbar">
         <attr name="toolbarTitle" format="string" />
         <attr name="toolbarNavigationIcon" format="reference" />
         <attr name="firstActionText" format="string" />
         <attr name="secondActionText" format="string" />
+        <attr name="firstActionIcon" format="reference" />
     </declare-styleable>
 
 </resources>

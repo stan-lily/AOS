@@ -73,16 +73,13 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_part_day_label"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="label"
+                android:text="@string/label_filter_default"
                 android:textAppearance="@style/Subtitle2"
                 app:chipIcon="@drawable/ic_filter"
                 app:chipIconSize="20dp"
-                app:closeIcon="@drawable/ic_close"
-                app:closeIconSize="20dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_part_day_detail"
                 app:layout_constraintStart_toEndOf="@id/tv_part_day_detail"
                 app:layout_constraintTop_toTopOf="@id/tv_part_day_detail" />

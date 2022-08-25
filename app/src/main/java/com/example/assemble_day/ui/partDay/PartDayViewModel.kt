@@ -11,6 +11,7 @@ class PartDayViewModel : ViewModel() {
 
     val loadedAssembleDayUnit = mutableListOf<PartDay>()
     val dummyTargets = mutableListOf<PartDayTarget>()
+//    val dummyLabels = mutableListOf<Label>()
 
     init {
         createDummyAssembleDay()
@@ -40,11 +41,17 @@ class PartDayViewModel : ViewModel() {
         repeat(10) {
             dummyTargets.add(
                 PartDayTarget(
-                    label = Label("test", "test", "#FFFF3B30", "#000000"),
+                    label = Label(name = "test", description = "test", backgroundColor = "#FFFF3B30", fontColor = "BRIGHT"),
                     title = "test 입니다"
                 )
             )
         }
+    }
+
+    fun filterLabel(selectedLabel: Label?) {
+        // TODO 선택 라벨이 null 이 아니면 필터링
+
+        // TODO 선택 라벨이 null 이면 전체 리스트 다시 조회
     }
 
 }

@@ -19,6 +19,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
     private var toolbarNavigationIcon: Drawable? = null
     private var firstActionText: Int
     private var secondActionText: Int
+    private var firstActionIcon: Drawable? = null
 
     init {
         setMenu()
@@ -34,15 +35,26 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
                 toolbarNavigationIcon = getDrawable(R.styleable.CustomToolbar_toolbarNavigationIcon)
                 firstActionText = getResourceId(R.styleable.CustomToolbar_firstActionText, 0)
                 secondActionText = getResourceId(R.styleable.CustomToolbar_secondActionText, 0)
+                firstActionIcon = getDrawable(R.styleable.CustomToolbar_firstActionIcon)
                 setToolbarTitle(toolbarTitle)
                 setToolbarNavIcon(toolbarNavigationIcon)
                 setFirstActionText(firstActionText)
                 setSecondActionText(secondActionText)
+                setFirstActionIcon(firstActionIcon)
             } finally {
                 recycle()
             }
         }
 
+    }
+
+    private fun setFirstActionIcon(firstActionIcon: Drawable?) {
+        if (firstActionIcon != null) {
+            firstActionItem.icon = firstActionIcon
+            firstActionIcon.setTint(ContextCompat.getColor(context, R.color.white))
+        }
+        firstActionItem.isVisible = firstActionIcon != null
+        firstActionItem.isEnabled = firstActionIcon != null
     }
 
     private fun setSecondActionText(secondActionText: Int) {
