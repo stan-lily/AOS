@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.partDay.PartDayActivity">
+
+        <com.example.assemble_day.ui.common.CustomToolbar
+            android:id="@+id/tl_assemble_day_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/ToolbarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:toolbarNavigationIcon="@drawable/ic_back"
+            app:toolbarTitle="@string/assemble_day" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_part_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_assemble_day_detail"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:spanCount="7"
+            tools:listitem="@layout/item_part_day" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_part_day_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/background_stroke_black"
+            android:paddingHorizontal="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_part_day">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_target_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:textAppearance="@style/Subtitle2"
+                app:layout_constraintBottom_toBottomOf="@id/tv_part_day_detail"
+                app:layout_constraintEnd_toStartOf="@id/tv_part_day_detail"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="5" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_part_day_detail"
+                style="@style/Subtitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="10dp"
+                android:text="18"
+                app:layout_constraintBottom_toTopOf="@+id/btn_target_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="18" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_part_day_label"
+                style="@style/Widget.MaterialComponents.Chip.Entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="label"
+                android:textAppearance="@style/Subtitle2"
+                app:chipIcon="@drawable/ic_filter"
+                app:chipIconSize="20dp"
+                app:closeIcon="@drawable/ic_close"
+                app:closeIconSize="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_part_day_detail"
+                app:layout_constraintStart_toEndOf="@id/tv_part_day_detail"
+                app:layout_constraintTop_toTopOf="@id/tv_part_day_detail" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_target_add"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/background_stroke_r20_royal_blue"
+                android:padding="5dp"
+                android:tint="@color/royal_blue"
+                app:layout_constraintEnd_toEndOf="@+id/rv_part_day_detail"
+                app:layout_constraintStart_toStartOf="@+id/rv_part_day_detail"
+                app:layout_constraintTop_toBottomOf="@id/tv_part_day_detail"
+                app:srcCompat="@drawable/ic_add" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_part_day_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_target_add"
+                tools:listitem="@layout/item_part_day_detail" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

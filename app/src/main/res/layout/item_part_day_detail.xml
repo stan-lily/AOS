@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="target"
+            type="com.example.assemble_day.domain.model.PartDayTarget" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:background="@drawable/background_stroke_r20_royal_blue">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_target_label"
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:background="@drawable/background_r16"
+            android:backgroundTint="@color/red"
+            app:layout_constraintBottom_toBottomOf="@id/tv_target"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/tv_target"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_target" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_target"
+            style="@style/Subtitle2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{target.title}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_target_label"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="target" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
