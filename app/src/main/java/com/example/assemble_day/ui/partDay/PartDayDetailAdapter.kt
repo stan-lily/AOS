@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.assemble_day.databinding.ItemPartDayDetailBinding
 import com.example.assemble_day.domain.model.PartDayTarget
 
-class PartDayDetailAdapter :
+class PartDayDetailAdapter(private val labelItemClick: (itemPosition: Int) -> Unit) :
     ListAdapter<PartDayTarget, PartDayDetailAdapter.PartDayDetailViewHolder>(
         PartDayDetailDiffUtil
     ) {
@@ -29,12 +29,20 @@ class PartDayDetailAdapter :
         holder.bind(getItem(position))
     }
 
-    class PartDayDetailViewHolder(private val binding: ItemPartDayDetailBinding) :
+    inner class PartDayDetailViewHolder(private val binding: ItemPartDayDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(target: PartDayTarget) {
             binding.target = target
+            setTargetLabelBtnOnEventListener()
         }
+
+        private fun setTargetLabelBtnOnEventListener() {
+            binding.btnTargetLabel.setOnClickListener {
+                labelItemClick.invoke(adapterPosition)
+            }
+        }
+
 
     }
 

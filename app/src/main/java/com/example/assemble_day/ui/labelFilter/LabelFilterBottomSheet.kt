@@ -24,6 +24,7 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
 
     private lateinit var binding: FragmentLabelFilterBottomSheetBinding
     private lateinit var labelFilterAdapter: LabelFilterAdapter
+    private var toolbarTitle = ""
     private val labelFilterViewModel: LabelFilterViewModel by viewModels()
 
     override fun onCreateView(
@@ -52,7 +53,6 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
             setOnLabelClickListener(selectedPosition)
         }
         binding.rvLabelFilter.adapter = labelFilterAdapter
-
         setOnIconClickEventListener()
         searchLabel()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -60,6 +60,7 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
                 launch { submitLabelList() }
             }
         }
+        binding.tlLabelSearch.title = toolbarTitle
     }
 
     private fun setOnIconClickEventListener() {
@@ -85,6 +86,10 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
             binding.clLabelFilterSearch.visibility = View.INVISIBLE
             binding.tlLabelSearch.isVisible = true
         }
+    }
+
+    fun setToolbarTitle(title: String) {
+        toolbarTitle = title
     }
 
     private suspend fun submitLabelList() {

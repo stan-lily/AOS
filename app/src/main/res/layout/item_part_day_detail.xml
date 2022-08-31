@@ -23,7 +23,7 @@
             android:layout_width="10dp"
             android:layout_height="0dp"
             android:background="@drawable/background_r16"
-            android:backgroundTint="@color/red"
+            targetLabelBtnBackgroundTint="@{target.label.backgroundColor}"
             app:layout_constraintBottom_toBottomOf="@id/tv_target"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/tv_target"

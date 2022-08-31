@@ -5,13 +5,22 @@ import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.domain.model.PartDayTarget
 import com.example.assemble_day.domain.model.PartDay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 
 class PartDayViewModel : ViewModel() {
 
     val loadedAssembleDayUnit = mutableListOf<PartDay>()
-    val dummyTargets = mutableListOf<PartDayTarget>()
-//    val dummyLabels = mutableListOf<Label>()
+    private var selectedLabel: Label? = null
+
+    private val _loadedTargetStateFlow = MutableStateFlow(listOf<PartDayTarget>())
+    val loadedTargetStateFlow = _loadedTargetStateFlow.asStateFlow()
+
+    private var _isFiltering = false
+    val isFiltering get() = _isFiltering
+
+    private var selectedTargetPosition = -1
 
     init {
         createDummyAssembleDay()
@@ -38,20 +47,38 @@ class PartDayViewModel : ViewModel() {
     }
 
     private fun createDummyTarget() {
+        val dummyTargetList = mutableListOf<PartDayTarget>()
         repeat(10) {
-            dummyTargets.add(
+            dummyTargetList.add(
                 PartDayTarget(
                     label = Label(name = "test", description = "test", backgroundColor = "#FFFF3B30", fontColor = "BRIGHT"),
                     title = "test 입니다"
                 )
             )
         }
+        _loadedTargetStateFlow.value = dummyTargetList
+    }
+
+    fun setFilteringFlag(isFiltering: Boolean) {
+        _isFiltering = isFiltering
     }
 
     fun filterLabel(selectedLabel: Label?) {
         // TODO 선택 라벨이 null 이 아니면 필터링
 
         // TODO 선택 라벨이 null 이면 전체 리스트 다시 조회
+    }
+
+    fun selectTarget(selectedPosition: Int) {
+        selectedTargetPosition = selectedPosition
+    }
+
+    fun updateTargetLabel(selectedLabel: Label?) {
+        selectedLabel?.let { label ->
+            val updatedList = _loadedTargetStateFlow.value.toMutableList()
+            updatedList[selectedTargetPosition] = updatedList[selectedTargetPosition].copy(label = label)
+            _loadedTargetStateFlow.value = updatedList
+        }
     }
 
 }
