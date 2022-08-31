@@ -7,6 +7,7 @@
         <attr name="firstActionText" format="string" />
         <attr name="secondActionText" format="string" />
         <attr name="firstActionIcon" format="reference" />
+        <attr name="secondActionIcon" format="reference" />
     </declare-styleable>
 
 </resources>

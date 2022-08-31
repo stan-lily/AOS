@@ -9,17 +9,18 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.common.Constants.BOTTOM_SHEET_HEIGHT_RATIO
 import com.example.assemble_day.databinding.FragmentLabelFilterBottomSheetBinding
 import com.example.assemble_day.domain.model.Label
+import com.example.assemble_day.ui.labelCreate.LabelCreateFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 
 
-class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) -> Unit) : BottomSheetDialogFragment() {
+class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) -> Unit) :
+    BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentLabelFilterBottomSheetBinding
     private lateinit var labelFilterAdapter: LabelFilterAdapter
@@ -66,9 +67,17 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
             dismiss()
         }
 
-        binding.tlLabelSearch.setOnMenuItemClickListener {
+        binding.tlLabelSearch.firstActionItem.setOnMenuItemClickListener {
             binding.tlLabelSearch.visibility = View.INVISIBLE
             binding.clLabelFilterSearch.isVisible = true
+            true
+        }
+
+        binding.tlLabelSearch.secondActionItem.setOnMenuItemClickListener {
+            val labelCreateFragment = LabelCreateFragment {
+                updateLabel()
+            }
+            labelCreateFragment.show(parentFragmentManager, null)
             true
         }
 
@@ -93,6 +102,10 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
             val inputText = it?.toString() ?: ""
             labelFilterViewModel.searchLabel(inputText)
         }
+    }
+
+    private fun updateLabel() {
+        labelFilterViewModel.updateLabel()
     }
 
     override fun onDismiss(dialog: DialogInterface) {

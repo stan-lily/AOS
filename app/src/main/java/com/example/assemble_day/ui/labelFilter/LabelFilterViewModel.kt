@@ -88,4 +88,9 @@ class LabelFilterViewModel : ViewModel() {
 
         _labelStateFlow.value = filteredLabelList
     }
+
+    fun updateLabel() {
+
+    }
+
 }
