@@ -64,7 +64,7 @@ class PartDayActivity : AppCompatActivity() {
 
     private fun setPartDayView(partDayAdapter: PartDayAdapter) {
         binding.rvPartDay.adapter = partDayAdapter.apply {
-            submitList(partDayViewModel.loadedAssembleDayUnit)
+            submitList(partDayViewModel.loadedPartDayList)
         }
     }
 

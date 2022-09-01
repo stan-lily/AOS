@@ -11,9 +11,10 @@ import java.time.LocalDate
 
 class PartDayViewModel : ViewModel() {
 
-    val loadedAssembleDayUnit = mutableListOf<PartDay>()
+    val loadedPartDayList = mutableListOf<PartDay>()
     private var selectedLabel: Label? = null
 
+    private val initialTargetList = mutableListOf<PartDayTarget>()
     private val _loadedTargetStateFlow = MutableStateFlow(listOf<PartDayTarget>())
     val loadedTargetStateFlow = _loadedTargetStateFlow.asStateFlow()
 
@@ -34,7 +35,7 @@ class PartDayViewModel : ViewModel() {
         val size = loadedAssembleDay.end.compareTo(loadedAssembleDay.start)
         var count = 0L
         repeat(size) {
-            loadedAssembleDayUnit.add(
+            loadedPartDayList.add(
                 PartDay(
                     loadedAssembleDay.start.plusDays(count),
                     loadedAssembleDay,
@@ -43,19 +44,43 @@ class PartDayViewModel : ViewModel() {
             )
             count++
         }
-        println(loadedAssembleDayUnit)
+        println(loadedPartDayList)
     }
 
     private fun createDummyTarget() {
+        initialTargetList.clear()
         val dummyTargetList = mutableListOf<PartDayTarget>()
-        repeat(10) {
+        repeat(3) {
             dummyTargetList.add(
                 PartDayTarget(
-                    label = Label(name = "test", description = "test", backgroundColor = "#FFFF3B30", fontColor = "BRIGHT"),
-                    title = "test 입니다"
+                    label = Label(
+                        id = 1,
+                        name = "BE",
+                        description = "dev-team",
+                        backgroundColor = "#1e90ff",
+                        fontColor = "BRIGHT"
+                    ),
+                    title = "BE 입니다"
                 )
             )
         }
+        repeat(4) {
+            dummyTargetList.add(
+                PartDayTarget(
+                    label = Label(2, "AOS", "dev-team", "#ff00ff", "BRIGHT"),
+                    title = "AOS 입니다"
+                )
+            )
+        }
+        repeat(3) {
+            dummyTargetList.add(
+                PartDayTarget(
+                    label = Label(3, "docs", "docs", "#adff2f", "DARK"),
+                    title = "docs 입니다"
+                )
+            )
+        }
+        initialTargetList.addAll(dummyTargetList)
         _loadedTargetStateFlow.value = dummyTargetList
     }
 
@@ -64,9 +89,14 @@ class PartDayViewModel : ViewModel() {
     }
 
     fun filterLabel(selectedLabel: Label?) {
-        // TODO 선택 라벨이 null 이 아니면 필터링
-
-        // TODO 선택 라벨이 null 이면 전체 리스트 다시 조회
+        selectedLabel?.let {
+            val filteredTargetList = initialTargetList.filter { target ->
+                target.label.name == selectedLabel.name
+            }
+            _loadedTargetStateFlow.value = filteredTargetList
+        } ?: kotlin.run {
+            _loadedTargetStateFlow.value = initialTargetList
+        }
     }
 
     fun selectTarget(selectedPosition: Int) {
@@ -76,7 +106,8 @@ class PartDayViewModel : ViewModel() {
     fun updateTargetLabel(selectedLabel: Label?) {
         selectedLabel?.let { label ->
             val updatedList = _loadedTargetStateFlow.value.toMutableList()
-            updatedList[selectedTargetPosition] = updatedList[selectedTargetPosition].copy(label = label)
+            updatedList[selectedTargetPosition] =
+                updatedList[selectedTargetPosition].copy(label = label)
             _loadedTargetStateFlow.value = updatedList
         }
     }

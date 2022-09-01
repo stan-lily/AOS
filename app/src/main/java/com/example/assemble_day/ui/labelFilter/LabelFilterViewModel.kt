@@ -25,16 +25,6 @@ class LabelFilterViewModel : ViewModel() {
         labelList.add(Label(1, "BE", "dev-team", "#1e90ff", "BRIGHT"))
         labelList.add(Label(2, "AOS", "dev-team", "#ff00ff", "BRIGHT"))
         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
-        labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
 
         initialLabelList.addAll(labelList)
         _labelStateFlow.value = labelList
