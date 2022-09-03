@@ -5,6 +5,14 @@
 
     <data>
 
+        <variable
+            name="backgroundColor"
+            type="String" />
+
+        <variable
+            name="fontColor"
+            type="String" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,11 +55,14 @@
             android:background="@android:color/transparent"
             android:ellipsize="end"
             android:hint="@string/label_hint_title"
+            android:maxLength="20"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="@id/tv_label_title"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/tv_label_title"
-            app:layout_constraintTop_toTopOf="@id/tv_label_title" />
+            app:layout_constraintTop_toTopOf="@id/tv_label_title"
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_label_description"
@@ -94,9 +105,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
-            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintBottom_toBottomOf="@id/tv_label_background_font_color"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/tv_label_background_font_color"
             app:layout_constraintTop_toTopOf="@id/tv_label_background_font_color" />
 
@@ -113,16 +124,20 @@
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_label_background_color"
             style="@style/Subtitle2.Grey01"
+            backgroundColorText="@{backgroundColor}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:background="@android:color/transparent"
             android:ellipsize="end"
+            android:maxLength="7"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="@id/tv_label_background_color"
             app:layout_constraintEnd_toStartOf="@id/btn_label_background_color"
+            app:layout_constraintHorizontal_bias="0.444"
             app:layout_constraintStart_toEndOf="@id/tv_label_background_color"
-            app:layout_constraintTop_toTopOf="@id/tv_label_background_color" />
+            app:layout_constraintTop_toTopOf="@id/tv_label_background_color"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_label_background_color"
@@ -152,6 +167,7 @@
             android:layout_height="0dp"
             android:layout_margin="16dp"
             android:background="@drawable/background_grey_r20"
+
             app:layout_constraintDimensionRatio="328:160"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -160,6 +176,8 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_label_background_color_preview"
             style="@style/Body2.Grey03.Alpha10"
+            backgroundColor="@{backgroundColor}"
+            fontColor="@{fontColor}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_r16"

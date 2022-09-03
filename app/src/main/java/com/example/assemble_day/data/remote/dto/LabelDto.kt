@@ -18,22 +18,23 @@ data class Labels(
     @SerializedName("description")
     val description: String,
     @SerializedName("backgroundColor")
-    val backgroundcolor: String,
+    val backgroundColor: String,
     @SerializedName("fontColor")
-    val fontcolor: String
+    val fontColor: String
 )
 
 data class Team(
     @SerializedName("teamId")
-    val teamid: Int,
+    val teamId: Int,
     @SerializedName("teamName")
-    val teamname: String
+    val teamName: String
 )
 
 fun LabelDto.toLabel(): List<Label> {
     val labelList = mutableListOf<Label>()
     this.labels.forEach {
-        labelList.add(Label(it.id, it.name, it.description, it.backgroundcolor, it.fontcolor))
+        labelList.add(Label(it.id, it.name, it.description, it.backgroundColor, it.fontColor))
     }
     return labelList
 }
+

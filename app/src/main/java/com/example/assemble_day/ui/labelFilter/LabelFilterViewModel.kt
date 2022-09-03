@@ -3,10 +3,9 @@ package com.example.assemble_day.ui.labelFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assemble_day.data.remote.NetworkResult
-import com.example.assemble_day.data.remote.dto.Labels
 import com.example.assemble_day.data.remote.dto.toLabel
 import com.example.assemble_day.domain.model.Label
-import com.example.assemble_day.domain.repository.LabelFilterRepository
+import com.example.assemble_day.domain.repository.LabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LabelFilterViewModel @Inject constructor(private val labelFilterRepository: LabelFilterRepository) : ViewModel() {
+class LabelFilterViewModel @Inject constructor(private val labelFilterRepository: LabelRepository) : ViewModel() {
 
     private var _selectedLabel: Label? = null
     val selectedLabel: Label? get() = _selectedLabel

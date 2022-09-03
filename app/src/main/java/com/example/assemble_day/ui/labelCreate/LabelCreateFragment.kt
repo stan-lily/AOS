@@ -21,6 +21,7 @@ import com.example.assemble_day.common.Constants.RGB_BLUE
 import com.example.assemble_day.common.Constants.RGB_GREEN
 import com.example.assemble_day.common.Constants.RGB_RED
 import com.example.assemble_day.databinding.FragmentLabelBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -58,18 +59,27 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                labelViewModel.saveActionStateFlow.collect {
-                    binding.tlLabel.firstActionItem.isEnabled = it
-                }
-            }
-        }
         setInputTextOnEventListener()
         setFontColorSpinner()
         setBackgroundColorBtnOnEventListener()
         setSaveBtnOnEventListener()
         setNavigationIconOnEventListener()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { enableSaveAction() }
+                launch { setLabelBackgroundColor() }
+                launch { setLabelBackgroundFontColor() }
+            }
+
+        }
+
+    }
+
+    private suspend fun enableSaveAction() {
+        labelViewModel.saveActionStateFlow.collect {
+            binding.tlLabel.firstActionItem.isEnabled = it
+        }
     }
 
     private fun setNavigationIconOnEventListener() {
@@ -82,14 +92,16 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
         binding.tlLabel.firstActionItem.setOnMenuItemClickListener {
             labelViewModel.saveLabel()
             saveLabel.invoke()
-            dismiss()
+//            dismiss()
             true
         }
     }
 
     private fun setInputTextOnEventListener() {
         binding.etLabelTitle.doAfterTextChanged {
-            labelViewModel.setTitle(it.toString())
+            val title = it.toString()
+            labelViewModel.setTitle(title)
+//                showMessageForWrongTitle()
         }
 
         binding.etLabelDescription.doAfterTextChanged {
@@ -97,21 +109,52 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
         }
 
         binding.etLabelBackgroundColor.doAfterTextChanged {
-            labelViewModel.setBackgroundColor(it.toString())
+            val color = it.toString()
+            if (color.length == 7) {
+                if (validateColorFormat(color)) {
+                    labelViewModel.setBackgroundColor(color)
+                } else {
+                    showMessageForWrongColorFormat()
+                }
+            }
+            if (color.isBlank() || color.isEmpty()) {
+                binding.backgroundColor = color
+            }
         }
+    }
+
+    private fun validateColorFormat(color: String): Boolean {
+        val r = "${color[1]}${color[2]}".toInt(16)
+        val g = "${color[3]}${color[4]}".toInt(16)
+        val b = "${color[5]}${color[6]}".toInt(16)
+
+        return try {
+            Color.rgb(r, g, b)
+            true
+        } catch (e: Throwable) {
+            println(color)
+            false
+        }
+    }
+
+    private fun showMessageForWrongColorFormat() {
+        Snackbar.make(requireView(), "정확한 색상을 입력하시기 바랍니다", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showMessageForWrongTitle() {
+        Snackbar.make(requireView(), "제목에는 공백이 있어서는 안됩니다", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun setBackgroundColorBtnOnEventListener() {
         binding.btnLabelBackgroundColor.setOnClickListener {
-            val rgbArray = labelViewModel.createRandomColor()
-            setLabelBackgroundColor(rgbArray)
-            setLabelBackgroundText(rgbArray)
+            labelViewModel.createRandomColor()
         }
     }
 
-    private fun setLabelBackgroundFontColor() {
-        val fontColor = labelViewModel.getFontColor()
-        binding.tvLabelBackgroundColorPreview.setTextColor(Color.parseColor(fontColor))
+    private suspend fun setLabelBackgroundFontColor() {
+        labelViewModel.fontColorStateFlow.collect {
+            binding.fontColor = it
+        }
     }
 
     private fun setFontColorSpinner() {
@@ -138,28 +181,16 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
                         )
                     )
                     labelViewModel.setFontColor(itemView.text.toString())
-                    setLabelBackgroundFontColor()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
     }
 
-    private fun setLabelBackgroundText(rgbArray: Array<Int>) {
-        val redHex = Integer.toHexString(rgbArray[RGB_RED]).uppercase()
-        val greenHex = Integer.toHexString(rgbArray[RGB_GREEN]).uppercase()
-        val blueHex = Integer.toHexString(rgbArray[RGB_BLUE]).uppercase()
-
-        binding.etLabelBackgroundColor.setText("#$redHex$greenHex$blueHex")
-    }
-
-    private fun setLabelBackgroundColor(rgbArray: Array<Int>) {
-        val red = rgbArray[RGB_RED]
-        val green = rgbArray[RGB_GREEN]
-        val blue = rgbArray[RGB_BLUE]
-
-        binding.tvLabelBackgroundColorPreview.backgroundTintList =
-            ColorStateList.valueOf(Color.rgb(red, green, blue))
+    private suspend fun setLabelBackgroundColor() {
+        labelViewModel.backgroundColorStateFlow.collect {
+            binding.backgroundColor = it
+        }
     }
 
 }

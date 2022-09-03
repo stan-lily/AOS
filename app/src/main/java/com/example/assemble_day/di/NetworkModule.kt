@@ -3,8 +3,8 @@ package com.example.assemble_day.di
 import com.example.assemble_day.data.remote.dataSource.LabelDataSource
 import com.example.assemble_day.data.remote.dataSource.LabelRemoteDataSource
 import com.example.assemble_day.data.remote.network.LabelApi
-import com.example.assemble_day.data.remote.repository.LabelFilterRepositoryImpl
-import com.example.assemble_day.domain.repository.LabelFilterRepository
+import com.example.assemble_day.data.remote.repository.LabelRepositoryImpl
+import com.example.assemble_day.domain.repository.LabelRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,8 +56,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideLabelFilterRepository(labelDataSource: LabelDataSource): LabelFilterRepository {
-        return LabelFilterRepositoryImpl(labelDataSource)
+    fun provideLabelRepository(labelDataSource: LabelDataSource): LabelRepository {
+        return LabelRepositoryImpl(labelDataSource)
     }
 
 }
