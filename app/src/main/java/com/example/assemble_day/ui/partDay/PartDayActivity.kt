@@ -1,8 +1,10 @@
 package com.example.assemble_day.ui.partDay
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -10,7 +12,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
 import com.example.assemble_day.databinding.ActivityPartDayBinding
 import com.example.assemble_day.domain.model.Label
+import com.example.assemble_day.ui.common.setEndIconOnClickListener
 import com.example.assemble_day.ui.labelFilter.LabelFilterBottomSheet
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 class PartDayActivity : AppCompatActivity() {
@@ -32,6 +36,8 @@ class PartDayActivity : AppCompatActivity() {
         labelFilterDialogFragment = LabelFilterBottomSheet { selectedLabel ->
             if (partDayViewModel.isFiltering) {
                 filterLabel(selectedLabel)
+            } else if (partDayViewModel.isCreatingTarget) {
+                selectLabelForNewTarget(selectedLabel)
             } else {
                 updateTargetLabel(selectedLabel)
             }
@@ -39,10 +45,15 @@ class PartDayActivity : AppCompatActivity() {
 
         setPartDayView(partDayAdapter)
         setChipLabelOnClickListener()
+        setTargetAddBtnOnClickListener()
+        setTargetEditTextIconOnClickListener()
+        inputTargetTitle()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { submitTargetList() }
+                launch { changeTargetTitleInputTextIcon() }
+                launch { showMessageForCreatingTargetError() }
             }
         }
     }
@@ -84,6 +95,65 @@ class PartDayActivity : AppCompatActivity() {
 
     private fun updateTargetLabel(selectedLabel: Label?) {
         partDayViewModel.updateTargetLabel(selectedLabel)
+    }
+
+    private fun setTargetAddBtnOnClickListener() {
+        binding.btnTargetAdd.setOnClickListener {
+            setTargetTextInputEditTextVisible(true)
+        }
+    }
+
+    private fun setTargetEditTextIconOnClickListener() {
+        binding.etTargetAdd.setEndIconOnClickListener {
+            if (partDayViewModel.inputTargetTitleStateFlow.value.isBlank() || partDayViewModel.inputTargetTitleStateFlow.value.isEmpty()) {
+                setTargetTextInputEditTextVisible(false)
+            } else {
+                val toolbarTitle = resources.getString(R.string.label_select)
+                labelFilterDialogFragment.setToolbarTitle(toolbarTitle)
+                labelFilterDialogFragment.show(supportFragmentManager, null)
+            }
+        }
+    }
+
+    private fun inputTargetTitle() {
+        binding.etTargetAdd.doAfterTextChanged { inputText ->
+            val title = (inputText ?: "").toString()
+            partDayViewModel.setTargetTitle(title)
+        }
+    }
+
+    private suspend fun changeTargetTitleInputTextIcon() {
+        partDayViewModel.inputTargetTitleStateFlow.collect { title ->
+            binding.isInputtingTitle = title
+        }
+    }
+
+    private fun selectLabelForNewTarget(selectedLabel: Label?) {
+        partDayViewModel.createNewTarget(selectedLabel)
+        setTargetTextInputEditTextVisible(false)
+    }
+
+    private fun setTargetTextInputEditTextVisible(isVisible: Boolean) {
+        if (isVisible) {
+            binding.etTargetAdd.isEnabled = true
+            binding.btnTargetAdd.visibility = View.INVISIBLE
+            binding.etTargetAdd.visibility = View.VISIBLE
+        } else {
+            binding.etTargetAdd.text = null
+            binding.etTargetAdd.isEnabled = false
+            binding.btnTargetAdd.visibility = View.VISIBLE
+            binding.etTargetAdd.visibility = View.INVISIBLE
+        }
+    }
+
+    private suspend fun showMessageForCreatingTargetError() {
+        partDayViewModel.createTargetFlagSharedFlow.collect { isLabelSelected ->
+            if (!isLabelSelected) Snackbar.make(
+                binding.clPartDayRoot,
+                R.string.snack_bar_unable_create_target,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 
 }

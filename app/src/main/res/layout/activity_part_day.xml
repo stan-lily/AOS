@@ -5,9 +5,16 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="isInputtingTitle"
+            type="String" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_part_day_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.partDay.PartDayActivity">
@@ -97,15 +104,36 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_part_day_detail"
                 app:srcCompat="@drawable/ic_add" />
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_target_add"
+                isInputtingTitle="@{isInputtingTitle}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/background_stroke_r20_royal_blue"
+                android:enabled="false"
+                android:maxLines="1"
+                android:paddingVertical="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="5dp"
+                android:textAppearance="@style/Subtitle2"
+                android:visibility="invisible"
+                app:drawableEndCompat="@drawable/ic_close"
+                app:drawableTint="@color/royal_blue"
+                app:layout_constraintEnd_toEndOf="@+id/rv_part_day_detail"
+                app:layout_constraintStart_toStartOf="@+id/rv_part_day_detail"
+                app:layout_constraintTop_toBottomOf="@id/tv_part_day_detail" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_part_day_detail"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_target_add"
-                tools:listitem="@layout/item_part_day_detail" />
+                tools:listitem="@layout/item_part_day_target" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,14 +5,17 @@ import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.domain.model.PartDayTarget
 import com.example.assemble_day.domain.model.PartDay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 
 class PartDayViewModel : ViewModel() {
 
     val loadedPartDayList = mutableListOf<PartDay>()
-    private var selectedLabel: Label? = null
+    private var selectedLabelForNewTarget: Label? = null
+    private var newTargetTitle = ""
 
     private val initialTargetList = mutableListOf<PartDayTarget>()
     private val _loadedTargetStateFlow = MutableStateFlow(listOf<PartDayTarget>())
@@ -20,6 +23,15 @@ class PartDayViewModel : ViewModel() {
 
     private var _isFiltering = false
     val isFiltering get() = _isFiltering
+
+    private var _isCreatingTarget = false
+    val isCreatingTarget get() = _isCreatingTarget
+
+    private var _inputTargetTitleStateFlow = MutableStateFlow("")
+    val inputTargetTitleStateFlow = _inputTargetTitleStateFlow.asStateFlow()
+
+    private val _createTargetFlagSharedFlow = MutableSharedFlow<Boolean>(replay = 1)
+    val createTargetFlagSharedFlow = _createTargetFlagSharedFlow.asSharedFlow()
 
     private var selectedTargetPosition = -1
 
@@ -86,6 +98,7 @@ class PartDayViewModel : ViewModel() {
 
     fun setFilteringFlag(isFiltering: Boolean) {
         _isFiltering = isFiltering
+        _isCreatingTarget = false
     }
 
     fun filterLabel(selectedLabel: Label?) {
@@ -109,6 +122,23 @@ class PartDayViewModel : ViewModel() {
             updatedList[selectedTargetPosition] =
                 updatedList[selectedTargetPosition].copy(label = label)
             _loadedTargetStateFlow.value = updatedList
+        }
+    }
+
+    fun setTargetTitle(title: String) {
+        _inputTargetTitleStateFlow.value = title
+        _isCreatingTarget = true
+        _isFiltering = false
+    }
+
+    fun createNewTarget(selectedLabel: Label?) {
+        _createTargetFlagSharedFlow.tryEmit(selectedLabel != null)
+        // TODO 새로운 타켓 생성
+        selectedLabel?.let {
+            val newTarget =
+                PartDayTarget(title = _inputTargetTitleStateFlow.value, label = selectedLabel)
+            initialTargetList.add(0, newTarget)
+            _loadedTargetStateFlow.value = initialTargetList.toList()
         }
     }
 

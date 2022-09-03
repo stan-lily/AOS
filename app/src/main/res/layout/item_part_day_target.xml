@@ -12,18 +12,18 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:padding="5dp"
-        android:background="@drawable/background_stroke_r20_royal_blue">
+        android:background="@drawable/background_stroke_r20_royal_blue"
+        android:padding="5dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_target_label"
+            targetLabelBtnBackgroundTint="@{target.label.backgroundColor}"
             android:layout_width="10dp"
             android:layout_height="0dp"
             android:background="@drawable/background_r16"
-            targetLabelBtnBackgroundTint="@{target.label.backgroundColor}"
             app:layout_constraintBottom_toBottomOf="@id/tv_target"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@+id/tv_target"
@@ -36,7 +36,9 @@
             style="@style/Subtitle2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:gravity="center"
+            android:maxLines="1"
             android:text="@{target.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_target_label"

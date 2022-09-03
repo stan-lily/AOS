@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.example.assemble_day.R
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
@@ -23,5 +24,14 @@ fun updateLabelTextColor(view: TextView, color: String) {
             )
         )
         else -> view.setTextColor(Color.parseColor(LABEL_FONT_COLOR_WHITE_HEX))
+    }
+}
+
+@BindingAdapter("isInputtingTitle")
+fun updateTargetViewVisible(view: TextView, title: String) {
+    if (title.isEmpty() || title.isBlank()) {
+        view.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_close, 0)
+    } else {
+        view.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_add, 0)
     }
 }
