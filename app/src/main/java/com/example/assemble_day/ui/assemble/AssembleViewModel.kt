@@ -8,13 +8,16 @@ import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.ui.common.CalendarUtil
 import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class AssembleViewModel : ViewModel() {
+@HiltViewModel
+class AssembleViewModel @Inject constructor() : ViewModel() {
 
     private val initialCalendarDay = CalendarDay()
     private val assembleDayList = mutableListOf<AssembleDay>()

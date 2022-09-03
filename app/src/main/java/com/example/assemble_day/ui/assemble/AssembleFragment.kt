@@ -18,9 +18,10 @@ import com.example.assemble_day.databinding.FragmentAssembleBinding
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class AssembleFragment : Fragment() {
 
     private val assembleViewModel: AssembleViewModel by viewModels()

@@ -6,10 +6,13 @@ import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
 import com.example.assemble_day.common.Constants.NULL_VALUE
 import com.example.assemble_day.domain.model.Label
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class LabelCreateViewModel : ViewModel() {
+@HiltViewModel
+class LabelCreateViewModel @Inject constructor() : ViewModel() {
 
     private var nameFlag = false
     private var name = ""

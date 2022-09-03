@@ -21,9 +21,10 @@ import com.example.assemble_day.common.Constants.RGB_BLUE
 import com.example.assemble_day.common.Constants.RGB_GREEN
 import com.example.assemble_day.common.Constants.RGB_RED
 import com.example.assemble_day.databinding.FragmentLabelBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() {
 
     private lateinit var binding: FragmentLabelBinding
