@@ -1,20 +1,30 @@
 package com.example.assemble_day.ui.assemble
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.assemble_day.common.Constants.ASSEMBLE_DAY_MAX_SELECTABLE_WEEK
 import com.example.assemble_day.common.Constants.ASSEMBLE_DAY_MIN_SELECTABLE_DAY
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
+import com.example.assemble_day.data.remote.NetworkResult
+import com.example.assemble_day.data.remote.dto.toAssembleDay
 import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.CalendarDay
+import com.example.assemble_day.domain.repository.AssembleRepository
 import com.example.assemble_day.ui.common.CalendarUtil
 import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import java.time.LocalDate
+import javax.inject.Inject
 
-class AssembleViewModel : ViewModel() {
+@HiltViewModel
+class AssembleViewModel @Inject constructor(private val assembleRepository: AssembleRepository) :
+    ViewModel() {
 
     private val initialCalendarDay = CalendarDay()
     private val assembleDayList = mutableListOf<AssembleDay>()
@@ -53,26 +63,38 @@ class AssembleViewModel : ViewModel() {
 
     init {
         createCalendarData()
-        loadAssembleDays()
-        setLoadedAssembleDays()
+        viewModelScope.launch {
+            loadAssembleDays()
+        }
     }
 
     private fun createCalendarData() {
         val calendarData =
-            Array<LocalDate>(CALENDAR_DAY_SIZE) { LocalDate.now().plusMonths(it.toLong()) }
+            Array<LocalDate>(CALENDAR_DAY_SIZE) { LocalDate.now().minusMonths(3).plusMonths(it.toLong()) }
         calendarData.forEach { date ->
             _calendarDataMap[date.toFormattedString()] = CalendarUtil.createDayList(date)
         }
     }
 
-    private fun loadAssembleDays() {
+//    private fun loadAssembleDays() {
+//        assembleDayList.removeAll(assembleDayList)
+//        val dummyAssembleDayList = listOf<AssembleDay>(
+//            AssembleDay("기획 2차 수정", LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 5)),
+//            AssembleDay("레이블 기능", LocalDate.of(2022, 9, 8), LocalDate.of(2022, 9, 17)),
+//            AssembleDay("assembles", LocalDate.of(2022, 9, 19), LocalDate.of(2022, 9, 26)),
+//        )
+//        assembleDayList.addAll(dummyAssembleDayList)
+//    }
+
+    private suspend fun loadAssembleDays() {
         assembleDayList.removeAll(assembleDayList)
-        val dummyAssembleDayList = listOf<AssembleDay>(
-            AssembleDay("기획 2차 수정", LocalDate.of(2022, 8, 1), LocalDate.of(2022, 8, 5)),
-            AssembleDay("레이블 기능", LocalDate.of(2022, 8, 8), LocalDate.of(2022, 8, 17)),
-            AssembleDay("assembles", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 26)),
-        )
-        assembleDayList.addAll(dummyAssembleDayList)
+        val loadedAssemble = assembleRepository.getAssembles()
+        when (loadedAssemble) {
+            is NetworkResult.Success -> {
+                assembleDayList.addAll(loadedAssemble.data.toAssembleDay())
+            }
+        }
+        setLoadedAssembleDays()
     }
 
     private fun setLoadedAssembleDays() {

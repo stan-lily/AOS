@@ -15,8 +15,10 @@ import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.ui.common.setEndIconOnClickListener
 import com.example.assemble_day.ui.labelFilter.LabelFilterBottomSheet
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class PartDayActivity : AppCompatActivity() {
 
     private val partDayViewModel: PartDayViewModel by viewModels()

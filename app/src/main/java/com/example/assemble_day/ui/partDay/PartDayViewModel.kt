@@ -5,13 +5,16 @@ import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.domain.model.PartDayTarget
 import com.example.assemble_day.domain.model.PartDay
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class PartDayViewModel : ViewModel() {
+@HiltViewModel
+class PartDayViewModel @Inject constructor() : ViewModel() {
 
     val loadedPartDayList = mutableListOf<PartDay>()
     private var selectedLabelForNewTarget: Label? = null

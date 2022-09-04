@@ -16,9 +16,10 @@ import com.example.assemble_day.databinding.FragmentLabelFilterBottomSheetBindin
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.ui.labelCreate.LabelCreateFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) -> Unit) :
     BottomSheetDialogFragment() {
 
