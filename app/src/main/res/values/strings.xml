@@ -12,6 +12,7 @@
     <string name="label_title">제목</string>
     <string name="label_description">설명</string>
     <string name="label_background">배경색</string>
+    <string name="label_filter_default">label</string>
     <string name="label_hint_description">선택 사항</string>
     <string name="label_hint_title">필수 입력</string>
     <string name="label_background_color_preview">label</string>
@@ -20,4 +21,11 @@
     <string name="assemble_day_period">일정</string>
     <string name="assemble_day_period_end">&#160;&#160;-&#160;&#160;%s</string>
     <string name="snack_bar_unable_select">시작일 2일 이내에는 Assemble Day 를 설정할 수 없습니다</string>
+    <string name="snack_bar_unable_create_target">타겟을 생성하기 위해서는 레이블을 지정해 주시기 바랍니다</string>
+    <string name="assemble_day">Assemble Day</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_filter">Filter label</string>
+    <string name="label_select">Select label</string>
+    <string name="label_search">Search label</string>
 </resources>

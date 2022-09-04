@@ -1,4 +1,4 @@
-package com.example.assemble_day.ui.label
+package com.example.assemble_day.ui.labelCreate
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,25 +21,41 @@ import com.example.assemble_day.common.Constants.RGB_BLUE
 import com.example.assemble_day.common.Constants.RGB_GREEN
 import com.example.assemble_day.common.Constants.RGB_RED
 import com.example.assemble_day.databinding.FragmentLabelBinding
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
-class LabelFragment : Fragment() {
+class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() {
 
     private lateinit var binding: FragmentLabelBinding
-    private val labelViewModel: LabelViewModel by viewModels()
+    private val labelViewModel: LabelCreateViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLabelBinding.inflate(inflater, container, false)
+        binding.clLabel.minHeight = getWindowHeight()
+        binding.clLabel.minWidth = getDialogFragmentDefaultWidth()
         return binding.root
+    }
+
+    private fun getDialogFragmentDefaultWidth(): Int {
+        return (getWindowWidth() * 0.9).toInt()
+    }
+
+    private fun getWindowHeight(): Int {
+        val displayMetrics = requireContext().resources.displayMetrics
+        return displayMetrics.heightPixels
+    }
+
+    private fun getWindowWidth(): Int {
+        val displayMetrics = requireContext().resources.displayMetrics
+        return displayMetrics.widthPixels
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isCancelable = false
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -48,20 +64,29 @@ class LabelFragment : Fragment() {
                 }
             }
         }
-        setOnInputTextEventListener()
+        setInputTextOnEventListener()
         setFontColorSpinner()
-        setOnBackgroundColorBtnEventListener()
-        setOnSaveBtnEventListener()
+        setBackgroundColorBtnOnEventListener()
+        setSaveBtnOnEventListener()
+        setNavigationIconOnEventListener()
     }
 
-    private fun setOnSaveBtnEventListener() {
+    private fun setNavigationIconOnEventListener() {
+        binding.tlLabel.setNavigationOnClickListener {
+            dismiss()
+        }
+    }
+
+    private fun setSaveBtnOnEventListener() {
         binding.tlLabel.firstActionItem.setOnMenuItemClickListener {
             labelViewModel.saveLabel()
+            saveLabel.invoke()
+            dismiss()
             true
         }
     }
 
-    private fun setOnInputTextEventListener() {
+    private fun setInputTextOnEventListener() {
         binding.etLabelTitle.doAfterTextChanged {
             labelViewModel.setTitle(it.toString())
         }
@@ -75,7 +100,7 @@ class LabelFragment : Fragment() {
         }
     }
 
-    private fun setOnBackgroundColorBtnEventListener() {
+    private fun setBackgroundColorBtnOnEventListener() {
         binding.btnLabelBackgroundColor.setOnClickListener {
             val rgbArray = labelViewModel.createRandomColor()
             setLabelBackgroundColor(rgbArray)
@@ -107,7 +132,7 @@ class LabelFragment : Fragment() {
                     itemView.setPadding(0, 0, 0, 0)
                     itemView.setTextColor(
                         ContextCompat.getColor(
-                            this@LabelFragment.requireContext(),
+                            this@LabelCreateFragment.requireContext(),
                             R.color.grey01
                         )
                     )

@@ -19,6 +19,8 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
     private var toolbarNavigationIcon: Drawable? = null
     private var firstActionText: Int
     private var secondActionText: Int
+    private var firstActionIcon: Drawable? = null
+    private var secondActionIcon: Drawable? = null
 
     init {
         setMenu()
@@ -34,10 +36,16 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
                 toolbarNavigationIcon = getDrawable(R.styleable.CustomToolbar_toolbarNavigationIcon)
                 firstActionText = getResourceId(R.styleable.CustomToolbar_firstActionText, 0)
                 secondActionText = getResourceId(R.styleable.CustomToolbar_secondActionText, 0)
+                firstActionIcon = getDrawable(R.styleable.CustomToolbar_firstActionIcon)
+                secondActionIcon = getDrawable(R.styleable.CustomToolbar_secondActionIcon)
                 setToolbarTitle(toolbarTitle)
                 setToolbarNavIcon(toolbarNavigationIcon)
-                setFirstActionText(firstActionText)
-                setSecondActionText(secondActionText)
+                setActionText(firstActionItem, firstActionText)
+                setActionText(secondActionItem, secondActionText)
+                setActionIcon(firstActionItem, firstActionIcon)
+                setActionIcon(secondActionItem, secondActionIcon)
+                setActionItemEnable(firstActionItem, firstActionIcon, firstActionText)
+                setActionItemEnable(secondActionItem, secondActionIcon, secondActionText)
             } finally {
                 recycle()
             }
@@ -45,14 +53,23 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
 
     }
 
-    private fun setSecondActionText(secondActionText: Int) {
-        if (secondActionText != 0) secondActionItem.setTitle(secondActionText)
-        else secondActionItem.isVisible = false
+    private fun setActionItemEnable(actionItem: MenuItem, actionIcon: Drawable?, actionText: Int) {
+        actionItem.isVisible = actionIcon != null || actionText != 0
+        actionItem.isEnabled = actionIcon != null || actionText != 0
     }
 
-    private fun setFirstActionText(firstActionText: Int) {
-        if (firstActionText != 0) firstActionItem.setTitle(firstActionText)
-        else firstActionItem.isVisible = false
+    private fun setActionIcon(actionItem: MenuItem, actionIcon: Drawable?) {
+        if (actionIcon != null) {
+            actionItem.icon = actionIcon
+            actionIcon.setTint(ContextCompat.getColor(context, R.color.white))
+        }
+        actionItem.isVisible = actionIcon != null
+        actionItem.isEnabled = actionIcon != null
+    }
+
+    private fun setActionText(actionItem: MenuItem, actionText: Int) {
+        if (actionText != 0) actionItem.setTitle(actionText)
+        else actionItem.isVisible = false
     }
 
     private fun setToolbarNavIcon(toolbarNavigationIcon: Drawable?) {

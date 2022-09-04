@@ -1,4 +1,4 @@
-package com.example.assemble_day.ui.label
+package com.example.assemble_day.ui.labelCreate
 
 import androidx.lifecycle.ViewModel
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
@@ -9,7 +9,7 @@ import com.example.assemble_day.domain.model.Label
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class LabelViewModel : ViewModel() {
+class LabelCreateViewModel : ViewModel() {
 
     private var nameFlag = false
     private var name = ""

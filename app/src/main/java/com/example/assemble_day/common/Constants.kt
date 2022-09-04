@@ -21,12 +21,14 @@ object Constants {
     const val RGB_BLUE = 2
 
     const val LABEL_FONT_COLOR_BLACK_HEX = "#000000"
-    const val LABEL_FONT_COLOR_BLACK_STRING = "Black"
+    const val LABEL_FONT_COLOR_BLACK_STRING = "DARK"
     const val LABEL_FONT_COLOR_WHITE_HEX = "#FFFFFF"
-    const val LABEL_FONT_COLOR_WHITE_STRING = "White"
+    const val LABEL_FONT_COLOR_WHITE_STRING = "BRIGHT"
 
     const val FIRST_ACTION = 0
     const val SECOND_ACTION = 1
 
     const val NULL_VALUE = "null"
+
+    const val BOTTOM_SHEET_HEIGHT_RATIO = 0.6
 }

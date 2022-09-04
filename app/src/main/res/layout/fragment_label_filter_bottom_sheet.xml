@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_root_label_filter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.labelFilter.LabelFilterBottomSheet">
+
+        <com.example.assemble_day.ui.common.CustomToolbar
+            android:id="@+id/tl_label_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:foregroundTint="@color/white"
+            android:theme="@style/ToolbarTheme"
+            app:firstActionIcon="@drawable/ic_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:secondActionIcon="@drawable/ic_add_no_circle"
+            app:toolbarNavigationIcon="@drawable/ic_close"
+            app:toolbarTitle="@string/label_filter" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_label_filter_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/royal_blue"
+            android:padding="5dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_label_filter_search_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/royal_blue"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/et_label_filter_search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_back" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_label_filter_search"
+                style="@style/Headline6.White"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/white"
+                android:hint="@string/label_search"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColorHint="@color/white_alpha_30"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_label_filter_search_back"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_label_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_label_search"
+            tools:listitem="@layout/item_label" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

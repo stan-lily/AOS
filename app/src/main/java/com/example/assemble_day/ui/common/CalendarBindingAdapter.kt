@@ -1,7 +1,6 @@
 package com.example.assemble_day.ui.common
 
 import android.os.Build
-import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -21,7 +20,7 @@ fun updateDayColor(
 ) {
     if (isSelected) {
         view.background =
-            ContextCompat.getDrawable(view.context, R.drawable.background_storke_r20)
+            ContextCompat.getDrawable(view.context, R.drawable.background_stroke_r20_royal_blue)
     } else {
         view.background =
             ContextCompat.getDrawable(view.context, R.color.white)
@@ -29,7 +28,7 @@ fun updateDayColor(
 
     if (isAssembleDay) {
         view.background =
-            ContextCompat.getDrawable(view.context, R.drawable.background_storke_r20)
+            ContextCompat.getDrawable(view.context, R.drawable.background_stroke_r20_royal_blue)
         view.setTextColor(ContextCompat.getColor(view.context, R.color.royal_blue))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             view.setTextAppearance(R.style.Subtitle2_Bold_Royal_Blue)

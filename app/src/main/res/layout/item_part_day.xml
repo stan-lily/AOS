@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="unit"
+            type="com.example.assemble_day.domain.model.PartDay" />
+
+        <variable
+            name="date"
+            type="String" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:background="@drawable/background_stroke_black"
+        android:padding="1dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_assemble_day"
+            style="@style/Subtitle1.Bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{date}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="29" />
+
+        <View
+            android:id="@+id/view_assemble_day_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey01"
+            app:layout_constraintStart_toStartOf="@id/tv_assemble_day"
+            app:layout_constraintTop_toBottomOf="@id/tv_assemble_day" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_assemble_day_detail"
+            style="@style/Subtitle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:gravity="center"
+            android:text="@{String.valueOf(unit.targetList.size)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/view_assemble_day_divider"
+            app:layout_constraintTop_toBottomOf="@id/view_assemble_day_divider" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
