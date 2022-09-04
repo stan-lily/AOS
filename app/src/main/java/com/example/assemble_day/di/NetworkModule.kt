@@ -1,9 +1,14 @@
 package com.example.assemble_day.di
 
+import com.example.assemble_day.data.remote.dataSource.AssembleDataSource
+import com.example.assemble_day.data.remote.dataSource.AssembleRemoteDataSource
 import com.example.assemble_day.data.remote.dataSource.LabelDataSource
 import com.example.assemble_day.data.remote.dataSource.LabelRemoteDataSource
+import com.example.assemble_day.data.remote.network.AssembleApi
 import com.example.assemble_day.data.remote.network.LabelApi
+import com.example.assemble_day.data.remote.repository.AssembleRepositoryImpl
 import com.example.assemble_day.data.remote.repository.LabelRepositoryImpl
+import com.example.assemble_day.domain.repository.AssembleRepository
 import com.example.assemble_day.domain.repository.LabelRepository
 import dagger.Module
 import dagger.Provides
@@ -50,6 +55,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideAssembleApi(retrofit: Retrofit): AssembleApi {
+        return retrofit.create(AssembleApi::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideLabelDataSource(labelApi: LabelApi): LabelDataSource {
         return LabelRemoteDataSource(labelApi)
     }
@@ -58,6 +69,18 @@ object NetworkModule {
     @Singleton
     fun provideLabelRepository(labelDataSource: LabelDataSource): LabelRepository {
         return LabelRepositoryImpl(labelDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAssembleDataSource(assembleApi: AssembleApi): AssembleDataSource {
+        return AssembleRemoteDataSource(assembleApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAssembleRepository(assembleDataSource: AssembleDataSource): AssembleRepository {
+        return AssembleRepositoryImpl(assembleDataSource)
     }
 
 }
