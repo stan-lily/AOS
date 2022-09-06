@@ -7,8 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assemble_day.databinding.ItemPartDayTargetBinding
 import com.example.assemble_day.domain.model.PartDayTarget
+import com.example.assemble_day.domain.model.TargetItemSelection
 
-class PartDayDetailAdapter(private val labelItemClick: (itemPosition: Int) -> Unit) :
+class PartDayDetailAdapter(
+    private val itemClick: (itemSelection: TargetItemSelection, itemPosition: Int) -> Unit
+) :
     ListAdapter<PartDayTarget, PartDayDetailAdapter.PartDayDetailViewHolder>(
         PartDayDetailDiffUtil
     ) {
@@ -34,15 +37,39 @@ class PartDayDetailAdapter(private val labelItemClick: (itemPosition: Int) -> Un
 
         fun bind(target: PartDayTarget) {
             binding.target = target
-            setTargetLabelBtnOnEventListener()
+            binding.isSelected = target.isSelected
+            setTargetLabelBtnOnClickListener()
+            setTargetOnClickListener()
+            setTargetUpdateBtnOnClickListener()
+            setTargetDeleteBtnOnClickListener()
         }
 
-        private fun setTargetLabelBtnOnEventListener() {
+        private fun setTargetLabelBtnOnClickListener() {
             binding.btnTargetLabel.setOnClickListener {
-                labelItemClick.invoke(adapterPosition)
+                itemClick.invoke(TargetItemSelection.labelSection, adapterPosition)
             }
         }
 
+        private fun setTargetOnClickListener() {
+            binding.clTarget.setOnClickListener {
+                itemClick.invoke(TargetItemSelection.targetSelection, adapterPosition)
+            }
+        }
+
+        private fun setTargetUpdateBtnOnClickListener() {
+            binding.btnTargetUpdate.setOnClickListener {
+                itemClick.invoke(
+                    TargetItemSelection.targetUpdateBtnSelection(binding.etTarget.text.toString()),
+                    adapterPosition
+                )
+            }
+        }
+
+        private fun setTargetDeleteBtnOnClickListener() {
+            binding.btnTargetDelete.setOnClickListener {
+                itemClick.invoke(TargetItemSelection.targetDeletBtnSelection, adapterPosition)
+            }
+        }
 
     }
 

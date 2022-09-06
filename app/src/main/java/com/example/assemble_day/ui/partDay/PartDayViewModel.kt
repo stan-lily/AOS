@@ -36,7 +36,10 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
     private val _createTargetFlagSharedFlow = MutableSharedFlow<Boolean>(replay = 1)
     val createTargetFlagSharedFlow = _createTargetFlagSharedFlow.asSharedFlow()
 
-    private var selectedTargetPosition = -1
+    private val _validateTargetFlagSharedFlow = MutableSharedFlow<Boolean>(replay = 1)
+    val validateTargetFlagSharedFlow = _validateTargetFlagSharedFlow.asSharedFlow()
+
+    private var selectedTargetLabelPosition = -1
 
     init {
         createDummyAssembleDay()
@@ -115,34 +118,59 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun selectTarget(selectedPosition: Int) {
-        selectedTargetPosition = selectedPosition
+    fun selectTargetLabel(selectedPosition: Int) {
+        selectedTargetLabelPosition = selectedPosition
     }
 
     fun updateTargetLabel(selectedLabel: Label?) {
         selectedLabel?.let { label ->
             val updatedList = _loadedTargetStateFlow.value.toMutableList()
-            updatedList[selectedTargetPosition] =
-                updatedList[selectedTargetPosition].copy(label = label)
+            updatedList[selectedTargetLabelPosition] =
+                updatedList[selectedTargetLabelPosition].copy(label = label)
             _loadedTargetStateFlow.value = updatedList
         }
     }
 
     fun setTargetTitle(title: String) {
-        _inputTargetTitleStateFlow.value = title
-        _isCreatingTarget = true
-        _isFiltering = false
+        if (validateTargetTitle(title)) {
+            _inputTargetTitleStateFlow.value = title
+            _isCreatingTarget = true
+            _isFiltering = false
+        }
     }
 
     fun createNewTarget(selectedLabel: Label?) {
         _createTargetFlagSharedFlow.tryEmit(selectedLabel != null)
-        // TODO 새로운 타켓 생성
         selectedLabel?.let {
             val newTarget =
                 PartDayTarget(title = _inputTargetTitleStateFlow.value, label = selectedLabel)
             initialTargetList.add(0, newTarget)
             _loadedTargetStateFlow.value = initialTargetList.toList()
         }
+    }
+
+    private fun validateTargetTitle(title: String): Boolean {
+        _validateTargetFlagSharedFlow.tryEmit(title.isNotBlank() && title.isNotEmpty())
+        return title.isNotEmpty() && title.isNotBlank()
+    }
+
+    fun selectTarget(selectedPosition: Int) {
+        val targetList = _loadedTargetStateFlow.value.toMutableList()
+        targetList[selectedPosition] = targetList[selectedPosition].copy(isSelected = true)
+        _loadedTargetStateFlow.value = targetList
+    }
+
+    fun updateTarget(updatedTitle: String, selectedPosition: Int) {
+        val targetList = _loadedTargetStateFlow.value.toMutableList()
+        targetList[selectedPosition] = targetList[selectedPosition].copy(isSelected = false)
+        if (validateTargetTitle(updatedTitle)) {
+            val currentTargetTitle = _loadedTargetStateFlow.value[selectedPosition].title
+            if (currentTargetTitle != updatedTitle) {
+                targetList[selectedPosition] =
+                    targetList[selectedPosition].copy(title = updatedTitle)
+            }
+        }
+        _loadedTargetStateFlow.value = targetList
     }
 
 }

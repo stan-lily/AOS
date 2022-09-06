@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
 import com.example.assemble_day.databinding.ActivityPartDayBinding
 import com.example.assemble_day.domain.model.Label
+import com.example.assemble_day.domain.model.TargetItemSelection
 import com.example.assemble_day.ui.common.setEndIconOnClickListener
 import com.example.assemble_day.ui.labelFilter.LabelFilterBottomSheet
 import com.google.android.material.snackbar.Snackbar
@@ -24,8 +25,23 @@ class PartDayActivity : AppCompatActivity() {
     private val partDayViewModel: PartDayViewModel by viewModels()
     private lateinit var binding: ActivityPartDayBinding
     private lateinit var labelFilterDialogFragment: LabelFilterBottomSheet
-    private val partDayDetailAdapter = PartDayDetailAdapter { position ->
-        setTargetLabelOnClickListener(position)
+    private val partDayDetailAdapter by lazy {
+        PartDayDetailAdapter { itemSelection, position ->
+            when (itemSelection) {
+                is TargetItemSelection.labelSection -> {
+                    setTargetLabelOnClickListener(position)
+                }
+                is TargetItemSelection.targetSelection -> {
+                    setTargetOnClickListener(position)
+                }
+                is TargetItemSelection.targetUpdateBtnSelection -> {
+                    setTargetUpdateBtnOnClickListener(itemSelection.updatedTitle, position)
+                }
+                is TargetItemSelection.targetDeletBtnSelection -> {
+                    setTargetDeleteBtnOnClickListener(position)
+                }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +108,19 @@ class PartDayActivity : AppCompatActivity() {
         labelFilterDialogFragment.show(supportFragmentManager, null)
         val toolbarTitle = resources.getString(R.string.label_select)
         labelFilterDialogFragment.setToolbarTitle(toolbarTitle)
+        partDayViewModel.selectTargetLabel(selectedPosition)
+    }
+
+    private fun setTargetOnClickListener(selectedPosition: Int) {
         partDayViewModel.selectTarget(selectedPosition)
+    }
+
+    private fun setTargetUpdateBtnOnClickListener(updatedTitle: String, selectedPosition: Int) {
+        partDayViewModel.updateTarget(updatedTitle, selectedPosition)
+    }
+
+    private fun setTargetDeleteBtnOnClickListener(selectedPosition: Int) {
+
     }
 
     private fun updateTargetLabel(selectedLabel: Label?) {
@@ -157,5 +185,4 @@ class PartDayActivity : AppCompatActivity() {
             ).show()
         }
     }
-
 }
