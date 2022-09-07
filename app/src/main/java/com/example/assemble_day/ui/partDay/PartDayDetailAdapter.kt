@@ -76,7 +76,7 @@ class PartDayDetailAdapter(
     companion object PartDayDetailDiffUtil : DiffUtil.ItemCallback<PartDayTarget>() {
 
         override fun areItemsTheSame(oldItem: PartDayTarget, newItem: PartDayTarget): Boolean {
-            return true
+            return oldItem.label == newItem.label && oldItem.title == newItem.title
         }
 
         override fun areContentsTheSame(

@@ -62,42 +62,31 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
             )
             count++
         }
-        println(loadedPartDayList)
     }
 
     private fun createDummyTarget() {
         initialTargetList.clear()
         val dummyTargetList = mutableListOf<PartDayTarget>()
-        repeat(3) {
-            dummyTargetList.add(
-                PartDayTarget(
-                    label = Label(
-                        id = 1,
-                        name = "BE",
-                        description = "dev-team",
-                        backgroundColor = "#1e90ff",
-                        fontColor = "BRIGHT"
-                    ),
-                    title = "BE 입니다"
-                )
-            )
-        }
-        repeat(4) {
-            dummyTargetList.add(
-                PartDayTarget(
-                    label = Label(2, "AOS", "dev-team", "#ff00ff", "BRIGHT"),
-                    title = "AOS 입니다"
-                )
-            )
-        }
-        repeat(3) {
-            dummyTargetList.add(
-                PartDayTarget(
-                    label = Label(3, "docs", "docs", "#adff2f", "DARK"),
-                    title = "docs 입니다"
-                )
-            )
-        }
+        val firstLabel = Label(1, "BE", "dev-team", "#1e90ff", "BRIGHT")
+        val secondLabel = Label(2, "AOS", "dev-team", "#ff00ff", "BRIGHT")
+        val thirdLabel = Label(3, "docs", "docs", "#adff2f", "DARK")
+
+        dummyTargetList.add(PartDayTarget(firstLabel, "BE 입니다"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "테스트입니다"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "대단합니다"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "힘듭니다"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "좋습니다"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "배고픕니다"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "점심"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "힘들어"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "테스트"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "잘되기를"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "BE"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "AOS"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "취직"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "안녕"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "잘가"))
+
         initialTargetList.addAll(dummyTargetList)
         _loadedTargetStateFlow.value = dummyTargetList
     }
@@ -173,4 +162,10 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         _loadedTargetStateFlow.value = targetList
     }
 
+    fun deleteTarget(selectedPosition: Int) {
+        val targetList = _loadedTargetStateFlow.value.toMutableList()
+        targetList.removeAt(selectedPosition)
+        _loadedTargetStateFlow.value = targetList
+    }
 }
+

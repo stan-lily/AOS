@@ -120,7 +120,7 @@ class PartDayActivity : AppCompatActivity() {
     }
 
     private fun setTargetDeleteBtnOnClickListener(selectedPosition: Int) {
-
+        partDayViewModel.deleteTarget(selectedPosition)
     }
 
     private fun updateTargetLabel(selectedLabel: Label?) {
