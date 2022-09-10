@@ -11,7 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
 import com.example.assemble_day.databinding.ActivityPartDayBinding
+import com.example.assemble_day.domain.eventListener.PartDayEventListener
 import com.example.assemble_day.domain.model.Label
+import com.example.assemble_day.domain.model.PartDay
+import com.example.assemble_day.domain.model.PartDayTarget
 import com.example.assemble_day.domain.model.TargetItemSelection
 import com.example.assemble_day.ui.common.setEndIconOnClickListener
 import com.example.assemble_day.ui.labelFilter.LabelFilterBottomSheet
@@ -20,11 +23,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PartDayActivity : AppCompatActivity() {
+class PartDayActivity : AppCompatActivity(), PartDayEventListener {
 
     private val partDayViewModel: PartDayViewModel by viewModels()
     private lateinit var binding: ActivityPartDayBinding
     private lateinit var labelFilterDialogFragment: LabelFilterBottomSheet
+    private val partDayAdapter by lazy {
+        PartDayAdapter(this)
+    }
     private val partDayDetailAdapter by lazy {
         PartDayDetailAdapter { itemSelection, position ->
             when (itemSelection) {
@@ -48,7 +54,7 @@ class PartDayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_part_day)
 
-        val partDayAdapter = PartDayAdapter()
+        binding.rvPartDay.adapter = partDayAdapter
         binding.rvPartDayDetail.adapter = partDayDetailAdapter
 
         labelFilterDialogFragment = LabelFilterBottomSheet { selectedLabel ->
@@ -61,7 +67,6 @@ class PartDayActivity : AppCompatActivity() {
             }
         }
 
-        setPartDayView(partDayAdapter)
         setChipLabelOnClickListener()
         setTargetAddBtnOnClickListener()
         setTargetEditTextIconOnClickListener()
@@ -69,11 +74,30 @@ class PartDayActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { submitPartDayList() }
                 launch { submitTargetList() }
                 launch { changeTargetTitleInputTextIcon() }
                 launch { showMessageForCreatingTargetError() }
+                launch { showMessageForTargetTitleError() }
             }
         }
+    }
+
+    override fun selectPartDay(selectedPartDay: PartDay) {
+        binding.selectedPartDay = selectedPartDay
+        partDayViewModel.selectPartDay(selectedPartDay)
+    }
+
+    override fun dropTargetToOtherPartDay(
+        droppedTarget: PartDayTarget,
+        droppedTargetPosition: Int,
+        itemPosition: Int
+    ) {
+        partDayViewModel.moveTargetToOtherPartDay(
+            droppedTarget,
+            droppedTargetPosition,
+            itemPosition
+        )
     }
 
     private fun setChipLabelOnClickListener() {
@@ -91,9 +115,13 @@ class PartDayActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPartDayView(partDayAdapter: PartDayAdapter) {
-        binding.rvPartDay.adapter = partDayAdapter.apply {
-            submitList(partDayViewModel.loadedPartDayList)
+    private suspend fun submitPartDayList() {
+        partDayViewModel.loadedPartDayListStateFlow.collect { partDayList ->
+            partDayAdapter.submitList(partDayList)
+            if (partDayViewModel.isInitPartDayList) {
+                selectPartDay(partDayList[0])
+                partDayViewModel.setInitPartDayListFlag()
+            }
         }
     }
 
@@ -185,4 +213,16 @@ class PartDayActivity : AppCompatActivity() {
             ).show()
         }
     }
+
+    private suspend fun showMessageForTargetTitleError() {
+        partDayViewModel.validateTargetFlagSharedFlow.collect { isValidated ->
+            if (!isValidated) Snackbar.make(
+                binding.clPartDayRoot,
+                R.string.snack_bar_unable_validate_target_title,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+
 }

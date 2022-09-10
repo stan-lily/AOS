@@ -1,7 +1,11 @@
 package com.example.assemble_day.ui.partDay
 
+import android.content.ClipData
+import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.DragStartHelper
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +46,8 @@ class PartDayDetailAdapter(
             setTargetOnClickListener()
             setTargetUpdateBtnOnClickListener()
             setTargetDeleteBtnOnClickListener()
+            setOnDragListener(target)
+
         }
 
         private fun setTargetLabelBtnOnClickListener() {
@@ -69,6 +75,25 @@ class PartDayDetailAdapter(
             binding.btnTargetDelete.setOnClickListener {
                 itemClick.invoke(TargetItemSelection.targetDeletBtnSelection, adapterPosition)
             }
+        }
+
+        private fun setOnDragListener(target: PartDayTarget) {
+            DragStartHelper(itemView) { view, _ ->
+                val targetIntent = Intent().apply {
+                    putExtra("target", target)
+                    putExtra("position", adapterPosition)
+                }
+
+                val dragClipData = ClipData.newIntent("target", targetIntent)
+                val dragShadowBuilder = View.DragShadowBuilder(view)
+
+                view.startDragAndDrop(
+                    dragClipData,
+                    dragShadowBuilder,
+                    null,
+                    View.DRAG_FLAG_GLOBAL
+                )
+            }.attach()
         }
 
     }

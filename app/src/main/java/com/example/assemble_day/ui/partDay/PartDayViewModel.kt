@@ -16,9 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class PartDayViewModel @Inject constructor() : ViewModel() {
 
-    val loadedPartDayList = mutableListOf<PartDay>()
     private var selectedLabelForNewTarget: Label? = null
     private var newTargetTitle = ""
+
+    private val _loadedPartDayListStateFlow = MutableStateFlow(listOf<PartDay>())
+    val loadedPartDayListStateFlow = _loadedPartDayListStateFlow.asStateFlow()
+
+    private var _isInitPartDayList = true
+    val isInitPartDayList get() = _isInitPartDayList
 
     private val initialTargetList = mutableListOf<PartDayTarget>()
     private val _loadedTargetStateFlow = MutableStateFlow(listOf<PartDayTarget>())
@@ -43,52 +48,63 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
 
     init {
         createDummyAssembleDay()
-        createDummyTarget()
     }
 
     private fun createDummyAssembleDay() {
         val loadedAssembleDay =
             AssembleDay("Test 입니다", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 30))
-
+        val partDayList = mutableListOf<PartDay>()
         val size = loadedAssembleDay.end.compareTo(loadedAssembleDay.start)
         var count = 0L
         repeat(size) {
-            loadedPartDayList.add(
+            val date = loadedAssembleDay.start.plusDays(count)
+            partDayList.add(
                 PartDay(
-                    loadedAssembleDay.start.plusDays(count),
+                    date,
                     loadedAssembleDay,
-                    listOf<PartDayTarget>()
+                    createDummyTarget(date.dayOfMonth)
                 )
             )
             count++
         }
+        _loadedPartDayListStateFlow.value = partDayList
     }
 
-    private fun createDummyTarget() {
+    private fun createDummyTarget(day: Int): List<PartDayTarget> {
         initialTargetList.clear()
         val dummyTargetList = mutableListOf<PartDayTarget>()
         val firstLabel = Label(1, "BE", "dev-team", "#1e90ff", "BRIGHT")
         val secondLabel = Label(2, "AOS", "dev-team", "#ff00ff", "BRIGHT")
         val thirdLabel = Label(3, "docs", "docs", "#adff2f", "DARK")
 
-        dummyTargetList.add(PartDayTarget(firstLabel, "BE 입니다"))
-        dummyTargetList.add(PartDayTarget(firstLabel, "테스트입니다"))
-        dummyTargetList.add(PartDayTarget(firstLabel, "대단합니다"))
-        dummyTargetList.add(PartDayTarget(firstLabel, "힘듭니다"))
-        dummyTargetList.add(PartDayTarget(secondLabel, "좋습니다"))
-        dummyTargetList.add(PartDayTarget(secondLabel, "배고픕니다"))
-        dummyTargetList.add(PartDayTarget(secondLabel, "점심"))
-        dummyTargetList.add(PartDayTarget(secondLabel, "힘들어"))
-        dummyTargetList.add(PartDayTarget(secondLabel, "테스트"))
-        dummyTargetList.add(PartDayTarget(thirdLabel, "잘되기를"))
-        dummyTargetList.add(PartDayTarget(thirdLabel, "BE"))
-        dummyTargetList.add(PartDayTarget(thirdLabel, "AOS"))
-        dummyTargetList.add(PartDayTarget(thirdLabel, "취직"))
-        dummyTargetList.add(PartDayTarget(thirdLabel, "안녕"))
-        dummyTargetList.add(PartDayTarget(thirdLabel, "잘가"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "$day BE 입니다"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "$day 테스트입니다"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "$day 대단합니다"))
+        dummyTargetList.add(PartDayTarget(firstLabel, "$day 힘듭니다"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "$day 좋습니다"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "$day 배고픕니다"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "$day 점심"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "$day 힘들어"))
+        dummyTargetList.add(PartDayTarget(secondLabel, "$day 테스트"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "$day 잘되기를"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "$day BE"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "$day AOS"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "$day 취직"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "$day 안녕"))
+        dummyTargetList.add(PartDayTarget(thirdLabel, "$day 잘가"))
 
-        initialTargetList.addAll(dummyTargetList)
-        _loadedTargetStateFlow.value = dummyTargetList
+        return dummyTargetList
+    }
+
+    fun selectPartDay(selectedPartDay: PartDay) {
+        val targetList = selectedPartDay.targetList
+        initialTargetList.clear()
+        initialTargetList.addAll(targetList)
+        _loadedTargetStateFlow.value = targetList
+    }
+
+    fun setInitPartDayListFlag() {
+        _isInitPartDayList = false
     }
 
     fun setFilteringFlag(isFiltering: Boolean) {
@@ -166,6 +182,30 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         val targetList = _loadedTargetStateFlow.value.toMutableList()
         targetList.removeAt(selectedPosition)
         _loadedTargetStateFlow.value = targetList
+    }
+
+    fun moveTargetToOtherPartDay(
+        droppedTarget: PartDayTarget,
+        droppedTargetPosition: Int,
+        itemPosition: Int
+    ) {
+        if (!doesDropTargetToSamePartDay(droppedTarget, itemPosition)) {
+            deleteTarget(droppedTargetPosition)
+            val initialPartDayList = _loadedPartDayListStateFlow.value.toMutableList()
+            val itemTargetList =
+                _loadedPartDayListStateFlow.value[itemPosition].targetList.toMutableList()
+            itemTargetList.add(droppedTarget)
+            initialPartDayList[itemPosition] =
+                _loadedPartDayListStateFlow.value[itemPosition].copy(targetList = itemTargetList)
+            _loadedPartDayListStateFlow.value = initialPartDayList
+        }
+    }
+
+    private fun doesDropTargetToSamePartDay(
+        droppedTarget: PartDayTarget,
+        itemPosition: Int
+    ): Boolean {
+        return _loadedPartDayListStateFlow.value[itemPosition].targetList.contains(droppedTarget)
     }
 }
 

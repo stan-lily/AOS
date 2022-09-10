@@ -1,6 +1,7 @@
 package com.example.assemble_day.domain.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Label(
     val id: Int = -1,
@@ -13,4 +14,4 @@ data class Label(
     @SerializedName("fontColor")
     val fontColor: String,
     val isSelected: Boolean = false
-)
+) : Serializable
