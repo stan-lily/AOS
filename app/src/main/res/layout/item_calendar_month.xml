@@ -7,7 +7,7 @@
 
         <variable
             name="month"
-            type="String" />
+            type="java.time.LocalDate" />
 
     </data>
 
@@ -18,7 +18,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_calendar_month"
             style="@style/Subtitle2.Bold"
-            android:text="@{month}"
+            updateYearAndMonth="@{month}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
