@@ -13,10 +13,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
-import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
 import com.example.assemble_day.databinding.FragmentAssembleBinding
 import com.example.assemble_day.domain.model.CalendarDay
-import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -49,6 +47,7 @@ class AssembleFragment : Fragment() {
                 launch { setOnStartDay() }
                 launch { showToastMessage() }
                 launch { setOnAssembleDayTitle() }
+                launch { submitCalendarData() }
             }
         }
     }
@@ -57,8 +56,12 @@ class AssembleFragment : Fragment() {
         monthAdapter = MonthAdapter { calendarDay ->
             selectAssembleDay(calendarDay)
         }
-        binding.rvAssembleDayMonth.adapter = monthAdapter.apply {
-            submitCalendarData(assembleViewModel.calendarDataMap)
+        binding.rvAssembleDayMonth.adapter = monthAdapter
+    }
+
+    private suspend fun submitCalendarData() {
+        assembleViewModel.calendarDataMapStateFlow.collect {
+            monthAdapter.submitCalendarData(it)
         }
     }
 
@@ -92,12 +95,12 @@ class AssembleFragment : Fragment() {
         assembleViewModel.startDayStateFlow.collect { selectedStartDay ->
             binding.startDate = selectedStartDay.date
             setOnResetAction(selectedStartDay.date != null)
-            if (!selectedStartDay.isAssembleDay && !assembleViewModel.didPreviouslySelectAssembleDay) {
+            /*if (!selectedStartDay.isAssembleDay && !assembleViewModel.didPreviouslySelectAssembleDay) {
                 monthAdapter.notifyItemRangeChanged(
                     0,
                     CALENDAR_DAY_SIZE - 1
                 )
-            }
+            }*/
         }
     }
 
@@ -105,29 +108,29 @@ class AssembleFragment : Fragment() {
         assembleViewModel.assembleDayStateFlow.collect { selectedAssembleDay ->
             binding.endDate = selectedAssembleDay.date
             showAssembleDayTitleEditText(selectedAssembleDay.date == null)
-            if (!selectedAssembleDay.isAssembleDay) {
+            /*if (!selectedAssembleDay.isAssembleDay) {
                 updateSelectedAssembleDay(selectedAssembleDay)
-            }
+            }*/
         }
     }
 
-    private fun updateSelectedAssembleDay(selectedAssembleDay: CalendarDay) {
+    /*private fun updateSelectedAssembleDay(selectedAssembleDay: CalendarDay) {
         val isSelectedDifferentMonth = assembleViewModel.isSelectedDifferentMonth
         if (isSelectedDifferentMonth) {
             monthAdapter.submitNewCalendarDateList(
-                assembleViewModel.previousAssembleDay.toFormattedString(),
+                assembleViewModel.previousAssembleDay.date,
                 assembleViewModel.copiedPreviousCalendarDayList
             )
         }
         monthAdapter.submitNewCalendarDateList(
-            selectedAssembleDay.toFormattedString(),
+            selectedAssembleDay.date,
             assembleViewModel.copiedCalendarDayList
         )
-    }
+    }*/
 
     private fun setOnResetAction(doesStartDayExist: Boolean) {
         binding.tlAssemble.firstActionItem.isEnabled = doesStartDayExist
-        if (!doesStartDayExist) monthAdapter.submitCalendarData(assembleViewModel.calendarDataMap)
+//        if (!doesStartDayExist) monthAdapter.submitCalendarData(assembleViewModel.calendarDataMapStateFlow.value)
     }
 
     private suspend fun showToastMessage() {

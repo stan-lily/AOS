@@ -11,6 +11,10 @@
             name="isInputtingTitle"
             type="String" />
 
+        <variable
+            name="selectedPartDay"
+            type="com.example.assemble_day.domain.model.PartDay" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
+                android:text="@{String.valueOf(selectedPartDay.targetList.size)}"
                 android:textAppearance="@style/Subtitle2"
                 app:layout_constraintBottom_toBottomOf="@id/tv_part_day_detail"
                 app:layout_constraintEnd_toStartOf="@id/tv_part_day_detail"
@@ -68,10 +73,10 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_part_day_detail"
                 style="@style/Subtitle1"
+                partDayDate="@{selectedPartDay.date}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="10dp"
-                android:text="18"
                 app:layout_constraintBottom_toTopOf="@+id/btn_target_add"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -128,8 +133,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_part_day_detail"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_target_add"

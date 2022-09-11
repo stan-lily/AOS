@@ -30,11 +30,7 @@ fun updateDayColor(
         view.background =
             ContextCompat.getDrawable(view.context, R.drawable.background_stroke_r20_royal_blue)
         view.setTextColor(ContextCompat.getColor(view.context, R.color.royal_blue))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.setTextAppearance(R.style.Subtitle2_Bold_Royal_Blue)
-        } else {
-            view.setTextAppearance(view.context, R.style.Subtitle2_Bold_Royal_Blue)
-        }
+        view.setTextAppearance(R.style.Subtitle2_Bold_Royal_Blue)
     } else if (!isSelectable) {
         view.setTextColor(ContextCompat.getColor(view.context, R.color.grey01))
     } else if (isSaturday) {
@@ -62,6 +58,16 @@ fun updateEndDateText(view: TextView, date: LocalDate?) {
         val formatter = DateTimeFormatter.ofPattern("MM월 dd일")
         view.text =
             view.resources.getString(R.string.assemble_day_period_end, it.format(formatter))
+    } ?: kotlin.run {
+        view.text = ""
+    }
+}
+
+@BindingAdapter("updateYearAndMonth")
+fun updateYearAndMonth(view: TextView, date: LocalDate?) {
+    date?.let {
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월")
+        view.text = it.format(formatter)
     } ?: kotlin.run {
         view.text = ""
     }

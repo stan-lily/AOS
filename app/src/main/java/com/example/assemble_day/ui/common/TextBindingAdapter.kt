@@ -11,6 +11,8 @@ import com.example.assemble_day.R
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @BindingAdapter("labelBackgroundTint")
 fun updateLabelBackgroundTint(view: View, color: String) {
@@ -78,4 +80,10 @@ fun updateLabelFontColor(view: TextView, fontColor: String) {
     } else {
         view.setTextColor(Color.parseColor(LABEL_FONT_COLOR_WHITE_HEX))
     }
+}
+
+@BindingAdapter("partDayDate")
+fun updatePartDayDate(view: TextView, date: LocalDate?) {
+    val formatter = DateTimeFormatter.ofPattern("dd")
+    view.text = date?.format(formatter) ?: ""
 }

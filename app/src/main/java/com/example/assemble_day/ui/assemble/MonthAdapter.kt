@@ -3,14 +3,16 @@ package com.example.assemble_day.ui.assemble
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
 import com.example.assemble_day.databinding.ItemCalendarMonthBinding
 import com.example.assemble_day.domain.model.CalendarDay
+import java.time.LocalDate
 
 class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) :
     RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
 
-    private val monthList = mutableListOf<String>()
-    private val calendarData = mutableMapOf<String, DayAdapter>()
+    private val monthList = mutableListOf<LocalDate>()
+    private val calendarData = mutableMapOf<LocalDate, DayAdapter>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val binding =
@@ -29,9 +31,8 @@ class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) :
     inner class MonthViewHolder(private val binding: ItemCalendarMonthBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(month: String) {
+        fun bind(month: LocalDate) {
             binding.month = month
-
             calendarData[month]?.let {
                 binding.rvCalendarMonth.adapter = it
             }
@@ -39,8 +40,8 @@ class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) :
 
     }
 
-    fun submitCalendarData(calendarDataMap: Map<String, List<CalendarDay>>) {
-        monthList.removeAll(monthList)
+    fun submitCalendarData(calendarDataMap: Map<LocalDate, List<CalendarDay>>) {
+        monthList.clear()
         calendarDataMap.forEach {
             val dayAdapter = DayAdapter(itemClick)
             calendarData[it.key] = dayAdapter.apply {
@@ -48,9 +49,12 @@ class MonthAdapter(private val itemClick: (calendarDay: CalendarDay) -> Unit) :
             }
         }
         monthList.addAll(calendarDataMap.keys)
+        notifyItemRangeChanged(0, CALENDAR_DAY_SIZE - 1)
     }
 
-    fun submitNewCalendarDateList(month: String, list: List<CalendarDay>) {
-        calendarData[month]?.submitList(list.toList())
-    }
+   /* fun submitNewCalendarDateList(month: LocalDate?, list: List<CalendarDay>) {
+        month?.let {
+            calendarData[it]?.submitList(list.toList())
+        }
+    }*/
 }
