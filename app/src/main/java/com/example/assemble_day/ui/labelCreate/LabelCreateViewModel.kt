@@ -7,6 +7,7 @@ import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_STRING
 import com.example.assemble_day.common.Constants.NULL_VALUE
+import com.example.assemble_day.data.remote.NetworkResult
 import com.example.assemble_day.data.remote.dto.Labels
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.domain.repository.LabelRepository
@@ -73,7 +74,12 @@ class LabelCreateViewModel @Inject constructor(private val labelRepository: Labe
             fontColor = _fontColorStateFlow.value
         )
         viewModelScope.launch {
-            labelRepository.createLabel(newLabel)
+            val createLabelRequest = labelRepository.createLabel(newLabel)
+            when (createLabelRequest) {
+                is NetworkResult.Success -> {
+
+                }
+            }
         }
     }
 }

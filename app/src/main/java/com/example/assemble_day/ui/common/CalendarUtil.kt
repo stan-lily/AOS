@@ -1,5 +1,6 @@
 package com.example.assemble_day.ui.common
 
+import com.example.assemble_day.common.Constants.CALENDAR_DAY_FORMAT
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_OF_MONTH_RANGE_END
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_OF_MONTH_RANGE_START
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
@@ -12,6 +13,7 @@ import com.example.assemble_day.common.Constants.SUNDAY_DAY_OF_WEEK
 import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.CalendarDay
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object CalendarUtil {
 
@@ -99,7 +101,7 @@ object CalendarUtil {
             (year % LEAP_YEAR_STANDARD_FOUR_YEAR == 0 && year % LEAP_YEAR_STANDARD_HUNDRED_YEAR != 0) || year % LEAP_YEAR_STANDARD_FOUR_HUNDRED_YEAR == 0
         val lastDay = month.length(isLeapYear)
         val maxSelectableDate =
-            if (assembleDayList.isNotEmpty()) assembleDayList.last().end.plusWeeks(3) else LocalDate.now()
+            if (assembleDayList.isNotEmpty()) assembleDayList.last().assembleEndAt.plusWeeks(3) else LocalDate.now()
                 .plusMonths(
                     CALENDAR_DAY_SIZE.toLong()
                 )
@@ -152,16 +154,16 @@ object CalendarUtil {
     }
 
     private fun List<AssembleDay>.toAssembleDayDateMap(): Map<LocalDate, AssembleDay> {
-        if (this.isEmpty()) return mapOf(LocalDate.now().minusMonths(CALENDAR_DAY_SIZE.toLong()) to AssembleDay("", LocalDate.now(), LocalDate.now()))
+        if (this.isEmpty()) return mapOf(LocalDate.now().minusMonths(CALENDAR_DAY_SIZE.toLong()) to AssembleDay(-1, "", LocalDate.now(), LocalDate.now()))
 
         val dateList = mutableMapOf<LocalDate, AssembleDay>()
         this.forEach {
-            dateList[it.end] = it
+            dateList[it.assembleEndAt] = it
         }
         return dateList
     }
 
-/*    fun CalendarDay.toFormattedString(): String {
+    fun CalendarDay.toFormattedString(): String {
         val formatter = DateTimeFormatter.ofPattern(CALENDAR_DAY_FORMAT)
         this.date?.let {
             return it.format(formatter)
@@ -172,7 +174,7 @@ object CalendarUtil {
     fun LocalDate.toFormattedString(): String {
         val formatter = DateTimeFormatter.ofPattern(CALENDAR_DAY_FORMAT)
         return this.format(formatter)
-    }*/
+    }
 
 
 }

@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:gravity="center"
+            android:maxLength="80"
             android:maxLines="1"
             android:text="@{target.title}"
             android:visibility="@{isSelected ? View.VISIBLE : View.GONE}"

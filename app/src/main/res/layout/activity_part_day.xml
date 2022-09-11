@@ -12,7 +12,7 @@
             type="String" />
 
         <variable
-            name="selectedPartDay"
+            name="partDay"
             type="com.example.assemble_day.domain.model.PartDay" />
 
     </data>
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:text="@{String.valueOf(selectedPartDay.targetList.size)}"
+                android:text="@{String.valueOf(partDay.count)}"
                 android:textAppearance="@style/Subtitle2"
                 app:layout_constraintBottom_toBottomOf="@id/tv_part_day_detail"
                 app:layout_constraintEnd_toStartOf="@id/tv_part_day_detail"
@@ -73,7 +73,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_part_day_detail"
                 style="@style/Subtitle1"
-                partDayDate="@{selectedPartDay.date}"
+                partDayDate="@{partDay.date}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="10dp"

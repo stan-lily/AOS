@@ -5,10 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.assemble_day.common.Constants.ASSEMBLE_DAY_MAX_SELECTABLE_WEEK
 import com.example.assemble_day.common.Constants.ASSEMBLE_DAY_MIN_SELECTABLE_DAY
 import com.example.assemble_day.common.Constants.CALENDAR_DAY_SIZE
+import com.example.assemble_day.data.remote.NetworkResult
+import com.example.assemble_day.data.remote.dto.toAssembleDay
 import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.domain.repository.AssembleRepository
 import com.example.assemble_day.ui.common.CalendarUtil
+import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
+import com.example.assemble_day.ui.common.toLocalDateFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +67,7 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         }
     }
 
-    private fun loadAssembleDays() {
+    /*private fun loadAssembleDays() {
         assembleDayList.clear()
         val dummyAssembleDayList = listOf<AssembleDay>(
             AssembleDay("기획 2차 수정", LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 5)),
@@ -72,6 +76,18 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         )
         assembleDayList.addAll(dummyAssembleDayList)
         createCalendarData()
+    }*/
+
+    private suspend fun loadAssembleDays() {
+        assembleDayList.clear()
+        val loadedAssemble = assembleRepository.getAssembles()
+        when (loadedAssemble) {
+            is NetworkResult.Success -> {
+                assembleDayList.addAll(loadedAssemble.data.toAssembleDay())
+                createCalendarData()
+            }
+        }
+
     }
 
     private fun createCalendarData() {
@@ -85,19 +101,6 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         _calendarDataMapStateFlow.value = calendarDateMap
         defaultCalendarDayMap.putAll(calendarDateMap)
     }
-
-/*    private suspend fun loadAssembleDays() {
-        assembleDayList.clear()
-        val loadedAssemble = assembleRepository.getAssembles()
-        when (loadedAssemble) {
-            is NetworkResult.Success -> {
-                assembleDayList.addAll(loadedAssemble.data.toAssembleDay())
-                createCalendarData()
-//                setLoadedAssembleDays()
-            }
-        }
-
-    }*/
 
 //    private fun setLoadedAssembleDays() {
 //        assembleDayList.forEach { assembleDay ->
@@ -193,9 +196,9 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
 
     private fun selectLoadedAssembleDay(calendarDay: CalendarDay) {
         _assembleDayStateFlow.value = calendarDay
-        setAssembleDayTitle(calendarDay.assembleDay?.title ?: "")
+        setAssembleDayTitle(calendarDay.assembleDay?.assembleTitle ?: "")
         calendarDay.assembleDay?.let { assembleDay ->
-            _startDayStateFlow.value = CalendarDay(date = assembleDay.start)
+            _startDayStateFlow.value = CalendarDay(date = assembleDay.assembleStartAt.toLocalDateFormat())
         }
         _didPreviouslySelectAssembleDay = true
     }
@@ -255,24 +258,24 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         }
     }*/
 
-   /* private fun selectAssembleDayWithDifferentMonth(
-        previousSelectedDay: CalendarDay,
-        previousSelectedMonth: String
-    ) {
-        _isSelectedDifferentMonth = true
-        _previousAssembleDay = previousSelectedDay
-        _copiedPreviousCalendarDayList.clear()
-        _calendarDataMapStateFlow[previousSelectedMonth]?.forEach { originalDay ->
-            when (originalDay) {
-                previousSelectedDay -> _copiedPreviousCalendarDayList.add(
-                    originalDay.copy(
-                        isSelected = false
-                    )
-                )
-                else -> _copiedPreviousCalendarDayList.add(originalDay.copy())
-            }
-        }
-    }*/
+    /* private fun selectAssembleDayWithDifferentMonth(
+         previousSelectedDay: CalendarDay,
+         previousSelectedMonth: String
+     ) {
+         _isSelectedDifferentMonth = true
+         _previousAssembleDay = previousSelectedDay
+         _copiedPreviousCalendarDayList.clear()
+         _calendarDataMapStateFlow[previousSelectedMonth]?.forEach { originalDay ->
+             when (originalDay) {
+                 previousSelectedDay -> _copiedPreviousCalendarDayList.add(
+                     originalDay.copy(
+                         isSelected = false
+                     )
+                 )
+                 else -> _copiedPreviousCalendarDayList.add(originalDay.copy())
+             }
+         }
+     }*/
 
     /*private fun selectStartDay(calendarDay: CalendarDay) {
            calendarDay.date?.let { selectedDay ->
@@ -312,7 +315,19 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
     }
 
     fun saveAssembleDay() {
-        // TODO 설정한 AssembleDay 저장 로직
+        viewModelScope.launch {
+            if (_startDayStateFlow.value.date != null && _assembleDayStateFlow.value.date != null) {
+                val newAssembleDay =
+                    AssembleDay(-1, _assembleDayTitleStateFlow.value, _startDayStateFlow.value.date?.toFormattedString() ?: "", _assembleDayStateFlow.value.date?.toFormattedString() ?: "")
+                val requestCreateAssemble = assembleRepository.createAssembles(newAssembleDay)
+                when (requestCreateAssemble) {
+                    is NetworkResult.Success -> {
+                        loadAssembleDays()
+                        resetAssembleDay()
+                    }
+                }
+            }
+        }
     }
 
 }

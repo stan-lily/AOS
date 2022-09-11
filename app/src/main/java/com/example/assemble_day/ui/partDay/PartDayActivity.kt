@@ -34,16 +34,16 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
     private val partDayDetailAdapter by lazy {
         PartDayDetailAdapter { itemSelection, position ->
             when (itemSelection) {
-                is TargetItemSelection.labelSection -> {
+                is TargetItemSelection.LabelSection -> {
                     setTargetLabelOnClickListener(position)
                 }
-                is TargetItemSelection.targetSelection -> {
+                is TargetItemSelection.TargetSelection -> {
                     setTargetOnClickListener(position)
                 }
-                is TargetItemSelection.targetUpdateBtnSelection -> {
+                is TargetItemSelection.TargetUpdateBtnSelection -> {
                     setTargetUpdateBtnOnClickListener(itemSelection.updatedTitle, position)
                 }
-                is TargetItemSelection.targetDeletBtnSelection -> {
+                is TargetItemSelection.TargetDeleteBtnSelection -> {
                     setTargetDeleteBtnOnClickListener(position)
                 }
             }
@@ -84,8 +84,8 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
     }
 
     override fun selectPartDay(selectedPartDay: PartDay) {
-        binding.selectedPartDay = selectedPartDay
-        partDayViewModel.selectPartDay(selectedPartDay)
+        binding.partDay = selectedPartDay
+        partDayViewModel.selectPartDay(selectedPartDay.date)
     }
 
     override fun dropTargetToOtherPartDay(
@@ -109,12 +109,6 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
         }
     }
 
-    private suspend fun submitTargetList() {
-        partDayViewModel.loadedTargetStateFlow.collect {
-            partDayDetailAdapter.submitList(it)
-        }
-    }
-
     private suspend fun submitPartDayList() {
         partDayViewModel.loadedPartDayListStateFlow.collect { partDayList ->
             partDayAdapter.submitList(partDayList)
@@ -124,6 +118,22 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
             }
         }
     }
+
+    private suspend fun submitTargetList() {
+        partDayViewModel.loadedTargetStateFlow.collect {
+            partDayDetailAdapter.submitList(it)
+        }
+    }
+
+   /* private suspend fun submitPartDayList() {
+        partDayViewModel.loadedPartDayListStateFlow.collect { partDayList ->
+            partDayAdapter.submitList(partDayList)
+            if (partDayViewModel.isInitPartDayList) {
+                selectPartDay(partDayList[0])
+                partDayViewModel.setInitPartDayListFlag()
+            }
+        }
+    }*/
 
     private fun filterLabel(selectedLabel: Label?) {
         binding.chipPartDayLabel.text =

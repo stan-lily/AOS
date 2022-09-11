@@ -91,7 +91,9 @@ class LabelFilterViewModel @Inject constructor(private val labelFilterRepository
     }
 
     fun updateLabel() {
-
+        viewModelScope.launch {
+            getLabel()
+        }
     }
 
 }

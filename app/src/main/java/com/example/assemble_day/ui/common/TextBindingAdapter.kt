@@ -83,7 +83,10 @@ fun updateLabelFontColor(view: TextView, fontColor: String) {
 }
 
 @BindingAdapter("partDayDate")
-fun updatePartDayDate(view: TextView, date: LocalDate?) {
-    val formatter = DateTimeFormatter.ofPattern("dd")
-    view.text = date?.format(formatter) ?: ""
+fun updatePartDayDate(view: TextView, date: String?) {
+    date?.let {
+        val localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val formatter = DateTimeFormatter.ofPattern("dd")
+        view.text = localDate.format(formatter) ?: ""
+    }
 }

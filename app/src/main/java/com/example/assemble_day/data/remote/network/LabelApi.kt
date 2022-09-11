@@ -9,11 +9,11 @@ import retrofit2.http.*
 
 interface LabelApi {
 
-    @GET("api/stan-lily/issue-trackers/labels")
+    @GET("api/stan-lily/labels")
     suspend fun getLabel(): Response<LabelDto>
 
-    @POST("api/stan-lily/issue-trackers/labels")
-    suspend fun createLabel(@Body newLabel: Label): ResponseBody
+    @POST("api/stan-lily/labels")
+    suspend fun createLabel(@Body newLabel: Label): Response<ResponseBody>
 
     @PUT("api/stan-lily/labels/1")
     suspend fun updateLabel()

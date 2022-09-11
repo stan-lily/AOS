@@ -1,15 +1,15 @@
 package com.example.assemble_day.di
 
-import com.example.assemble_day.data.remote.dataSource.AssembleDataSource
-import com.example.assemble_day.data.remote.dataSource.AssembleRemoteDataSource
-import com.example.assemble_day.data.remote.dataSource.LabelDataSource
-import com.example.assemble_day.data.remote.dataSource.LabelRemoteDataSource
+import com.example.assemble_day.data.remote.dataSource.*
 import com.example.assemble_day.data.remote.network.AssembleApi
 import com.example.assemble_day.data.remote.network.LabelApi
+import com.example.assemble_day.data.remote.network.TargetApi
 import com.example.assemble_day.data.remote.repository.AssembleRepositoryImpl
 import com.example.assemble_day.data.remote.repository.LabelRepositoryImpl
+import com.example.assemble_day.data.remote.repository.TargetRepositoryImpl
 import com.example.assemble_day.domain.repository.AssembleRepository
 import com.example.assemble_day.domain.repository.LabelRepository
+import com.example.assemble_day.domain.repository.TargetRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,6 +81,18 @@ object NetworkModule {
     @Singleton
     fun provideAssembleRepository(assembleDataSource: AssembleDataSource): AssembleRepository {
         return AssembleRepositoryImpl(assembleDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTargetDataSource(targetApi: TargetApi): TargetDataSource {
+        return TargetRemoteDataSource(targetApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTargetRepository(targetDataSource: TargetDataSource): TargetRepository {
+        return TargetRepositoryImpl(targetDataSource)
     }
 
 }

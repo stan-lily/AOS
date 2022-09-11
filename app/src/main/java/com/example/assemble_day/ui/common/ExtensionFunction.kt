@@ -5,6 +5,8 @@ import android.view.View
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import com.google.android.material.textfield.TextInputEditText
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 fun TextInputEditText.setEndIconOnClickListener(clickEvent: () -> Unit) {
     setOnTouchListener(object : View.OnTouchListener {
@@ -20,4 +22,14 @@ fun TextInputEditText.setEndIconOnClickListener(clickEvent: () -> Unit) {
             return false
         }
     })
+}
+
+fun LocalDate.toStringFormat(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return this.format(formatter)
+}
+
+fun String.toLocalDateFormat(): LocalDate {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return LocalDate.parse(this, formatter)
 }
