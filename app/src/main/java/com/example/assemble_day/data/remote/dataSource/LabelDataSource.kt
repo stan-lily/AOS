@@ -8,6 +8,6 @@ import retrofit2.Response
 interface LabelDataSource {
     suspend fun getLabel(): Response<LabelDto>
     suspend fun createLabel(newLabel: Label): Response<ResponseBody>
-    suspend fun updateLabel()
-    suspend fun deleteLabel()
+    suspend fun updateLabel(labelId: Int, updatingLabel: Label): Response<ResponseBody>
+    suspend fun deleteLabel(labelId: Int): Response<Unit>
 }

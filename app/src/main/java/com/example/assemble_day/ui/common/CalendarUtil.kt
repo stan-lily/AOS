@@ -101,10 +101,11 @@ object CalendarUtil {
             (year % LEAP_YEAR_STANDARD_FOUR_YEAR == 0 && year % LEAP_YEAR_STANDARD_HUNDRED_YEAR != 0) || year % LEAP_YEAR_STANDARD_FOUR_HUNDRED_YEAR == 0
         val lastDay = month.length(isLeapYear)
         val maxSelectableDate =
-            if (assembleDayList.isNotEmpty()) assembleDayList.last().assembleEndAt.plusWeeks(3) else LocalDate.now()
-                .plusMonths(
-                    CALENDAR_DAY_SIZE.toLong()
-                )
+            if (assembleDayList.isNotEmpty()) {
+                assembleDayList.last().assembleEndAt.toLocalDateFormat().plusWeeks(3)
+            } else {
+                LocalDate.now().plusMonths(CALENDAR_DAY_SIZE.toLong())
+            }
         val assembleDayDateMap = assembleDayList.toAssembleDayDateMap()
         val assembleDayDateList = assembleDayDateMap.keys
 
@@ -122,17 +123,17 @@ object CalendarUtil {
                 val newDate = LocalDate.of(year, month, day)
                 val isSaturday = newDate.dayOfWeek.value == SATURDAY_DAY_OF_WEEK
                 val isSunday = newDate.dayOfWeek.value == SUNDAY_DAY_OF_WEEK
-                val isAssembleDay = assembleDayDateList.contains(newDate)
+                val isAssembleDay = assembleDayDateList.contains(newDate.toStringFormat())
 
                 if (thisMonth == month.value) {
                     dayList.add(
                         CalendarDay(
                             date = newDate,
-                            isSelectable = day >= today && newDate < maxSelectableDate && newDate > assembleDayDateList.last(),
+                            isSelectable = day >= today && newDate < maxSelectableDate && newDate.toStringFormat() > assembleDayDateList.last(),
                             isSaturday = isSaturday,
                             isSunday = isSunday,
                             isAssembleDay = isAssembleDay,
-                            assembleDay = if (isAssembleDay) assembleDayDateMap[newDate] else null
+                            assembleDay = if (isAssembleDay) assembleDayDateMap[newDate.toStringFormat()] else null
                         )
                     )
                 } else {
@@ -140,41 +141,35 @@ object CalendarUtil {
                         CalendarDay(
                             date = newDate,
 //                            isSelectable = (year > thisYear && (month.value > thisMonth && thisYear >= year) || newDate <= maxSelectableDate),
-                            isSelectable = newDate < maxSelectableDate && newDate > assembleDayDateList.last(),
+                            isSelectable = newDate < maxSelectableDate && newDate.toStringFormat() > assembleDayDateList.last(),
                             isSaturday = isSaturday,
                             isSunday = isSunday,
-                            isAssembleDay = assembleDayDateList.contains(newDate),
-                            assembleDay = if (isAssembleDay) assembleDayDateMap[newDate] else null
+                            isAssembleDay = isAssembleDay,
+                            assembleDay = if (isAssembleDay) assembleDayDateMap[newDate.toStringFormat()] else null
                         )
                     )
                 }
             }
         }
+
         return dayList
     }
 
-    private fun List<AssembleDay>.toAssembleDayDateMap(): Map<LocalDate, AssembleDay> {
-        if (this.isEmpty()) return mapOf(LocalDate.now().minusMonths(CALENDAR_DAY_SIZE.toLong()) to AssembleDay(-1, "", LocalDate.now(), LocalDate.now()))
+    private fun List<AssembleDay>.toAssembleDayDateMap(): Map<String, AssembleDay> {
+        if (this.isEmpty()) return mapOf(
+            LocalDate.now().minusMonths(CALENDAR_DAY_SIZE.toLong()).toStringFormat() to AssembleDay(
+                -1,
+                "",
+                LocalDate.now().toStringFormat(),
+                LocalDate.now().toStringFormat()
+            )
+        )
 
-        val dateList = mutableMapOf<LocalDate, AssembleDay>()
+        val dateList = mutableMapOf<String, AssembleDay>()
         this.forEach {
             dateList[it.assembleEndAt] = it
         }
         return dateList
     }
-
-    fun CalendarDay.toFormattedString(): String {
-        val formatter = DateTimeFormatter.ofPattern(CALENDAR_DAY_FORMAT)
-        this.date?.let {
-            return it.format(formatter)
-        }
-        return ""
-    }
-
-    fun LocalDate.toFormattedString(): String {
-        val formatter = DateTimeFormatter.ofPattern(CALENDAR_DAY_FORMAT)
-        return this.format(formatter)
-    }
-
 
 }

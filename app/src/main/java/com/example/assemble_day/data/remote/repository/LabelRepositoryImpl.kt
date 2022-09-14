@@ -21,4 +21,12 @@ class LabelRepositoryImpl @Inject constructor(private val labelDataSource: Label
         return labelDataSource.createLabel(newLabel).safeApiCall()
     }
 
+    override suspend fun updateLabel(labelId: Int, updatingLabel: Label): NetworkResult<ResponseBody> {
+        return labelDataSource.updateLabel(labelId, updatingLabel).safeApiCall()
+    }
+
+    override suspend fun deleteLabel(labelId: Int): NetworkResult<Unit> {
+        return labelDataSource.deleteLabel(labelId).safeApiCall()
+    }
+
 }

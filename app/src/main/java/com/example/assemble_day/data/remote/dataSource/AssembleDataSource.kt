@@ -1,5 +1,6 @@
 package com.example.assemble_day.data.remote.dataSource
 
+import com.example.assemble_day.data.remote.dto.Assembles
 import com.example.assemble_day.data.remote.dto.AssemblesDto
 import com.example.assemble_day.data.remote.dto.LabelDto
 import com.example.assemble_day.domain.model.AssembleDay

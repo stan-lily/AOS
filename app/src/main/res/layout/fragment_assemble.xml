@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:secondActionText="@string/action_item_apply"
+            app:secondActionText="@string/action_item_detail"
             app:toolbarNavigationIcon="@drawable/ic_back"
             app:toolbarTitle="@string/title_assemble" />
 
@@ -85,7 +85,6 @@
                 style="@style/Subtitle1.White"
                 android:layout_width="0dp"
                 android:text="@{assembleDayTitle}"
-                android:visibility='@{assembleDayTitle.equals("") ? View.GONE : View.VISIBLE}'
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"

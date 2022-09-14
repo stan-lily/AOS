@@ -14,14 +14,14 @@ class LabelRemoteDataSource @Inject constructor(private val labelApi: LabelApi) 
     }
 
     override suspend fun createLabel(newLabel: Label): Response<ResponseBody> {
-        return labelApi.createLabel(newLabel)
+        return labelApi.createLabel(newLabel = newLabel)
     }
 
-    override suspend fun updateLabel() {
-        TODO("Not yet implemented")
+    override suspend fun updateLabel(labelId: Int, updatingLabel: Label): Response<ResponseBody> {
+        return labelApi.updateLabel(labelId = labelId, updatingLabel = updatingLabel)
     }
 
-    override suspend fun deleteLabel() {
-        TODO("Not yet implemented")
+    override suspend fun deleteLabel(labelId: Int): Response<Unit> {
+        return labelApi.deleteLabel(labelId = labelId)
     }
 }

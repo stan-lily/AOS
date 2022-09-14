@@ -1,6 +1,5 @@
 package com.example.assemble_day.ui.labelCreate
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,25 +16,28 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
-import com.example.assemble_day.common.Constants.RGB_BLUE
-import com.example.assemble_day.common.Constants.RGB_GREEN
-import com.example.assemble_day.common.Constants.RGB_RED
-import com.example.assemble_day.databinding.FragmentLabelBinding
+import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
+import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_INDEX
+import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_INDEX
+import com.example.assemble_day.databinding.FragmentLabelCreateBinding
+import com.example.assemble_day.domain.model.Label
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() {
+class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragment() {
 
-    private lateinit var binding: FragmentLabelBinding
+    private lateinit var binding: FragmentLabelCreateBinding
+    private var selectedLabel: Label? = null
+    private val isEditing get() = selectedLabel != null
     private val labelViewModel: LabelCreateViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLabelBinding.inflate(inflater, container, false)
+        binding = FragmentLabelCreateBinding.inflate(inflater, container, false)
         binding.clLabel.minHeight = getWindowHeight()
         binding.clLabel.minWidth = getDialogFragmentDefaultWidth()
         return binding.root
@@ -62,14 +64,22 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
         setInputTextOnEventListener()
         setFontColorSpinner()
         setBackgroundColorBtnOnEventListener()
-        setSaveBtnOnEventListener()
+        setSaveBtnOnClickListener()
         setNavigationIconOnEventListener()
+        editSelectedLabel()
+        setSecondActionText()
+        setFirstActionText()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { enableSaveAction() }
                 launch { setLabelBackgroundColor() }
                 launch { setLabelBackgroundFontColor() }
+                launch { setResetOrDeleteBtnOnClickListener() }
+                launch { resetLabelValues() }
+                launch { succeedDeleteLabel() }
+                launch { succeedCreateLabel() }
+                launch { succeedUpdateLabel() }
             }
 
         }
@@ -88,11 +98,19 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
         }
     }
 
-    private fun setSaveBtnOnEventListener() {
+    private fun setSaveBtnOnClickListener() {
         binding.tlLabel.firstActionItem.setOnMenuItemClickListener {
-            labelViewModel.saveLabel()
-            saveLabel.invoke()
-//            dismiss()
+            labelViewModel.runFirstActionItem(selectedLabel)
+            true
+        }
+    }
+
+    private fun setResetOrDeleteBtnOnClickListener() {
+        binding.tlLabel.secondActionItem.setOnMenuItemClickListener {
+            if (isEditing) {
+                labelViewModel.deleteLabel(selectedLabel)
+            }
+            labelViewModel.resetLabel()
             true
         }
     }
@@ -110,12 +128,12 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
 
         binding.etLabelBackgroundColor.doAfterTextChanged {
             val color = it.toString()
-            if (color.length == 7) {
+            if (color.length == 7 && color[0] == '#') {
                 if (validateColorFormat(color)) {
                     labelViewModel.setBackgroundColor(color)
-                } else {
-                    showMessageForWrongColorFormat()
                 }
+            } else {
+                showMessageForWrongColorFormat()
             }
             if (color.isBlank() || color.isEmpty()) {
                 binding.backgroundColor = color
@@ -139,10 +157,6 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
 
     private fun showMessageForWrongColorFormat() {
         Snackbar.make(requireView(), "정확한 색상을 입력하시기 바랍니다", Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun showMessageForWrongTitle() {
-        Snackbar.make(requireView(), "제목에는 공백이 있어서는 안됩니다", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun setBackgroundColorBtnOnEventListener() {
@@ -190,6 +204,81 @@ class LabelCreateFragment(private val saveLabel: () -> Unit) : DialogFragment() 
     private suspend fun setLabelBackgroundColor() {
         labelViewModel.backgroundColorStateFlow.collect {
             binding.backgroundColor = it
+            binding.etLabelBackgroundColor.setText(it)
+        }
+    }
+
+    private suspend fun resetLabelValues() {
+        labelViewModel.resetActionStateFlow.collect { doesReset ->
+            if (doesReset) {
+                binding.etLabelTitle.setText("")
+                binding.etLabelDescription.setText("")
+                labelViewModel.setBackgroundColor("")
+                binding.spLabelBackgroundFontColor.setSelection(LABEL_FONT_COLOR_BLACK_INDEX)
+                labelViewModel.completedReset()
+            }
+        }
+    }
+
+    fun setSelectedLabel(label: Label) {
+        selectedLabel = label
+    }
+
+    private fun setFirstActionText() {
+        if (isEditing) {
+            binding.tlLabel.firstActionItem.setTitle(R.string.action_item_update)
+        } else {
+            binding.tlLabel.firstActionItem.setTitle(R.string.action_item_save)
+        }
+    }
+
+    private fun setSecondActionText() {
+        if (isEditing) {
+            binding.tlLabel.secondActionItem.setTitle(R.string.action_item_delete)
+        } else {
+            binding.tlLabel.secondActionItem.setTitle(R.string.action_item_reset)
+        }
+    }
+
+    private fun editSelectedLabel() {
+        selectedLabel?.let { label ->
+            binding.etLabelTitle.setText(label.name)
+            binding.etLabelDescription.setText(label.description)
+            labelViewModel.setBackgroundColor(label.backgroundColor)
+            if (label.fontColor == LABEL_FONT_COLOR_BLACK_HEX) {
+                binding.spLabelBackgroundFontColor.setSelection(LABEL_FONT_COLOR_BLACK_INDEX)
+            } else {
+                binding.spLabelBackgroundFontColor.setSelection(LABEL_FONT_COLOR_WHITE_INDEX)
+            }
+        }
+    }
+
+    private suspend fun succeedCreateLabel() {
+        labelViewModel.networkCreateSuccessStateFlow.collect { isSucceed ->
+            if (isSucceed) {
+                updateLabelList.invoke()
+                labelViewModel.resetLabel()
+            }
+        }
+    }
+
+    private suspend fun succeedUpdateLabel() {
+        labelViewModel.networkUpdateSuccessStateFlow.collect { isSucceed ->
+            if (isSucceed) {
+                updateLabelList.invoke()
+            }
+        }
+    }
+
+    private suspend fun succeedDeleteLabel() {
+        labelViewModel.networkDeleteSuccessStateFlow.collect { isSucceed ->
+            if (isSucceed) {
+                updateLabelList.invoke()
+                labelViewModel.resetLabel()
+                selectedLabel = null
+                setFirstActionText()
+                setSecondActionText()
+            }
         }
     }
 

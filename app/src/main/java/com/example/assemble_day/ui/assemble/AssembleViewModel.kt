@@ -11,9 +11,10 @@ import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.domain.repository.AssembleRepository
 import com.example.assemble_day.ui.common.CalendarUtil
-import com.example.assemble_day.ui.common.CalendarUtil.toFormattedString
 import com.example.assemble_day.ui.common.toLocalDateFormat
+import com.example.assemble_day.ui.common.toStringFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -40,19 +41,6 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
     val assembleDayStateFlow = _assembleDayStateFlow.asStateFlow()
 
     private var _didPreviouslySelectAssembleDay = false
-    val didPreviouslySelectAssembleDay: Boolean get() = _didPreviouslySelectAssembleDay
-
-    private val _copiedCalendarDayList = mutableListOf<CalendarDay>()
-    val copiedCalendarDayList: List<CalendarDay> = _copiedCalendarDayList
-
-    private var _isSelectedDifferentMonth = false
-    val isSelectedDifferentMonth: Boolean get() = _isSelectedDifferentMonth
-
-    private var _previousAssembleDay = defaultCalendarDay
-    val previousAssembleDay: CalendarDay get() = _previousAssembleDay
-
-    private val _copiedPreviousCalendarDayList = mutableListOf<CalendarDay>()
-    val copiedPreviousCalendarDayList: List<CalendarDay> = _copiedPreviousCalendarDayList
 
     private val _startDayStateFlow = MutableStateFlow(defaultCalendarDay)
     val startDayStateFlow = _startDayStateFlow.asStateFlow()
@@ -60,6 +48,10 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
     private val _selectableAssembleDayFlagSharedFlow = MutableSharedFlow<Boolean>(replay = 1)
     val selectableAssembleDayFlagSharedFlow =
         _selectableAssembleDayFlagSharedFlow.asSharedFlow()
+
+    private val ceh = CoroutineExceptionHandler { _, throwable ->
+        println(throwable)
+    }
 
     init {
         viewModelScope.launch {
@@ -70,9 +62,9 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
     /*private fun loadAssembleDays() {
         assembleDayList.clear()
         val dummyAssembleDayList = listOf<AssembleDay>(
-            AssembleDay("기획 2차 수정", LocalDate.of(2022, 9, 1), LocalDate.of(2022, 9, 5)),
-            AssembleDay("레이블 기능", LocalDate.of(2022, 9, 8), LocalDate.of(2022, 9, 17)),
-            AssembleDay("assembles", LocalDate.of(2022, 9, 19), LocalDate.of(2022, 9, 26)),
+            AssembleDay(1, "기획 2차 수정", "2022-09-01", "2022-09-05"),
+            AssembleDay(2, "레이블 기능", "2022-09-14", "2022-09-17"),
+            AssembleDay(3, "assembles", "2022-09-22", "2022-09-30"),
         )
         assembleDayList.addAll(dummyAssembleDayList)
         createCalendarData()
@@ -84,10 +76,12 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         when (loadedAssemble) {
             is NetworkResult.Success -> {
                 assembleDayList.addAll(loadedAssemble.data.toAssembleDay())
+                println(assembleDayList)
                 createCalendarData()
             }
+            else -> {
+            }
         }
-
     }
 
     private fun createCalendarData() {
@@ -198,7 +192,8 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         _assembleDayStateFlow.value = calendarDay
         setAssembleDayTitle(calendarDay.assembleDay?.assembleTitle ?: "")
         calendarDay.assembleDay?.let { assembleDay ->
-            _startDayStateFlow.value = CalendarDay(date = assembleDay.assembleStartAt.toLocalDateFormat())
+            _startDayStateFlow.value =
+                CalendarDay(date = assembleDay.assembleStartAt.toLocalDateFormat())
         }
         _didPreviouslySelectAssembleDay = true
     }
@@ -308,6 +303,7 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         _assembleDayStateFlow.value = defaultCalendarDay
         _startDayStateFlow.value = defaultCalendarDay
         _selectableAssembleDayFlagSharedFlow.tryEmit(true)
+        _didPreviouslySelectAssembleDay = false
         _assembleDayTitleStateFlow.value = ""
         _calendarDataMapStateFlow.value = defaultCalendarDayMap
 //        if (assembleDayList.isEmpty()) resetCalendarDataWhenAssembleDayListEmpty()
@@ -318,12 +314,25 @@ class AssembleViewModel @Inject constructor(private val assembleRepository: Asse
         viewModelScope.launch {
             if (_startDayStateFlow.value.date != null && _assembleDayStateFlow.value.date != null) {
                 val newAssembleDay =
-                    AssembleDay(-1, _assembleDayTitleStateFlow.value, _startDayStateFlow.value.date?.toFormattedString() ?: "", _assembleDayStateFlow.value.date?.toFormattedString() ?: "")
+                    AssembleDay(
+                        -1,
+                        _assembleDayTitleStateFlow.value,
+                        _startDayStateFlow.value.date?.toStringFormat() ?: "",
+                        _assembleDayStateFlow.value.date?.toStringFormat() ?: ""
+                    )
+                println(newAssembleDay)
                 val requestCreateAssemble = assembleRepository.createAssembles(newAssembleDay)
                 when (requestCreateAssemble) {
                     is NetworkResult.Success -> {
                         loadAssembleDays()
                         resetAssembleDay()
+                    }
+                    is NetworkResult.Error -> {
+                        println(requestCreateAssemble.code)
+                        println(requestCreateAssemble.message)
+                    }
+                    is NetworkResult.Exception -> {
+                        println(requestCreateAssemble.error)
                     }
                 }
             }

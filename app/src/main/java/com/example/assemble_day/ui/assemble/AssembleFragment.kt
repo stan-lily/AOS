@@ -1,5 +1,6 @@
 package com.example.assemble_day.ui.assemble
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.assemble_day.R
+import com.example.assemble_day.common.Constants.INTENT_NAME_ASSEMBLE_ID
 import com.example.assemble_day.databinding.FragmentAssembleBinding
 import com.example.assemble_day.domain.model.CalendarDay
+import com.example.assemble_day.ui.partDay.PartDayActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,6 +30,7 @@ class AssembleFragment : Fragment() {
     private val assembleViewModel: AssembleViewModel by viewModels()
     private lateinit var binding: FragmentAssembleBinding
     private lateinit var monthAdapter: MonthAdapter
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +42,8 @@ class AssembleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+
         displayInitialCalendar()
         setOnInputTextEventListener()
         setOnResetEventListener()
@@ -48,6 +56,7 @@ class AssembleFragment : Fragment() {
                 launch { showToastMessage() }
                 launch { setOnAssembleDayTitle() }
                 launch { submitCalendarData() }
+                launch { setOnViewDetailsEventListener() }
             }
         }
     }
@@ -82,6 +91,21 @@ class AssembleFragment : Fragment() {
         }
     }
 
+    private fun setOnViewDetailsEventListener() {
+        binding.tlAssemble.secondActionItem.setOnMenuItemClickListener {
+            val isAssembleDay = assembleViewModel.assembleDayStateFlow.value.isAssembleDay
+            val assembleDay = assembleViewModel.assembleDayStateFlow.value.assembleDay
+            if (isAssembleDay && assembleDay != null) {
+                val intent = Intent(requireActivity(), PartDayActivity::class.java).apply {
+                    putExtra(INTENT_NAME_ASSEMBLE_ID, assembleDay.id)
+                }
+                startActivity(intent)
+            }
+            true
+        }
+    }
+
+
     private fun selectAssembleDay(calendarDay: CalendarDay) {
         assembleViewModel.selectCalendarDay(calendarDay)
     }
@@ -108,6 +132,7 @@ class AssembleFragment : Fragment() {
         assembleViewModel.assembleDayStateFlow.collect { selectedAssembleDay ->
             binding.endDate = selectedAssembleDay.date
             showAssembleDayTitleEditText(selectedAssembleDay.date == null)
+            setOnViewDetailsAction(selectedAssembleDay.isAssembleDay)
             /*if (!selectedAssembleDay.isAssembleDay) {
                 updateSelectedAssembleDay(selectedAssembleDay)
             }*/
@@ -131,6 +156,10 @@ class AssembleFragment : Fragment() {
     private fun setOnResetAction(doesStartDayExist: Boolean) {
         binding.tlAssemble.firstActionItem.isEnabled = doesStartDayExist
 //        if (!doesStartDayExist) monthAdapter.submitCalendarData(assembleViewModel.calendarDataMapStateFlow.value)
+    }
+
+    private fun setOnViewDetailsAction(doesSelectAssembleDay: Boolean) {
+        binding.tlAssemble.secondActionItem.isEnabled = doesSelectAssembleDay
     }
 
     private suspend fun showToastMessage() {

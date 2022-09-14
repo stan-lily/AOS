@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
+import com.example.assemble_day.common.Constants.INTENT_NAME_ASSEMBLE_ID
 import com.example.assemble_day.databinding.ActivityPartDayBinding
 import com.example.assemble_day.domain.eventListener.PartDayEventListener
 import com.example.assemble_day.domain.model.Label
@@ -53,6 +54,7 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_part_day)
+        getPartDays()
 
         binding.rvPartDay.adapter = partDayAdapter
         binding.rvPartDayDetail.adapter = partDayDetailAdapter
@@ -81,6 +83,11 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
                 launch { showMessageForTargetTitleError() }
             }
         }
+    }
+
+    private fun getPartDays() {
+        val assembleIdFromIntent = intent.getIntExtra(INTENT_NAME_ASSEMBLE_ID, -1)
+        partDayViewModel.getPartDays(assembleIdFromIntent)
     }
 
     override fun selectPartDay(selectedPartDay: PartDay) {
@@ -112,7 +119,7 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
     private suspend fun submitPartDayList() {
         partDayViewModel.loadedPartDayListStateFlow.collect { partDayList ->
             partDayAdapter.submitList(partDayList)
-            if (partDayViewModel.isInitPartDayList) {
+            if (partDayViewModel.isInitPartDayList && partDayList.isNotEmpty()) {
                 selectPartDay(partDayList[0])
                 partDayViewModel.setInitPartDayListFlag()
             }

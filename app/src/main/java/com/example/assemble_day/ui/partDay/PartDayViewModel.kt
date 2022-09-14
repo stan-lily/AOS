@@ -57,13 +57,6 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
 
     private var selectedTargetLabelPosition = -1
 
-    init {
-        viewModelScope.launch {
-            getPartDays()
-        }
-//        createDummyAssembleDay()
-    }
-
     /*private fun createDummyAssembleDay() {
         val loadedAssembleDay =
             AssembleDay("Test 입니다", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 30))
@@ -110,14 +103,18 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
         return dummyTargetList
     }*/
 
-    private suspend fun getPartDays() {
-        val targetCounts = targetRepository.getTargetCounts(assembleId)
-        when (targetCounts) {
-            is NetworkResult.Success -> {
-                val partDayList = targetCounts.data.toPartDayList()
-                _loadedPartDayListStateFlow.value = partDayList
+    fun getPartDays(id: Int) {
+        setAssembleId(id)
+        println("넘어온 id $assembleId")
+        /*viewModelScope.launch {
+            val targetCounts = targetRepository.getTargetCounts(assembleId)
+            when (targetCounts) {
+                is NetworkResult.Success -> {
+                    val partDayList = targetCounts.data.toPartDayList()
+                    _loadedPartDayListStateFlow.value = partDayList
+                }
             }
-        }
+        }*/
     }
 
 /*    private suspend fun getTargets() {
@@ -129,6 +126,10 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
             }
         }
     }*/
+
+    private fun setAssembleId(Id: Int) {
+        assembleId = Id
+    }
 
     fun selectPartDay(selectedPartDayDate: String) {
         viewModelScope.launch {

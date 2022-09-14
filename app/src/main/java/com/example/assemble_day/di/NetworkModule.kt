@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://cfd1d0a7-b24d-4933-a688-15fa8308ce12.mock.pstmn.io/"
+    private const val BASE_URL = "http://3.35.229.71:8080/"
 
     @Provides
     @Singleton
@@ -57,6 +57,12 @@ object NetworkModule {
     @Singleton
     fun provideAssembleApi(retrofit: Retrofit): AssembleApi {
         return retrofit.create(AssembleApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTargetApi(retrofit: Retrofit): TargetApi {
+        return retrofit.create(TargetApi::class.java)
     }
 
     @Provides

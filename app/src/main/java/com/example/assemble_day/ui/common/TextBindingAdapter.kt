@@ -14,10 +14,17 @@ import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@BindingAdapter("labelBackgroundTint")
-fun updateLabelBackgroundTint(view: View, color: String) {
-    view.backgroundTintList = ColorStateList.valueOf(Color.parseColor(color))
-}
+//@BindingAdapter("labelBackgroundTint")
+//fun updateLabelBackgroundTint(view: View, backgroundColor: String) {
+//    val r = "${backgroundColor[1]}${backgroundColor[2]}".toInt(16)
+//    val g = "${backgroundColor[3]}${backgroundColor[4]}".toInt(16)
+//    val b = "${backgroundColor[5]}${backgroundColor[6]}".toInt(16)
+//    try {
+//        view.backgroundTintList = ColorStateList.valueOf(Color.rgb(r, g, b))
+//    } catch (e: Throwable) {
+//        Log.d("Error", e.message, e)
+//    }
+//}
 
 @BindingAdapter("labelTextColor")
 fun updateLabelTextColor(view: TextView, color: String) {
@@ -51,8 +58,8 @@ fun updateLabelCreatingViewBackgroundColorHexText(view: TextView, backgroundColo
     }
 }
 
-@BindingAdapter("backgroundColor")
-fun updateLabelCreatingViewBackgroundColor(view: TextView, backgroundColor: String) {
+@BindingAdapter("labelBackgroundTint")
+fun updateLabelBackgroundTint(view: TextView, backgroundColor: String) {
     if (backgroundColor.isNotBlank() || backgroundColor.isNotEmpty()) {
         val r = "${backgroundColor[1]}${backgroundColor[2]}".toInt(16)
         val g = "${backgroundColor[3]}${backgroundColor[4]}".toInt(16)

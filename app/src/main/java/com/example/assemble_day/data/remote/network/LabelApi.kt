@@ -9,17 +9,17 @@ import retrofit2.http.*
 
 interface LabelApi {
 
-    @GET("api/stan-lily/labels")
-    suspend fun getLabel(): Response<LabelDto>
+    @GET("api/{team-name}/labels")
+    suspend fun getLabel(@Path("team-name") teamName: String = "stan-lily"): Response<LabelDto>
 
-    @POST("api/stan-lily/labels")
-    suspend fun createLabel(@Body newLabel: Label): Response<ResponseBody>
+    @POST("api/{team-name}/labels")
+    suspend fun createLabel(@Path("team-name") teamName: String = "stan-lily", @Body newLabel: Label): Response<ResponseBody>
 
-    @PUT("api/stan-lily/labels/1")
-    suspend fun updateLabel()
+    @PUT("api/{team-name}/labels/{id}")
+    suspend fun updateLabel(@Path("team-name") teamName: String = "stan-lily", @Path("id") labelId: Int, @Body updatingLabel: Label): Response<ResponseBody>
 
-    @DELETE("api/stan-lily/labels/1")
-    suspend fun deleteLabel()
+    @DELETE("api/{team-name}/labels/{id}")
+    suspend fun deleteLabel(@Path("team-name") teamName: String = "stan-lily", @Path("id") labelId: Int): Response<Unit>
 
 
 }
