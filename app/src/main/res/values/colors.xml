@@ -25,10 +25,13 @@
 <!--    <color name="light_blue">#FF4B0082</color>-->
 <!--    <color name="light_blue">#FF8A2BE2</color>-->
     <color name="royal_blue">#FF4169E1</color>
+    <color name="sky_blue">#CCD4FF</color>
+    <color name="indigo">#0025E7</color>
 <!--    <color name="light_blue">#FF1E90FF</color>-->
     <color name="grey01">#FF87878D</color>
     <color name="grey02">#FFF2F2F7</color>
     <color name="grey03">#FFE5E5EA</color>
+    <color name="grey04">#FF8E8E93</color>
     <color name="grey03_alpha_10">#1AE5E5EA</color>
     <color name="red">#FFFF3B30</color>
     <color name="blue">#FF0000FF</color>

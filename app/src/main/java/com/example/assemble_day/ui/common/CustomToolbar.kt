@@ -74,6 +74,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
 
     private fun setToolbarNavIcon(toolbarNavigationIcon: Drawable?) {
         this.navigationIcon = toolbarNavigationIcon
+        this.navigationIcon?.setTintList(ContextCompat.getColorStateList(context, R.color.white))
     }
 
     private fun setToolbarTitle(toolbarTitle: Int) {
@@ -90,7 +91,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
 
     private fun initToolbarUI() {
         this.setBackgroundColor(ContextCompat.getColor(context, R.color.royal_blue))
-        this.setTitleTextAppearance(context, R.style.Headline6)
+        this.setTitleTextAppearance(context, R.style.Headline5)
         this.setTitleTextColor(ContextCompat.getColor(context, R.color.white))
     }
 

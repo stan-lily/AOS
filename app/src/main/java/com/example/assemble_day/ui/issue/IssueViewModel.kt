@@ -1,0 +1,39 @@
+package com.example.assemble_day.ui.issue
+
+import androidx.lifecycle.ViewModel
+import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
+import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_STRING
+import com.example.assemble_day.domain.model.Issue
+import com.example.assemble_day.domain.model.Label
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+class IssueViewModel : ViewModel() {
+
+    private val _issueListStateFlow = MutableStateFlow(listOf<Issue>())
+    val issueListStateFlow = _issueListStateFlow.asStateFlow()
+
+    init {
+        createDummyIssueList()
+    }
+
+    private fun createDummyIssueList() {
+        val issueList = mutableListOf<Issue>()
+        val dummyLabel = Label(
+            name = "테스트",
+            description = "테스트입니다",
+            backgroundColor = LABEL_FONT_COLOR_BLACK_STRING,
+            fontColor = LABEL_FONT_COLOR_WHITE_STRING
+            )
+        repeat(10) {
+            issueList.add(Issue(
+                title = "테스트",
+                description = "테스트입니다",
+                label = dummyLabel,
+                milestone = "마일스톤"
+            ))
+        }
+        _issueListStateFlow.value = issueList
+    }
+
+}
