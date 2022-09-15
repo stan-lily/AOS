@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_navigation_graph"
-    app:startDestination="@id/assembleFragment3">
+    app:startDestination="@id/assembleFragment">
     <fragment
-        android:id="@+id/assembleFragment3"
+        android:id="@+id/assembleFragment"
         android:name="com.example.assemble_day.ui.assemble.AssembleFragment"
         android:label="AssembleFragment" />
 </navigation>

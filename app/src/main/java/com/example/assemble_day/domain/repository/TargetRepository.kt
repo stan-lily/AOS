@@ -13,7 +13,7 @@ import java.time.LocalDate
 interface TargetRepository {
 
     suspend fun getTargetCounts(assembleId: Int): NetworkResult<TargetCountsDto>
-    suspend fun getTargets(date: String): NetworkResult<TargetDto>
+    suspend fun getTargets(assembleId: Int, date: String): NetworkResult<TargetDto>
     suspend fun createTarget(assembleId: Int, newTarget: PartDayTarget): NetworkResult<ResponseBody>
 
 }

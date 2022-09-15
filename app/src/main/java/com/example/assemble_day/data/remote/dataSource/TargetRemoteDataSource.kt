@@ -13,18 +13,18 @@ import javax.inject.Inject
 class TargetRemoteDataSource @Inject constructor(private val targetApi: TargetApi) : TargetDataSource {
 
     override suspend fun getTargetCounts(assembleId: Int): Response<TargetCountsDto> {
-        return targetApi.getTargetsCount("stan-lily", assembleId)
+        return targetApi.getTargetsCount(assembleId = assembleId)
     }
 
-    override suspend fun getTargets(date: String): Response<TargetDto> {
-        return targetApi.getTargets(date)
+    override suspend fun getTargets(assembleId: Int, date: String): Response<TargetDto> {
+        return targetApi.getTargets(assembleId = assembleId, date = date)
     }
 
     override suspend fun createTarget(
         assembleId: Int,
         newTarget: PartDayTarget
     ): Response<ResponseBody> {
-        return targetApi.createTarget("stan-lily", assembleId, newTarget)
+        return targetApi.createTarget(assembleId = assembleId, newTarget = newTarget)
     }
 
 }

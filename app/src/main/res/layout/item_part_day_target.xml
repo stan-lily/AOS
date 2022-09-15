@@ -27,6 +27,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_target_label"
+            targetLabelBtnBackgroundTint="@{target.labelBackgroundColor}"
             android:layout_width="10dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="5dp"

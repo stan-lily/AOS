@@ -12,6 +12,6 @@ import java.time.LocalDate
 
 interface TargetDataSource {
     suspend fun getTargetCounts(assembleId: Int): Response<TargetCountsDto>
-    suspend fun getTargets(date: String): Response<TargetDto>
+    suspend fun getTargets(assembleId: Int, date: String): Response<TargetDto>
     suspend fun createTarget(assembleId: Int, newTarget: PartDayTarget): Response<ResponseBody>
 }

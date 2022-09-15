@@ -16,7 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.assemble_day.R
-import com.example.assemble_day.common.Constants.INTENT_NAME_ASSEMBLE_ID
+import com.example.assemble_day.common.Constants.INTENT_NAME_ASSEMBLE
 import com.example.assemble_day.databinding.FragmentAssembleBinding
 import com.example.assemble_day.domain.model.CalendarDay
 import com.example.assemble_day.ui.partDay.PartDayActivity
@@ -97,7 +97,7 @@ class AssembleFragment : Fragment() {
             val assembleDay = assembleViewModel.assembleDayStateFlow.value.assembleDay
             if (isAssembleDay && assembleDay != null) {
                 val intent = Intent(requireActivity(), PartDayActivity::class.java).apply {
-                    putExtra(INTENT_NAME_ASSEMBLE_ID, assembleDay.id)
+                    putExtra(INTENT_NAME_ASSEMBLE, assembleDay)
                 }
                 startActivity(intent)
             }

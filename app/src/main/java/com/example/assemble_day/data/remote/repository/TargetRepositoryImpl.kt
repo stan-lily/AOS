@@ -16,8 +16,8 @@ class TargetRepositoryImpl @Inject constructor(private val targetDataSource: Tar
         return targetDataSource.getTargetCounts(assembleId).safeApiCall()
     }
 
-    override suspend fun getTargets(date: String): NetworkResult<TargetDto> {
-        return targetDataSource.getTargets(date).safeApiCall()
+    override suspend fun getTargets(assembleId: Int, date: String): NetworkResult<TargetDto> {
+        return targetDataSource.getTargets(assembleId, date).safeApiCall()
     }
 
     override suspend fun createTarget(

@@ -34,5 +34,5 @@ object Constants {
 
     const val BOTTOM_SHEET_HEIGHT_RATIO = 0.6
 
-    const val INTENT_NAME_ASSEMBLE_ID = "assembleId"
+    const val INTENT_NAME_ASSEMBLE = "assemble"
 }

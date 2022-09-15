@@ -1,6 +1,7 @@
 package com.example.assemble_day.domain.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.time.LocalDate
 
 data class AssembleDay(
@@ -11,4 +12,4 @@ data class AssembleDay(
     val assembleStartAt: String,
     @SerializedName("assembleEndAt")
     val assembleEndAt: String
-)
+) : Serializable

@@ -21,7 +21,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_assemble_day"
             style="@style/Subtitle1.Bold"
-            android:text="@{partDay.date}"
+            partDayDate="@{partDay.date}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:text="@{partDay.count}"
+            android:text="@{String.valueOf(partDay.count)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/view_assemble_day_divider"

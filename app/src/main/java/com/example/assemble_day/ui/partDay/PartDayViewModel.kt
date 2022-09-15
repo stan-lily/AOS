@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.assemble_day.data.remote.NetworkResult
 import com.example.assemble_day.data.remote.dto.toPartDayList
 import com.example.assemble_day.data.remote.dto.toPartDayTarget
+import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.domain.model.PartDay
 import com.example.assemble_day.domain.model.PartDayTarget
 import com.example.assemble_day.domain.repository.TargetRepository
+import com.example.assemble_day.ui.common.toLocalDateFormat
 import com.example.assemble_day.ui.common.toStringFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,22 +18,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class PartDayViewModel @Inject constructor(private val targetRepository: TargetRepository) :
     ViewModel() {
 
-    private var currentPartDayDate = ""
-    private var newTargetTitle = ""
-    private var assembleId = 1
+    private var currentAssembleDay: AssembleDay? = null
+    private val assembleId get() = currentAssembleDay?.id ?: 1
 
-//    private val _loadedTargetCountsListStateFlow = MutableStateFlow(listOf<PartDay>())
-//    val loadedTargetCountsListStateFlow = _loadedTargetCountsListStateFlow.asStateFlow()
+    private var _currentPartDayDate = ""
+    val currentPartDayDate get() = _currentPartDayDate
 
-    private val _loadedPartDayListStateFlow = MutableStateFlow(listOf<PartDay>())
-    val loadedPartDayListStateFlow = _loadedPartDayListStateFlow.asStateFlow()
+    private val _loadedPartDayMapStateFlow = MutableStateFlow(mapOf<String, PartDay>())
+    val loadedPartDayListStateFlow = _loadedPartDayMapStateFlow.asStateFlow()
 
     private var _isInitPartDayList = true
     val isInitPartDayList get() = _isInitPartDayList
@@ -57,25 +57,25 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
 
     private var selectedTargetLabelPosition = -1
 
-    /*private fun createDummyAssembleDay() {
-        val loadedAssembleDay =
-            AssembleDay("Test 입니다", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 30))
-        val partDayList = mutableListOf<PartDay>()
-        val size = loadedAssembleDay.assembleEndAt.compareTo(loadedAssembleDay.assembleStartAt)
-        var count = 0L
-        repeat(size) {
-            val date = loadedAssembleDay.assembleStartAt.plusDays(count)
-            partDayList.add(
-                PartDay(
-                    date,
-                    loadedAssembleDay,
-                    createDummyTarget(date.dayOfMonth)
-                )
-            )
-            count++
+    fun setCurrentAssembleDay(assembleDay: AssembleDay) {
+        currentAssembleDay = assembleDay
+        createPartDayList()
+    }
+
+    private fun createPartDayList() {
+        currentAssembleDay?.let { assembleDay ->
+            val partDayList = mutableMapOf<String, PartDay>()
+            val startDay = assembleDay.assembleStartAt.toLocalDateFormat()
+            val endDay = assembleDay.assembleEndAt.toLocalDateFormat()
+            val size = endDay.compareTo(startDay)
+
+            repeat(size) { count ->
+                val date = startDay.plusDays(count.toLong()).toStringFormat()
+                partDayList[date] = PartDay(date, 0)
+            }
+            _loadedPartDayMapStateFlow.value = partDayList
         }
-        _loadedPartDayListStateFlow.value = partDayList
-    }*/
+    }
 
     /*private fun createDummyTarget(day: Int): List<PartDayTarget> {
         initialTargetList.clear()
@@ -103,18 +103,20 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
         return dummyTargetList
     }*/
 
-    fun getPartDays(id: Int) {
-        setAssembleId(id)
-        println("넘어온 id $assembleId")
-        /*viewModelScope.launch {
+    private fun getPartDays() {
+        viewModelScope.launch {
             val targetCounts = targetRepository.getTargetCounts(assembleId)
             when (targetCounts) {
                 is NetworkResult.Success -> {
+                    val partDayMap = _loadedPartDayMapStateFlow.value.toMutableMap()
                     val partDayList = targetCounts.data.toPartDayList()
-                    _loadedPartDayListStateFlow.value = partDayList
+                    partDayList.forEach { partDay ->
+                        partDayMap[partDay.date] = PartDay(partDay.date, partDay.count)
+                    }
+                    _loadedPartDayMapStateFlow.value = partDayMap
                 }
             }
-        }*/
+        }
     }
 
 /*    private suspend fun getTargets() {
@@ -127,14 +129,11 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
         }
     }*/
 
-    private fun setAssembleId(Id: Int) {
-        assembleId = Id
-    }
-
     fun selectPartDay(selectedPartDayDate: String) {
+        getPartDays()
         viewModelScope.launch {
-            currentPartDayDate = selectedPartDayDate
-            val targetList = targetRepository.getTargets(currentPartDayDate)
+            _currentPartDayDate = selectedPartDayDate
+            val targetList = targetRepository.getTargets(assembleId, _currentPartDayDate)
             when (targetList) {
                 is NetworkResult.Success -> {
                     val partDayTargetList = targetList.data.toPartDayTarget()
@@ -205,12 +204,13 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
                     PartDayTarget(
                         title = _inputTargetTitleStateFlow.value,
                         labelId = label.id,
-                        targetAt = currentPartDayDate
+                        targetAt = _currentPartDayDate
                     )
+                println("new $newTarget")
                 val requestCreateTarget = targetRepository.createTarget(assembleId, newTarget)
                 when (requestCreateTarget) {
                     is NetworkResult.Success -> {
-                        selectPartDay(currentPartDayDate)
+                        selectPartDay(_currentPartDayDate)
                     }
                 }
             }
@@ -218,7 +218,7 @@ class PartDayViewModel @Inject constructor(private val targetRepository: TargetR
     }
 
     private fun validateTargetTitle(title: String): Boolean {
-        _validateTargetFlagSharedFlow.tryEmit(title.isNotBlank() && title.isNotEmpty())
+//        _validateTargetFlagSharedFlow.tryEmit(title.isNotBlank() && title.isNotEmpty())
         return title.isNotEmpty() && title.isNotBlank()
     }
 

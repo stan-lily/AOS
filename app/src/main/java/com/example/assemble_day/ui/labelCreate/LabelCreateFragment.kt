@@ -129,12 +129,10 @@ class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragm
         binding.etLabelBackgroundColor.doAfterTextChanged {
             val color = it.toString()
             if (color.length == 7 && color[0] == '#') {
-                if (validateColorFormat(color)) {
-                    labelViewModel.setBackgroundColor(color)
-                }
-            } else {
-                showMessageForWrongColorFormat()
+                labelViewModel.setBackgroundColor(validateColorFormat(color), color)
+                if (!validateColorFormat(color)) showMessageForWrongColorFormat()
             }
+
             if (color.isBlank() || color.isEmpty()) {
                 binding.backgroundColor = color
             }
@@ -142,12 +140,8 @@ class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragm
     }
 
     private fun validateColorFormat(color: String): Boolean {
-        val r = "${color[1]}${color[2]}".toInt(16)
-        val g = "${color[3]}${color[4]}".toInt(16)
-        val b = "${color[5]}${color[6]}".toInt(16)
-
         return try {
-            Color.rgb(r, g, b)
+            Color.parseColor(color)
             true
         } catch (e: Throwable) {
             println(color)
@@ -213,7 +207,7 @@ class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragm
             if (doesReset) {
                 binding.etLabelTitle.setText("")
                 binding.etLabelDescription.setText("")
-                labelViewModel.setBackgroundColor("")
+                labelViewModel.setBackgroundColor(false, "")
                 binding.spLabelBackgroundFontColor.setSelection(LABEL_FONT_COLOR_BLACK_INDEX)
                 labelViewModel.completedReset()
             }
@@ -244,7 +238,10 @@ class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragm
         selectedLabel?.let { label ->
             binding.etLabelTitle.setText(label.name)
             binding.etLabelDescription.setText(label.description)
-            labelViewModel.setBackgroundColor(label.backgroundColor)
+            labelViewModel.setBackgroundColor(
+                validateColorFormat(label.backgroundColor),
+                label.backgroundColor
+            )
             if (label.fontColor == LABEL_FONT_COLOR_BLACK_HEX) {
                 binding.spLabelBackgroundFontColor.setSelection(LABEL_FONT_COLOR_BLACK_INDEX)
             } else {

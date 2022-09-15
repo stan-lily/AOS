@@ -72,20 +72,3 @@ fun updateYearAndMonth(view: TextView, date: LocalDate?) {
         view.text = ""
     }
 }
-
-//@BindingAdapter("isSelected", "isAssembleDay")
-//fun updateAssembleDayBackground(view: TextView, isSelected: Boolean) {
-//    if (isSelected) {
-//        view.background =
-//            ContextCompat.getDrawable(view.context, R.drawable.background_storke_r20)
-//    } else {
-//        view.background =
-//            ContextCompat.getDrawable(view.context, R.color.white)
-//    }
-//}
-
-@BindingAdapter("isAssembleDay", "isSelectable1")
-fun updateDateClickable(view: TextView, isAssembleDay: Boolean, isSelectable: Boolean) {
-    view.isClickable = isSelectable || isAssembleDay
-}
-

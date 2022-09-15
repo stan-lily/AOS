@@ -13,13 +13,13 @@ import java.time.LocalDate
 
 interface TargetApi {
 
-    @GET("api/{team-name}/asembles/{id}")
+    @GET("api/{team-name}/assembles/{id}")
     suspend fun getTargetsCount(@Path("team-name") name: String = "stan-lily", @Path("id") assembleId: Int): Response<TargetCountsDto>
 
-    @GET("api/stan-lily/assembles/1/targets?targetAt=2022-07-01")
-    suspend fun getTargets(@Query("date") date: String): Response<TargetDto>
+    @GET("api/{team-name}/assembles/{id}/targets")
+    suspend fun getTargets(@Path("team-name") teamName:String = "stan-lily", @Path("id") assembleId: Int, @Query("date") date: String): Response<TargetDto>
 
-    @POST("api/{team-name}/asembles/{id}/targets")
+    @POST("api/{team-name}/assembles/{id}/targets")
     suspend fun createTarget(@Path("team-name") name: String = "stan-lily", @Path("id") assembleId: Int, @Body newTarget: PartDayTarget): Response<ResponseBody>
 
 }

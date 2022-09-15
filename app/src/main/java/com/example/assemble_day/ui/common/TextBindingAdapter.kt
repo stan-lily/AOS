@@ -14,18 +14,6 @@ import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-//@BindingAdapter("labelBackgroundTint")
-//fun updateLabelBackgroundTint(view: View, backgroundColor: String) {
-//    val r = "${backgroundColor[1]}${backgroundColor[2]}".toInt(16)
-//    val g = "${backgroundColor[3]}${backgroundColor[4]}".toInt(16)
-//    val b = "${backgroundColor[5]}${backgroundColor[6]}".toInt(16)
-//    try {
-//        view.backgroundTintList = ColorStateList.valueOf(Color.rgb(r, g, b))
-//    } catch (e: Throwable) {
-//        Log.d("Error", e.message, e)
-//    }
-//}
-
 @BindingAdapter("labelTextColor")
 fun updateLabelTextColor(view: TextView, color: String) {
     when (color) {
@@ -58,7 +46,7 @@ fun updateLabelCreatingViewBackgroundColorHexText(view: TextView, backgroundColo
     }
 }
 
-@BindingAdapter("labelBackgroundTint")
+/*@BindingAdapter("labelBackgroundTint")
 fun updateLabelBackgroundTint(view: TextView, backgroundColor: String) {
     if (backgroundColor.isNotBlank() || backgroundColor.isNotEmpty()) {
         val r = "${backgroundColor[1]}${backgroundColor[2]}".toInt(16)
@@ -66,6 +54,25 @@ fun updateLabelBackgroundTint(view: TextView, backgroundColor: String) {
         val b = "${backgroundColor[5]}${backgroundColor[6]}".toInt(16)
         try {
             view.backgroundTintList = ColorStateList.valueOf(Color.rgb(r, g, b))
+        } catch (e: Throwable) {
+            Log.d("Error", e.message, e)
+        }
+    } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            view.backgroundTintList =
+                ColorStateList.valueOf(view.resources.getColor(R.color.grey03_alpha_10, null))
+        } else {
+            view.backgroundTintList =
+                ColorStateList.valueOf(view.resources.getColor(R.color.grey03_alpha_10))
+        }
+    }
+}*/
+
+@BindingAdapter("labelBackgroundTint")
+fun updateLabelBackgroundTint(view: TextView, backgroundColor: String) {
+    if (backgroundColor.isNotBlank() || backgroundColor.isNotEmpty()) {
+        try {
+            view.backgroundTintList = ColorStateList.valueOf(Color.parseColor(backgroundColor))
         } catch (e: Throwable) {
             Log.d("Error", e.message, e)
         }

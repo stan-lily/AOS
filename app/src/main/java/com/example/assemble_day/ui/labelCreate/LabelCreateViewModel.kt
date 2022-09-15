@@ -60,9 +60,9 @@ class LabelCreateViewModel @Inject constructor(private val labelRepository: Labe
         description = inputText
     }
 
-    fun setBackgroundColor(inputText: String) {
+    fun setBackgroundColor(isColorFormat: Boolean, inputText: String) {
         backgroundColorFlag =
-            inputText.isNotEmpty() && inputText != NULL_VALUE && inputText.isNotBlank()
+            inputText.isNotEmpty() && inputText != NULL_VALUE && inputText.isNotBlank() && isColorFormat
         if (backgroundColorFlag) _backgroundColorStateFlow.value = inputText
         validateActionFlag()
     }
