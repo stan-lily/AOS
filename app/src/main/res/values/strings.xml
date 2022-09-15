@@ -33,4 +33,7 @@
     <string name="label_search">Search label</string>
     <string name="action_item_delete">삭제</string>
     <string name="issue_close">닫기</string>
+    <string name="title_issue_edit_default">0</string>
+    <string name="title_issue_search">검색</string>
+    <string name="issue_search_hint">검색어를 입력하세요</string>
 </resources>

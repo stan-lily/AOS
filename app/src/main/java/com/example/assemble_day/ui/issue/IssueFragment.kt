@@ -1,20 +1,20 @@
 package com.example.assemble_day.ui.issue
 
 import android.os.Bundle
+import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.assemble_day.R
 import com.example.assemble_day.databinding.FragmentIssueBinding
+import com.example.assemble_day.domain.model.Issue
+import com.example.assemble_day.ui.common.eventListener.IssueEventListener
 import kotlinx.coroutines.launch
 
 
-class IssueFragment : Fragment() {
+class IssueFragment : Fragment(), IssueEventListener {
 
     private lateinit var binding: FragmentIssueBinding
     private lateinit var issueAdapter: IssueAdapter
@@ -30,8 +30,10 @@ class IssueFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        issueAdapter = IssueAdapter()
+        issueAdapter = IssueAdapter(this)
         binding.rvIssue.adapter = issueAdapter
+
+        closeIssueEditMode()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -45,5 +47,29 @@ class IssueFragment : Fragment() {
             issueAdapter.submitList(issueList)
         }
     }
+
+    override fun switchToIssueEditMode() {
+        binding.tlIssue.isVisible = false
+        binding.tlIssueEdit.isVisible = true
+        issueAdapter.showIssueEditMode()
+    }
+
+    override fun checkIssue(issue: Issue) {
+        issueViewModel.checkIssue(issue)
+    }
+
+    override fun uncheckIssue(issue: Issue) {
+        issueViewModel.uncheckIssue(issue)
+    }
+
+    private fun closeIssueEditMode() {
+        binding.tlIssueEdit.setNavigationOnClickListener {
+            binding.tlIssueEdit.isVisible = false
+            binding.tlIssue.isVisible = true
+            issueViewModel.clearCheckingIssueList()
+            issueAdapter.closeIssueEditMode()
+        }
+    }
+
 
 }

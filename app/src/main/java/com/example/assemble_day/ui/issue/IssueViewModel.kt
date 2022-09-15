@@ -13,6 +13,8 @@ class IssueViewModel : ViewModel() {
     private val _issueListStateFlow = MutableStateFlow(listOf<Issue>())
     val issueListStateFlow = _issueListStateFlow.asStateFlow()
 
+    private val checkingIssueList = mutableListOf<Issue>()
+
     init {
         createDummyIssueList()
     }
@@ -27,6 +29,7 @@ class IssueViewModel : ViewModel() {
             )
         repeat(10) {
             issueList.add(Issue(
+                id = it,
                 title = "테스트",
                 description = "테스트입니다",
                 label = dummyLabel,
@@ -34,6 +37,18 @@ class IssueViewModel : ViewModel() {
             ))
         }
         _issueListStateFlow.value = issueList
+    }
+
+    fun clearCheckingIssueList() {
+        checkingIssueList.clear()
+    }
+
+    fun checkIssue(issue: Issue) {
+        checkingIssueList.add(issue)
+    }
+
+    fun uncheckIssue(issue: Issue) {
+        checkingIssueList.remove(issue)
     }
 
 }

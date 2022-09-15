@@ -1,4 +1,4 @@
-package com.example.assemble_day.domain.eventListener
+package com.example.assemble_day.ui.common.eventListener
 
 import com.example.assemble_day.domain.model.PartDay
 import com.example.assemble_day.domain.model.PartDayTarget
