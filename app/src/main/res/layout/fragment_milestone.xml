@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.milestone.MilestoneFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_milestone_toolbar_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.example.assemble_day.ui.common.CustomToolbar
+                android:id="@+id/tl_milestone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:firstActionIcon="@drawable/ic_add_no_circle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:toolbarTitle="@string/milestone_title" />
+
+            <com.example.assemble_day.ui.common.CustomToolbar
+                android:id="@+id/tl_milestone_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:theme="@style/ToolbarTheme"
+                android:visibility="gone"
+                app:firstActionIcon="@drawable/ic_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:toolbarNavigationIcon="@drawable/ic_close"
+                app:toolbarTitle="@string/title_issue_edit_default" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_milestone"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_milestone_toolbar_container" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.R" />
+
+        <variable
+            name="milestone"
+            type="com.example.assemble_day.domain.model.Milestone" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_milestone_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="15dp">
+
+        <CheckBox
+            android:id="@+id/cb_milestone_selector"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="30dp"
+            android:theme="@style/checkBoxStyle"
+            app:layout_constraintBottom_toBottomOf="@id/cl_milestone"
+            app:layout_constraintEnd_toStartOf="@+id/cl_milestone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cl_milestone"
+            app:layout_constraintWidth_percent="0.2" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_milestone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cb_milestone_selector"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_milestone_title"
+                style="@style/Body1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{milestone.title}"
+                app:layout_constraintEnd_toStartOf="@+id/tv_milestone_progress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="제목" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_milestone_progress"
+                style="@style/Body1.Green02"
+                progress="@{milestone.progress}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_milestone_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_milestone_title"
+                tools:text="진행률%" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_milestone_description"
+                style="@style/Body2.Grey04"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{milestone.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_milestone_title"
+                tools:text="마일스톤에 대한 설명" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_milestone_date"
+                style="@style/Body2.Grey04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="10dp"
+                android:text="@{milestone.date}"
+                app:drawableStartCompat="@drawable/ic_completion_date"
+                app:drawableTint="@color/grey04"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_milestone_description"
+                tools:text="완료일(생략 가능)" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_milestone_date" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_issue"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="5dp"
+            android:background="@color/grey02"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_milestone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

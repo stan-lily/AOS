@@ -28,7 +28,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:toolbarNavigationIcon="@drawable/ic_back"
                 app:toolbarTitle="@string/title_issue" />
 
             <com.example.assemble_day.ui.common.CustomToolbar

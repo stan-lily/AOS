@@ -104,3 +104,8 @@ fun updatePartDayDate(view: TextView, date: String?) {
         view.text = localDate.format(formatter) ?: ""
     }
 }
+
+@BindingAdapter("progress")
+fun updateProgress(view: TextView, progress: Int) {
+    view.text = view.context.getString(R.string.milestone_progress, progress)
+}

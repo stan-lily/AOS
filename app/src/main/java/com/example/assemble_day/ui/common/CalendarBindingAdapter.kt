@@ -1,6 +1,5 @@
 package com.example.assemble_day.ui.common
 
-import android.os.Build
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -34,7 +33,7 @@ fun updateDayColor(
     } else if (!isSelectable) {
         view.setTextColor(ContextCompat.getColor(view.context, R.color.grey01))
     } else if (isSaturday) {
-        view.setTextColor(ContextCompat.getColor(view.context, R.color.green))
+        view.setTextColor(ContextCompat.getColor(view.context, R.color.green01))
     } else if (isSunday) {
         view.setTextColor(ContextCompat.getColor(view.context, R.color.red))
     } else {
