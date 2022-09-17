@@ -3,6 +3,7 @@ package com.example.assemble_day.ui.issue
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -37,6 +38,9 @@ class IssueFragment : Fragment(), IssueEventListener, SwipeEventListener {
 
         closeIssueEditMode()
         setIssueOnSwipeEventListener()
+        showIssueSearchMode()
+        closeIssueSearchMode()
+        searchIssue()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -48,6 +52,7 @@ class IssueFragment : Fragment(), IssueEventListener, SwipeEventListener {
     private suspend fun submitIssueList() {
         issueViewModel.issueListStateFlow.collect { issueList ->
             issueAdapter.submitList(issueList)
+            issueAdapter.setIsSearchingFlag(issueViewModel.isSearching)
         }
     }
 
@@ -90,6 +95,36 @@ class IssueFragment : Fragment(), IssueEventListener, SwipeEventListener {
 
     override fun unclampItem(itemPosition: Int) {
         issueViewModel.unswipeIssue(itemPosition)
+    }
+
+    private fun showIssueSearchMode() {
+        binding.tlIssue.firstActionItem.setOnMenuItemClickListener {
+            binding.tlIssue.isVisible = false
+            binding.tlIssueSearch.isVisible = true
+            binding.etlIssueSearch.isVisible = binding.tlIssueSearch.isVisible
+            issueViewModel.setIsSearchingFlag(true)
+            true
+        }
+    }
+
+    private fun closeIssueSearchMode() {
+        binding.tlIssueSearch.setNavigationOnClickListener {
+            binding.tlIssueSearch.isVisible = false
+            binding.tlIssue.isVisible = true
+            binding.etlIssueSearch.isVisible = binding.tlIssueSearch.isVisible
+            issueViewModel.setIsSearchingFlag(false)
+        }
+    }
+
+    private fun searchIssue() {
+        binding.etIssueSearch.doAfterTextChanged { inputText ->
+            val searchText = inputText?.toString() ?: ""
+            if (searchText.isNotEmpty() && searchText.isNotBlank()) {
+                issueViewModel.searchIssue(searchText)
+            } else {
+                issueViewModel.showInitialIssueList()
+            }
+        }
     }
 
 }

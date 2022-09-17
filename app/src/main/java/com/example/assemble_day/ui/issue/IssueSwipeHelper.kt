@@ -21,7 +21,7 @@ class IssueSwipeHelper(private val swipeEventListener: SwipeEventListener) : Ite
         // clamp 을 기준으로 swipe 됐는지 안됐는지를 판단
         // Issue 뷰 넓이의 30퍼 이상을 스와이프했다면 스와이프했다고 판단
         clamp = view.width.toFloat() * (0.3f)
-        return if (isEditMode(viewHolder)) 0
+        return if (isEditMode(viewHolder) || isSearchMode(viewHolder)) 0
         else makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
     }
 
@@ -45,13 +45,9 @@ class IssueSwipeHelper(private val swipeEventListener: SwipeEventListener) : Ite
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
         // 현재 위치가 clamp 이상 갔을 때 스와이프 상태로 판단한다.
         // 스와이프 위치적으로 없어지는 기준 설정
-        val issuePosition = viewHolder.adapterPosition
+        val issueViewHolder = viewHolder as IssueAdapter.IssueViewHolder
+        issueViewHolder.setClamped(currentDx <= -clamp)
 
-        if (currentDx <= -clamp) {
-            swipeEventListener.clampItem(issuePosition)
-        } else {
-            swipeEventListener.unclampItem(issuePosition)
-        }
         return 2f
     }
 
@@ -92,6 +88,7 @@ class IssueSwipeHelper(private val swipeEventListener: SwipeEventListener) : Ite
                 isCurrentlyActive
             )
         }
+
     }
 
     private fun getClampHorizontalPosition(
@@ -125,6 +122,11 @@ class IssueSwipeHelper(private val swipeEventListener: SwipeEventListener) : Ite
 
     private fun isEditMode(viewHolder: RecyclerView.ViewHolder): Boolean {
         return (viewHolder as IssueAdapter.IssueViewHolder).getBinding().cbIssueSelector.isVisible
+    }
+
+    private fun isSearchMode(viewHolder: RecyclerView.ViewHolder): Boolean {
+//        return (viewHolder as IssueAdapter.IssueViewHolder).getBinding()..isVisible
+        return false
     }
 
 }

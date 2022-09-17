@@ -10,10 +10,14 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class IssueViewModel : ViewModel() {
 
+    private val initialIssueList = mutableListOf<Issue>()
     private val _issueListStateFlow = MutableStateFlow(listOf<Issue>())
     val issueListStateFlow = _issueListStateFlow.asStateFlow()
 
     private val checkingIssueList = mutableListOf<Issue>()
+
+    private var _isSearching = false
+    val isSearching get() = _isSearching
 
     init {
         createDummyIssueList()
@@ -30,12 +34,14 @@ class IssueViewModel : ViewModel() {
         repeat(10) {
             issueList.add(Issue(
                 id = it,
-                title = "테스트",
+                title = "테스트 $it",
                 description = "테스트입니다",
                 label = dummyLabel,
                 milestone = "마일스톤"
             ))
         }
+        initialIssueList.clear()
+        initialIssueList.addAll(issueList)
         _issueListStateFlow.value = issueList
     }
 
@@ -66,6 +72,35 @@ class IssueViewModel : ViewModel() {
 
     fun closeIssue(issuePosition: Int) {
         println("will close issue $issuePosition")
+    }
+
+    fun searchIssue(inputText: String) {
+        val issueList = initialIssueList.toMutableList()
+        val filteredIssueList = issueList.filter { issue ->
+            issue.title.contains(inputText)
+        }.toMutableList()
+
+        _issueListStateFlow.value = filteredIssueList
+    }
+
+    fun setIsSearchingFlag(isSearching: Boolean) {
+        _isSearching = isSearching
+        if (_isSearching) unswipeAllIssue()
+    }
+
+    fun unswipeAllIssue() {
+        val issueList = _issueListStateFlow.value.toMutableList()
+        issueList.forEachIndexed { index, issue ->
+            if (issue.isClamped) {
+                issueList[index] = issue.copy(isClamped = false)
+            }
+        }
+        _issueListStateFlow.value = issueList
+    }
+
+    fun showInitialIssueList() {
+        val issueList = initialIssueList.toList()
+        _issueListStateFlow.value = issueList
     }
 
 }

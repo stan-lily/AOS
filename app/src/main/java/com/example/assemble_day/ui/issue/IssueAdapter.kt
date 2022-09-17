@@ -12,7 +12,7 @@ import com.example.assemble_day.ui.common.eventListener.IssueEventListener
 class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdapter<Issue, IssueAdapter.IssueViewHolder>(IssueDiffUtil) {
 
     private var isEditMode = false
-    private var rootWidth = 0
+    private var isSearching = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueViewHolder {
         val binding = ItemIssueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -31,6 +31,7 @@ class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdap
             longClickIssue()
             setCheckBoxOnCheckListener(issue)
             setCloseTextOnClickListener()
+            closeClampWhenSearchMode()
         }
 
         private fun longClickIssue() {
@@ -53,11 +54,21 @@ class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdap
             }
         }
 
+        fun setClamped(isClamped: Boolean){
+            getItem(adapterPosition).isClamped = isClamped
+        }
+
         fun getBinding() = binding
 
         private fun setCloseTextOnClickListener() {
             binding.tvIssueClose.setOnClickListener {
                 itemEventListener.closeIssue(adapterPosition)
+            }
+        }
+
+        private fun closeClampWhenSearchMode() {
+            if (isSearching) {
+                binding.clIssue.translationX = 0f
             }
         }
 
@@ -72,6 +83,11 @@ class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdap
         isEditMode = false
         notifyItemRangeChanged(0, this.currentList.size)
     }
+
+    fun setIsSearchingFlag(isSearching: Boolean) {
+        this.isSearching = isSearching
+    }
+
 
     companion object IssueDiffUtil : DiffUtil.ItemCallback<Issue>() {
 
