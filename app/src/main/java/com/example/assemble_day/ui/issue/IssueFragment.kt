@@ -8,13 +8,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.assemble_day.databinding.FragmentIssueBinding
 import com.example.assemble_day.domain.model.Issue
 import com.example.assemble_day.ui.common.eventListener.IssueEventListener
+import com.example.assemble_day.ui.common.eventListener.SwipeEventListener
 import kotlinx.coroutines.launch
 
 
-class IssueFragment : Fragment(), IssueEventListener {
+class IssueFragment : Fragment(), IssueEventListener, SwipeEventListener {
 
     private lateinit var binding: FragmentIssueBinding
     private lateinit var issueAdapter: IssueAdapter
@@ -34,6 +36,7 @@ class IssueFragment : Fragment(), IssueEventListener {
         binding.rvIssue.adapter = issueAdapter
 
         closeIssueEditMode()
+        setIssueOnSwipeEventListener()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -62,6 +65,10 @@ class IssueFragment : Fragment(), IssueEventListener {
         issueViewModel.uncheckIssue(issue)
     }
 
+    override fun closeIssue(issuePosition: Int) {
+        issueViewModel.closeIssue(issuePosition)
+    }
+
     private fun closeIssueEditMode() {
         binding.tlIssueEdit.setNavigationOnClickListener {
             binding.tlIssueEdit.isVisible = false
@@ -71,5 +78,18 @@ class IssueFragment : Fragment(), IssueEventListener {
         }
     }
 
+    private fun setIssueOnSwipeEventListener() {
+        val swipeHelper = IssueSwipeHelper(this)
+        val itemTouchHelper = ItemTouchHelper(swipeHelper)
+        itemTouchHelper.attachToRecyclerView(binding.rvIssue)
+    }
+
+    override fun clampItem(itemPosition: Int) {
+        issueViewModel.swipeIssue(itemPosition)
+    }
+
+    override fun unclampItem(itemPosition: Int) {
+        issueViewModel.unswipeIssue(itemPosition)
+    }
 
 }

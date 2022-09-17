@@ -12,6 +12,7 @@ import com.example.assemble_day.ui.common.eventListener.IssueEventListener
 class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdapter<Issue, IssueAdapter.IssueViewHolder>(IssueDiffUtil) {
 
     private var isEditMode = false
+    private var rootWidth = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IssueViewHolder {
         val binding = ItemIssueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,6 +30,7 @@ class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdap
             showCheckBox()
             longClickIssue()
             setCheckBoxOnCheckListener(issue)
+            setCloseTextOnClickListener()
         }
 
         private fun longClickIssue() {
@@ -48,6 +50,14 @@ class IssueAdapter(private val itemEventListener: IssueEventListener) : ListAdap
                 if (isChecked) itemEventListener.checkIssue(issue)
                 else itemEventListener.uncheckIssue(issue)
 
+            }
+        }
+
+        fun getBinding() = binding
+
+        private fun setCloseTextOnClickListener() {
+            binding.tvIssueClose.setOnClickListener {
+                itemEventListener.closeIssue(adapterPosition)
             }
         }
 

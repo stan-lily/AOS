@@ -11,6 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_issue_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="15dp">
@@ -24,15 +25,15 @@
 
             <TextView
                 android:id="@+id/tv_issue_close"
-                style="@style/Headline6.Indigo"
+                style="@style/Body2.Indigo"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_margin="5dp"
                 android:background="@color/sky_blue"
                 android:gravity="center"
+                android:padding="5dp"
                 android:text="@string/issue_close"
                 app:drawableTint="@color/indigo"
-                app:drawableTopCompat="@drawable/ic_milestone_close"
+                app:drawableTopCompat="@drawable/ic_milestone_close_smaller"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -57,6 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cb_issue_selector"

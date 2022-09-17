@@ -6,4 +6,5 @@ data class Issue(
     val description: String,
     val label: Label,
     val milestone: String,
+    var isClamped: Boolean = false
 )

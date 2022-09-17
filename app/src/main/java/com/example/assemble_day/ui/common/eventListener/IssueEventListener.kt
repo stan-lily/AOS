@@ -6,4 +6,5 @@ interface IssueEventListener {
     fun switchToIssueEditMode()
     fun checkIssue(issue: Issue)
     fun uncheckIssue(issue: Issue)
+    fun closeIssue(issuePosition: Int)
 }

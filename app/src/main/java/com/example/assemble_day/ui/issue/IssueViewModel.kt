@@ -51,4 +51,21 @@ class IssueViewModel : ViewModel() {
         checkingIssueList.remove(issue)
     }
 
+    fun swipeIssue(issuePosition: Int) {
+        val issueList = _issueListStateFlow.value.apply {
+            this[issuePosition].isClamped = true
+        }
+        _issueListStateFlow.value = issueList.toList()
+    }
+
+    fun unswipeIssue(issuePosition: Int) {
+        val issueList = _issueListStateFlow.value.toMutableList()
+        issueList[issuePosition] = issueList[issuePosition].copy(isClamped = false)
+        _issueListStateFlow.value = issueList
+    }
+
+    fun closeIssue(issuePosition: Int) {
+        println("will close issue $issuePosition")
+    }
+
 }
