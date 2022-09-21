@@ -4,18 +4,21 @@
     <string name="menu_assemble">Assemble</string>
     <string name="calendar_day_of_the_week">월화수목금토일</string>
     <string name="calendar_day">#d</string>
-    <string name="title_assemble">Assemble</string>
-    <string name="title_issue">이슈</string>
+    <string name="assemble_title">Assemble</string>
+    <string name="issue_title">이슈</string>
     <string name="action_item_reset">초기화</string>
     <string name="action_item_detail">상세보기</string>
     <string name="action_item_save">저장</string>
     <string name="action_item_update">수정</string>
-    <string name="title_label">새로운 레이블</string>
+    <string name="label_creation_title">새로운 레이블</string>
+    <string name="milestone_creation_title">새로운 마일스톤</string>
+    <string name="milestone_date">완료일</string>
     <string name="label_title">제목</string>
     <string name="label_description">설명</string>
     <string name="label_background">배경색</string>
     <string name="label_filter_default">label</string>
     <string name="label_hint_description">선택 사항</string>
+    <string name="milestone_date_hint_description">선택 사항(YYYY-MM-DD)</string>
     <string name="label_hint_title">필수 입력</string>
     <string name="label_background_color_preview">label</string>
     <string name="label_font_color">글씨색</string>
@@ -36,4 +39,6 @@
     <string name="title_issue_edit_default">0</string>
     <string name="title_issue_search">검색</string>
     <string name="issue_search_hint">검색어를 입력하세요</string>
+    <string name="milestone_title">마일스톤</string>
+    <string name="milestone_progress">%d%%</string>
 </resources>

@@ -92,6 +92,7 @@
                 style="@style/Body2.Grey04"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="@{issue.description}"
@@ -102,6 +103,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"

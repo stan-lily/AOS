@@ -16,7 +16,7 @@ import com.example.assemble_day.R
 import com.example.assemble_day.common.Constants.BOTTOM_SHEET_HEIGHT_RATIO
 import com.example.assemble_day.databinding.FragmentLabelFilterBottomSheetBinding
 import com.example.assemble_day.domain.model.Label
-import com.example.assemble_day.ui.labelCreate.LabelCreateFragment
+import com.example.assemble_day.ui.labelCreation.LabelCreationFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -80,7 +80,7 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
 
         binding.tlLabelSearch.secondActionItem.setOnMenuItemClickListener {
             val isEditing = labelFilterViewModel.isSelectingFlagStateFlow.value
-            val labelCreateFragment = LabelCreateFragment {
+            val labelCreateFragment = LabelCreationFragment {
                 updateLabel()
             }
             labelCreateFragment.show(parentFragmentManager, null)

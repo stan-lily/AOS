@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_milestone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="2dp"
+        tools:context=".ui.labelCreation.LabelCreationFragment">
+
+        <com.example.assemble_day.ui.common.CustomToolbar
+            android:id="@+id/tl_milestone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:theme="@style/ToolbarTheme"
+            app:firstActionText="@string/action_item_reset"
+            app:secondActionText="@string/action_item_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:toolbarNavigationIcon="@drawable/ic_back"
+            app:toolbarTitle="@string/milestone_creation_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_milestone_title"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/label_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tl_milestone" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_milestone_title"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/label_hint_title"
+            android:maxLength="20"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_milestone_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/tv_milestone_title"
+            app:layout_constraintTop_toTopOf="@id/tv_milestone_title"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_milestone_description"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="@string/label_description"
+            app:layout_constraintStart_toStartOf="@id/tv_milestone_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_milestone_title" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_milestone_description"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/label_hint_description"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/tv_milestone_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_milestone_description"
+            app:layout_constraintTop_toTopOf="@id/tv_milestone_description" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_milestone_date"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="@string/milestone_date"
+            app:layout_constraintStart_toStartOf="@id/tv_milestone_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_milestone_description" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_milestone_date_value"
+            style="@style/Subtitle2.Grey01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/milestone_date_hint_description"
+            android:inputType="date"
+            app:layout_constraintBottom_toBottomOf="@id/tv_milestone_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_milestone_date"
+            app:layout_constraintTop_toTopOf="@id/tv_milestone_date" />
+
+        <View
+            android:id="@+id/divider_label"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/grey03"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_milestone_date" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="2dp"
-        tools:context=".ui.labelCreate.LabelCreateFragment">
+        tools:context=".ui.labelCreation.LabelCreationFragment">
 
         <com.example.assemble_day.ui.common.CustomToolbar
             android:id="@+id/tl_label"
@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:toolbarNavigationIcon="@drawable/ic_back"
             app:secondActionText="@string/action_item_delete"
-            app:toolbarTitle="@string/title_label" />
+            app:toolbarTitle="@string/label_creation_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_label_title"
@@ -190,6 +190,6 @@
             app:layout_constraintStart_toStartOf="@id/tv_label_background_color_frame"
             app:layout_constraintTop_toTopOf="@id/tv_label_background_color_frame" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
