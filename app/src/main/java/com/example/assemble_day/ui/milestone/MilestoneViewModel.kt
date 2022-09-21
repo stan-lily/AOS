@@ -12,6 +12,9 @@ class MilestoneViewModel : ViewModel() {
     private val _milestoneListStateFlow = MutableStateFlow(listOf<Milestone>())
     val milestoneListStateFlow = _milestoneListStateFlow.asStateFlow()
 
+    private val _checkedMilestoneCountStateFlow = MutableStateFlow(0)
+    val checkedMilestoneCountStateFlow = _checkedMilestoneCountStateFlow.asStateFlow()
+
     private val checkingMilestoneList = mutableListOf<Milestone>()
 
     init {
@@ -24,11 +27,11 @@ class MilestoneViewModel : ViewModel() {
         repeat(10) {
             milestoneList.add(
                 Milestone(
-                id = it,
-                title = "테스트 $it",
-                description = "테스트입니다",
-                date = "2022-09-$it",
-                progress = 30,
+                    id = it,
+                    title = "테스트 $it",
+                    description = "테스트입니다",
+                    date = "2022-09-$it",
+                    progress = 30,
                 )
             )
         }
@@ -41,11 +44,20 @@ class MilestoneViewModel : ViewModel() {
         checkingMilestoneList.clear()
     }
 
-    fun checkMilestone(milestone: Milestone) {
-        checkingMilestoneList.add(milestone)
+    fun checkMilestone(milestonePosition: Int) {
+        _checkedMilestoneCountStateFlow.value++
+        val milestoneList = _milestoneListStateFlow.value.toMutableList()
+        milestoneList[milestonePosition] = milestoneList[milestonePosition].copy(isChecked = true)
+        _milestoneListStateFlow.value = milestoneList
+        checkingMilestoneList.add(milestoneList[milestonePosition])
     }
 
-    fun uncheckMilestone(milestone: Milestone) {
-        checkingMilestoneList.remove(milestone)
+    fun uncheckMilestone(milestonePosition: Int) {
+        _checkedMilestoneCountStateFlow.value =
+            if (_checkedMilestoneCountStateFlow.value < 1) 0 else _checkedMilestoneCountStateFlow.value - 1
+        val milestoneList = _milestoneListStateFlow.value.toMutableList()
+        milestoneList[milestonePosition] = milestoneList[milestonePosition].copy(isChecked = false)
+        _milestoneListStateFlow.value = milestoneList
+        checkingMilestoneList.remove(milestoneList[milestonePosition])
     }
 }

@@ -5,6 +5,6 @@ import com.example.assemble_day.domain.model.Milestone
 
 interface MilestoneEventListener {
     fun switchToIssueEditMode()
-    fun checkMilestone(milestone: Milestone)
-    fun uncheckMilestone(milestone: Milestone)
+    fun checkMilestone(milestonePosition: Int)
+    fun uncheckMilestone(milestonePosition: Int)
 }

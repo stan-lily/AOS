@@ -42,6 +42,7 @@ class MilestoneFragment : Fragment(), MilestoneEventListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { submitMilestoneList() }
+                launch { countCheckedMilestone() }
             }
         }
     }
@@ -58,12 +59,12 @@ class MilestoneFragment : Fragment(), MilestoneEventListener {
         milestoneAdapter.showIssueEditMode()
     }
 
-    override fun checkMilestone(milestone: Milestone) {
-        milestoneViewModel.checkMilestone(milestone)
+    override fun checkMilestone(milestonePosition: Int) {
+        milestoneViewModel.checkMilestone(milestonePosition)
     }
 
-    override fun uncheckMilestone(milestone: Milestone) {
-        milestoneViewModel.uncheckMilestone(milestone)
+    override fun uncheckMilestone(milestonePosition: Int) {
+        milestoneViewModel.uncheckMilestone(milestonePosition)
     }
 
     private fun closeMilestoneEditMode() {
@@ -80,6 +81,12 @@ class MilestoneFragment : Fragment(), MilestoneEventListener {
             val milestoneCreationFragment = MilestoneCreationFragment()
             milestoneCreationFragment.show(parentFragmentManager, null)
             true
+        }
+    }
+
+    private suspend fun countCheckedMilestone() {
+        milestoneViewModel.checkedMilestoneCountStateFlow.collect {
+            binding.tlMilestoneEdit.title = it.toString()
         }
     }
 

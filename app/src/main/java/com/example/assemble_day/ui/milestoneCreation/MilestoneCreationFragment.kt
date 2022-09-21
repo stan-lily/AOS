@@ -57,6 +57,7 @@ class MilestoneCreationFragment : DialogFragment() {
         inputMilestoneDescription()
         resetMilestone()
         createMilestone()
+        dismissMilestoneCreation()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -135,6 +136,12 @@ class MilestoneCreationFragment : DialogFragment() {
         binding.tlMilestone.secondActionItem.setOnMenuItemClickListener {
             milestoneCreateViewModel.createMilestone()
             true
+        }
+    }
+
+    private fun dismissMilestoneCreation() {
+        binding.tlMilestone.setNavigationOnClickListener {
+            dismiss()
         }
     }
 }

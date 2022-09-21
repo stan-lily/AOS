@@ -6,4 +6,5 @@ data class Milestone(
     val progress: Int,
     val description: String,
     val date: String,
+    val isChecked: Boolean = false,
 )

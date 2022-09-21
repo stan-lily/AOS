@@ -29,6 +29,7 @@ class MilestoneAdapter(
 
         fun bind(milestone: Milestone) {
             binding.milestone = milestone
+            binding.cbMilestoneSelector.isChecked = milestone.isChecked
             longClickMilestone()
             showCheckBox()
             setCheckBoxOnCheckListener(milestone)
@@ -47,10 +48,15 @@ class MilestoneAdapter(
         }
 
         private fun setCheckBoxOnCheckListener(milestone: Milestone) {
-            binding.cbMilestoneSelector.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) itemEventListener.checkMilestone(milestone)
-                else itemEventListener.uncheckMilestone(milestone)
+            binding.cbMilestoneSelector.setOnClickListener {
+                if (milestone.isChecked) itemEventListener.uncheckMilestone(adapterPosition)
+                else itemEventListener.checkMilestone(adapterPosition)
             }
+
+//            binding.cbMilestoneSelector.setOnCheckedChangeListener { _, isChecked ->
+//                if (isChecked) itemEventListener.checkMilestone(milestone)
+//                else itemEventListener.uncheckMilestone(milestone)
+//            }
         }
 
     }
