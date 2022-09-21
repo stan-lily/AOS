@@ -40,10 +40,6 @@ class MilestoneViewModel : ViewModel() {
         _milestoneListStateFlow.value = milestoneList
     }
 
-    fun clearCheckingIssueList() {
-        checkingMilestoneList.clear()
-    }
-
     fun checkMilestone(milestonePosition: Int) {
         _checkedMilestoneCountStateFlow.value++
         val milestoneList = _milestoneListStateFlow.value.toMutableList()
@@ -59,5 +55,18 @@ class MilestoneViewModel : ViewModel() {
         milestoneList[milestonePosition] = milestoneList[milestonePosition].copy(isChecked = false)
         _milestoneListStateFlow.value = milestoneList
         checkingMilestoneList.remove(milestoneList[milestonePosition])
+    }
+
+    fun resetEditMode() {
+        _checkedMilestoneCountStateFlow.value = 0
+        val milestoneList = _milestoneListStateFlow.value.toMutableList()
+        milestoneList.forEachIndexed { index, milestone ->
+            if (milestone.isChecked) {
+                milestoneList[index] =  milestoneList[index].copy(isChecked = false)
+            }
+        }
+        _milestoneListStateFlow.value = milestoneList
+        checkingMilestoneList.clear()
+        checkingMilestoneList.clear()
     }
 }

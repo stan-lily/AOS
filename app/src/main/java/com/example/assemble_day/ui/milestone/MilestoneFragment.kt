@@ -71,8 +71,8 @@ class MilestoneFragment : Fragment(), MilestoneEventListener {
         binding.tlMilestoneEdit.setNavigationOnClickListener {
             binding.tlMilestoneEdit.isVisible = false
             binding.tlMilestone.isVisible = true
-            milestoneViewModel.clearCheckingIssueList()
             milestoneAdapter.closeIssueEditMode()
+            milestoneViewModel.resetEditMode()
         }
     }
 
