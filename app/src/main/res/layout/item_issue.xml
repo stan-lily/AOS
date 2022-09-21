@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="issue"
+            type="com.example.assemble_day.domain.model.Issue" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_issue_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="15dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_issue_close"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/cl_issue"
+            app:layout_constraintTop_toTopOf="@id/cl_issue">
+
+            <TextView
+                android:id="@+id/tv_issue_close"
+                style="@style/Body2.Indigo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/sky_blue"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/issue_close"
+                app:drawableTint="@color/indigo"
+                app:drawableTopCompat="@drawable/ic_milestone_close_smaller"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <CheckBox
+            android:id="@+id/cb_issue_selector"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="30dp"
+            android:theme="@style/checkBoxStyle"
+            app:layout_constraintBottom_toBottomOf="@id/cl_issue"
+            app:layout_constraintEnd_toStartOf="@+id/cl_issue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cl_issue"
+            app:layout_constraintWidth_percent="0.2" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_issue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cb_issue_selector"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_issue_milestone"
+                style="@style/Overline.Grey01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:text="@{issue.milestone}"
+                app:drawableStartCompat="@drawable/ic_milestone"
+                app:drawableTint="@color/grey01"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="마일스톤" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_issue_title"
+                style="@style/Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{issue.title}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_milestone"
+                tools:text="제목" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_issue_description"
+                style="@style/Body2.Grey04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@{issue.description}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_title"
+                tools:text="이슈에 대한 설명" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_issue_description" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_issue"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="5dp"
+            android:background="@color/grey02"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_issue" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

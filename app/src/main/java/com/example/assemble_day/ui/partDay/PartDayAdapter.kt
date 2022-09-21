@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assemble_day.databinding.ItemPartDayBinding
-import com.example.assemble_day.domain.eventListener.PartDayEventListener
+import com.example.assemble_day.ui.common.eventListener.PartDayEventListener
 import com.example.assemble_day.domain.model.PartDay
 import com.example.assemble_day.domain.model.PartDayTarget
 

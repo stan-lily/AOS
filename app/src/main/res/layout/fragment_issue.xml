@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_issue_toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.example.assemble_day.ui.common.CustomToolbar
+                android:id="@+id/tl_issue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:theme="@style/ToolbarTheme"
+                app:firstActionIcon="@drawable/ic_search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:toolbarNavigationIcon="@drawable/ic_back"
+                app:toolbarTitle="@string/title_issue" />
+
+            <com.example.assemble_day.ui.common.CustomToolbar
+                android:id="@+id/tl_issue_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:theme="@style/ToolbarTheme"
+                android:visibility="gone"
+                app:firstActionIcon="@drawable/ic_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:secondActionIcon="@drawable/ic_milestone_close"
+                app:toolbarNavigationIcon="@drawable/ic_close"
+                app:toolbarTitle="@string/title_issue_edit_default" />
+
+            <com.example.assemble_day.ui.common.CustomToolbar
+                android:id="@+id/tl_issue_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:theme="@style/ToolbarTheme"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:toolbarNavigationIcon="@drawable/ic_close"
+                app:toolbarTitle="@string/title_issue_search">
+
+            </com.example.assemble_day.ui.common.CustomToolbar>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etl_issue_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/royal_blue"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:visibility="gone"
+                app:endIconDrawable="@drawable/ic_search"
+                app:endIconMode="custom"
+                app:endIconTint="@color/black"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tl_issue_search">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_issue_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:hint="@string/issue_search_hint"
+                    android:maxLines="1"
+                    android:paddingTop="8dp"
+                    android:textAppearance="@style/Body2"
+                    android:textColorHint="@color/black" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_issue"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_issue_toolbar_container"
+            tools:listitem="@layout/item_issue" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
