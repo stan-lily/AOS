@@ -1,4 +1,4 @@
-package com.example.assemble_day.ui.labelCreate
+package com.example.assemble_day.ui.labelCreation
 
 import android.graphics.Color
 import android.os.Bundle
@@ -19,25 +19,25 @@ import com.example.assemble_day.R
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_INDEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_INDEX
-import com.example.assemble_day.databinding.FragmentLabelCreateBinding
+import com.example.assemble_day.databinding.FragmentLabelCreationBinding
 import com.example.assemble_day.domain.model.Label
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragment() {
+class LabelCreationFragment(private val updateLabelList: () -> Unit) : DialogFragment() {
 
-    private lateinit var binding: FragmentLabelCreateBinding
+    private lateinit var binding: FragmentLabelCreationBinding
     private var selectedLabel: Label? = null
     private val isEditing get() = selectedLabel != null
-    private val labelViewModel: LabelCreateViewModel by viewModels()
+    private val labelViewModel: LabelCreationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLabelCreateBinding.inflate(inflater, container, false)
+        binding = FragmentLabelCreationBinding.inflate(inflater, container, false)
         binding.clLabel.minHeight = getWindowHeight()
         binding.clLabel.minWidth = getDialogFragmentDefaultWidth()
         return binding.root
@@ -184,7 +184,7 @@ class LabelCreateFragment(private val updateLabelList: () -> Unit) : DialogFragm
                     itemView.setPadding(0, 0, 0, 0)
                     itemView.setTextColor(
                         ContextCompat.getColor(
-                            this@LabelCreateFragment.requireContext(),
+                            this@LabelCreationFragment.requireContext(),
                             R.color.grey01
                         )
                     )

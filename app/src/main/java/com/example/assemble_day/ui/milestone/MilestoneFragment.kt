@@ -10,10 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.assemble_day.R
 import com.example.assemble_day.databinding.FragmentMilestoneBinding
 import com.example.assemble_day.domain.model.Milestone
 import com.example.assemble_day.ui.common.eventListener.MilestoneEventListener
+import com.example.assemble_day.ui.milestoneCreation.MilestoneCreationFragment
 import kotlinx.coroutines.launch
 
 
@@ -37,6 +37,7 @@ class MilestoneFragment : Fragment(), MilestoneEventListener {
         binding.rvMilestone.adapter = milestoneAdapter
 
         closeMilestoneEditMode()
+        createNewMilestone()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -71,6 +72,14 @@ class MilestoneFragment : Fragment(), MilestoneEventListener {
             binding.tlMilestone.isVisible = true
             milestoneViewModel.clearCheckingIssueList()
             milestoneAdapter.closeIssueEditMode()
+        }
+    }
+
+    private fun createNewMilestone() {
+        binding.tlMilestone.firstActionItem.setOnMenuItemClickListener {
+            val milestoneCreationFragment = MilestoneCreationFragment()
+            milestoneCreationFragment.show(parentFragmentManager, null)
+            true
         }
     }
 

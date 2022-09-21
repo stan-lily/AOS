@@ -28,7 +28,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:toolbarTitle="@string/title_issue" />
+                app:toolbarTitle="@string/issue_title" />
 
             <com.example.assemble_day.ui.common.CustomToolbar
                 android:id="@+id/tl_issue_edit"

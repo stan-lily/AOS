@@ -1,26 +1,20 @@
-package com.example.assemble_day.ui.labelCreate
+package com.example.assemble_day.ui.labelCreation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_HEX
 import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_BLACK_STRING
-import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_HEX
-import com.example.assemble_day.common.Constants.LABEL_FONT_COLOR_WHITE_STRING
 import com.example.assemble_day.common.Constants.NULL_VALUE
 import com.example.assemble_day.data.remote.NetworkResult
-import com.example.assemble_day.data.remote.dto.Labels
 import com.example.assemble_day.domain.model.Label
 import com.example.assemble_day.domain.repository.LabelRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
-class LabelCreateViewModel @Inject constructor(private val labelRepository: LabelRepository) :
+class LabelCreationViewModel @Inject constructor(private val labelRepository: LabelRepository) :
     ViewModel() {
 
     private var nameFlag = false

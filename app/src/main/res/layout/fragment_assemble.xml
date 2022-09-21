@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:secondActionText="@string/action_item_detail"
             app:toolbarNavigationIcon="@drawable/ic_back"
-            app:toolbarTitle="@string/title_assemble" />
+            app:toolbarTitle="@string/assemble_title" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/tl_assemble_period"
