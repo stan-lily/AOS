@@ -6,8 +6,9 @@
     <string name="calendar_day">#d</string>
     <string name="title_assemble">Assemble</string>
     <string name="action_item_reset">초기화</string>
-    <string name="action_item_apply">적용</string>
+    <string name="action_item_detail">상세보기</string>
     <string name="action_item_save">저장</string>
+    <string name="action_item_update">수정</string>
     <string name="title_label">새로운 레이블</string>
     <string name="label_title">제목</string>
     <string name="label_description">설명</string>
@@ -29,4 +30,5 @@
     <string name="label_filter">Filter label</string>
     <string name="label_select">Select label</string>
     <string name="label_search">Search label</string>
+    <string name="action_item_delete">삭제</string>
 </resources>

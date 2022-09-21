@@ -58,7 +58,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) :
         actionItem.isEnabled = actionIcon != null || actionText != 0
     }
 
-    private fun setActionIcon(actionItem: MenuItem, actionIcon: Drawable?) {
+    fun setActionIcon(actionItem: MenuItem, actionIcon: Drawable?) {
         if (actionIcon != null) {
             actionItem.icon = actionIcon
             actionIcon.setTint(ContextCompat.getColor(context, R.color.white))

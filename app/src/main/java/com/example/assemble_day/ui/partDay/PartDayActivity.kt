@@ -10,12 +10,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.assemble_day.R
+import com.example.assemble_day.common.Constants.INTENT_NAME_ASSEMBLE
 import com.example.assemble_day.databinding.ActivityPartDayBinding
 import com.example.assemble_day.domain.eventListener.PartDayEventListener
-import com.example.assemble_day.domain.model.Label
-import com.example.assemble_day.domain.model.PartDay
-import com.example.assemble_day.domain.model.PartDayTarget
-import com.example.assemble_day.domain.model.TargetItemSelection
+import com.example.assemble_day.domain.model.*
 import com.example.assemble_day.ui.common.setEndIconOnClickListener
 import com.example.assemble_day.ui.labelFilter.LabelFilterBottomSheet
 import com.google.android.material.snackbar.Snackbar
@@ -28,22 +26,23 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
     private val partDayViewModel: PartDayViewModel by viewModels()
     private lateinit var binding: ActivityPartDayBinding
     private lateinit var labelFilterDialogFragment: LabelFilterBottomSheet
+    private lateinit var currentAssembleDay: AssembleDay
     private val partDayAdapter by lazy {
         PartDayAdapter(this)
     }
     private val partDayDetailAdapter by lazy {
         PartDayDetailAdapter { itemSelection, position ->
             when (itemSelection) {
-                is TargetItemSelection.labelSection -> {
+                is TargetItemSelection.LabelSection -> {
                     setTargetLabelOnClickListener(position)
                 }
-                is TargetItemSelection.targetSelection -> {
+                is TargetItemSelection.TargetSelection -> {
                     setTargetOnClickListener(position)
                 }
-                is TargetItemSelection.targetUpdateBtnSelection -> {
+                is TargetItemSelection.TargetUpdateBtnSelection -> {
                     setTargetUpdateBtnOnClickListener(itemSelection.updatedTitle, position)
                 }
-                is TargetItemSelection.targetDeletBtnSelection -> {
+                is TargetItemSelection.TargetDeleteBtnSelection -> {
                     setTargetDeleteBtnOnClickListener(position)
                 }
             }
@@ -53,6 +52,8 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_part_day)
+        currentAssembleDay = intent.getSerializableExtra(INTENT_NAME_ASSEMBLE) as AssembleDay
+//        currentAssembleDay = AssembleDay(1, "test", "2022-09-10", "2022-09-29")
 
         binding.rvPartDay.adapter = partDayAdapter
         binding.rvPartDayDetail.adapter = partDayDetailAdapter
@@ -66,7 +67,8 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
                 updateTargetLabel(selectedLabel)
             }
         }
-
+        getPartDays(currentAssembleDay)
+        setToolbarTitle()
         setChipLabelOnClickListener()
         setTargetAddBtnOnClickListener()
         setTargetEditTextIconOnClickListener()
@@ -83,9 +85,17 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
         }
     }
 
+    private fun setToolbarTitle() {
+        binding.tlAssembleDayDetail.title = currentAssembleDay.assembleTitle
+    }
+
+    private fun getPartDays(assembleDay: AssembleDay) {
+        partDayViewModel.setCurrentAssembleDay(assembleDay)
+    }
+
     override fun selectPartDay(selectedPartDay: PartDay) {
-        binding.selectedPartDay = selectedPartDay
-        partDayViewModel.selectPartDay(selectedPartDay)
+        binding.partDay = selectedPartDay
+        partDayViewModel.selectPartDay(selectedPartDay.date)
     }
 
     override fun dropTargetToOtherPartDay(
@@ -109,13 +119,28 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
         }
     }
 
+    private suspend fun submitPartDayList() {
+        partDayViewModel.loadedPartDayListStateFlow.collect { partDayMap ->
+            val partDayList = partDayMap.values.toList()
+
+            partDayAdapter.submitList(partDayList)
+            if (partDayViewModel.isInitPartDayList && partDayList.isNotEmpty()) {
+                selectPartDay(partDayList[0])
+                partDayViewModel.setInitPartDayListFlag()
+            } else {
+                val currentPartDay = partDayViewModel.currentPartDayDate
+                binding.partDay = partDayMap[currentPartDay]
+            }
+        }
+    }
+
     private suspend fun submitTargetList() {
         partDayViewModel.loadedTargetStateFlow.collect {
             partDayDetailAdapter.submitList(it)
         }
     }
 
-    private suspend fun submitPartDayList() {
+   /* private suspend fun submitPartDayList() {
         partDayViewModel.loadedPartDayListStateFlow.collect { partDayList ->
             partDayAdapter.submitList(partDayList)
             if (partDayViewModel.isInitPartDayList) {
@@ -123,7 +148,7 @@ class PartDayActivity : AppCompatActivity(), PartDayEventListener {
                 partDayViewModel.setInitPartDayListFlag()
             }
         }
-    }
+    }*/
 
     private fun filterLabel(selectedLabel: Label?) {
         binding.chipPartDayLabel.text =

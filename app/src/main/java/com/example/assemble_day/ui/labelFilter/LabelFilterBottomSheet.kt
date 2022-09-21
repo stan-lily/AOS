@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.assemble_day.R
 import com.example.assemble_day.common.Constants.BOTTOM_SHEET_HEIGHT_RATIO
 import com.example.assemble_day.databinding.FragmentLabelFilterBottomSheetBinding
 import com.example.assemble_day.domain.model.Label
@@ -59,6 +61,7 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { submitLabelList() }
+                launch { setSecondActionItemIcon() }
             }
         }
         binding.tlLabelSearch.title = toolbarTitle
@@ -76,10 +79,16 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
         }
 
         binding.tlLabelSearch.secondActionItem.setOnMenuItemClickListener {
+            val isEditing = labelFilterViewModel.isSelectingFlagStateFlow.value
             val labelCreateFragment = LabelCreateFragment {
                 updateLabel()
             }
             labelCreateFragment.show(parentFragmentManager, null)
+            if (isEditing) {
+                labelFilterViewModel.selectedLabel?.let { selectedLabel ->
+                    labelCreateFragment.setSelectedLabel(selectedLabel)
+                }
+            }
             true
         }
 
@@ -99,6 +108,18 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
         }
     }
 
+    private suspend fun setSecondActionItemIcon() {
+        labelFilterViewModel.isSelectingFlagStateFlow.collect { isSelecting ->
+            if (isSelecting) {
+                val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_create)
+                binding.tlLabelSearch.setActionIcon(binding.tlLabelSearch.secondActionItem, icon)
+            } else {
+                val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_add_no_circle)
+                binding.tlLabelSearch.setActionIcon(binding.tlLabelSearch.secondActionItem, icon)
+            }
+        }
+    }
+
     private fun setOnLabelClickListener(selectedPosition: Int) {
         labelFilterViewModel.selectLabel(selectedPosition)
     }
@@ -111,6 +132,7 @@ class LabelFilterBottomSheet(private val selectedLabel: (selectedLabel: Label?) 
     }
 
     private fun updateLabel() {
+        labelFilterViewModel.initPreviousSelectedPosition()
         labelFilterViewModel.updateLabel()
     }
 

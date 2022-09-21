@@ -10,10 +10,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
-class LabelFilterViewModel @Inject constructor(private val labelFilterRepository: LabelRepository) : ViewModel() {
+class LabelFilterViewModel @Inject constructor(private val labelFilterRepository: LabelRepository) :
+    ViewModel() {
 
     private var _selectedLabel: Label? = null
     val selectedLabel: Label? get() = _selectedLabel
@@ -22,23 +24,52 @@ class LabelFilterViewModel @Inject constructor(private val labelFilterRepository
     private val _labelStateFlow = MutableStateFlow(listOf<Label>())
     val labelStateFlow = _labelStateFlow.asStateFlow()
 
+    private var _isSelectingFlagStateFlow = MutableStateFlow(false)
+    val isSelectingFlagStateFlow = _isSelectingFlagStateFlow.asStateFlow()
+
     private var previousSelectedPosition = -1
 
     init {
+        getLabel()
+    }
+
+    private fun getLabel() {
         viewModelScope.launch {
-            getLabel()
+            val networkResult = labelFilterRepository.getLabel()
+            when (networkResult) {
+                is NetworkResult.Success -> {
+                    println("다시조회")
+                    val loadedLabelList = networkResult.data.toLabel()
+                    initialLabelList.clear()
+                    initialLabelList.addAll(loadedLabelList)
+                    _labelStateFlow.value = loadedLabelList
+                }
+            }
         }
     }
 
-    private suspend fun getLabel() {
-        val networkResult = labelFilterRepository.getLabel()
-        when (networkResult) {
-            is NetworkResult.Success -> {
-                val loadedLabelList = networkResult.data.toLabel()
-                initialLabelList.addAll(loadedLabelList)
-                _labelStateFlow.value = loadedLabelList
-            }
-        }
+    /* private fun getLabel() {
+         val labelList = mutableListOf<Label>()
+         labelList.add(Label(1, "BE", "dev-team", "#1e90ff", "BRIGHT"))
+         labelList.add(Label(2, "AOS", "dev-team", "#ff00ff", "BRIGHT"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+         labelList.add(Label(3, "docs", "docs", "#adff2f", "DARK"))
+
+         initialLabelList.addAll(labelList)
+         _labelStateFlow.value = labelList
+     }*/
+
+    fun initPreviousSelectedPosition() {
+        previousSelectedPosition = -1
     }
 
     fun selectLabel(selectedPosition: Int) {
@@ -60,12 +91,14 @@ class LabelFilterViewModel @Inject constructor(private val labelFilterRepository
     }
 
     private fun selectSameLabel(selectedPosition: Int, labelList: MutableList<Label>) {
+        _isSelectingFlagStateFlow.value = false
         labelList[selectedPosition] = labelList[selectedPosition].copy(isSelected = false)
-        previousSelectedPosition = -1
+        initPreviousSelectedPosition()
         _selectedLabel = null
     }
 
     private fun selectOtherLabel(selectedPosition: Int, labelList: MutableList<Label>) {
+        _isSelectingFlagStateFlow.value = true
         labelList[selectedPosition] = labelList[selectedPosition].copy(isSelected = true)
         previousSelectedPosition = selectedPosition
         _selectedLabel = labelList[selectedPosition]
@@ -91,7 +124,6 @@ class LabelFilterViewModel @Inject constructor(private val labelFilterRepository
     }
 
     fun updateLabel() {
-
+        getLabel()
     }
-
 }

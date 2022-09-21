@@ -15,7 +15,6 @@ import com.example.assemble_day.databinding.ItemPartDayBinding
 import com.example.assemble_day.domain.eventListener.PartDayEventListener
 import com.example.assemble_day.domain.model.PartDay
 import com.example.assemble_day.domain.model.PartDayTarget
-import java.time.format.DateTimeFormatter
 
 class PartDayAdapter(private val eventListener: PartDayEventListener) :
     ListAdapter<PartDay, PartDayAdapter.PartDayViewHolder>(
@@ -43,17 +42,17 @@ class PartDayAdapter(private val eventListener: PartDayEventListener) :
 
         fun bind(partDay: PartDay) {
             binding.partDay = partDay
-            setOnDropListener(partDay)
+            setOnDropListener()
             setOnClickListener(partDay)
         }
 
-        private fun setOnClickListener(partDay: PartDay) {
+        private fun setOnClickListener(selectedPartDay: PartDay) {
             itemView.setOnClickListener {
-                eventListener.selectPartDay(partDay)
+                eventListener.selectPartDay(selectedPartDay)
             }
         }
 
-        private fun setOnDropListener(partDay: PartDay) {
+        private fun setOnDropListener() {
             DropHelper.configureView(
                 binding.root.context as Activity,
                 itemView,
@@ -64,13 +63,13 @@ class PartDayAdapter(private val eventListener: PartDayEventListener) :
 
                 when {
                     payload.clip.description.hasMimeType(ClipDescription.MIMETYPE_TEXT_INTENT) ->
-                        handleTargetDrop(item, partDay)
+                        handleTargetDrop(item)
                 }
                 remaining
             }
         }
 
-        private fun handleTargetDrop(item: ClipData.Item, partDay: PartDay) {
+        private fun handleTargetDrop(item: ClipData.Item) {
             val droppedTarget = item.intent.getSerializableExtra("target") as PartDayTarget
             val droppedTargetPosition = item.intent.getIntExtra("position", -1)
             eventListener.dropTargetToOtherPartDay(

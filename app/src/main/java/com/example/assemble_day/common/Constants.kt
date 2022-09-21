@@ -22,8 +22,10 @@ object Constants {
 
     const val LABEL_FONT_COLOR_BLACK_HEX = "#000000"
     const val LABEL_FONT_COLOR_BLACK_STRING = "DARK"
+    const val LABEL_FONT_COLOR_BLACK_INDEX = 0
     const val LABEL_FONT_COLOR_WHITE_HEX = "#FFFFFF"
     const val LABEL_FONT_COLOR_WHITE_STRING = "BRIGHT"
+    const val LABEL_FONT_COLOR_WHITE_INDEX = 1
 
     const val FIRST_ACTION = 0
     const val SECOND_ACTION = 1
@@ -31,4 +33,6 @@ object Constants {
     const val NULL_VALUE = "null"
 
     const val BOTTOM_SHEET_HEIGHT_RATIO = 0.6
+
+    const val INTENT_NAME_ASSEMBLE = "assemble"
 }

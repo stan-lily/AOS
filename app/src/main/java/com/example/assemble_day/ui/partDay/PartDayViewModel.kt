@@ -1,26 +1,37 @@
 package com.example.assemble_day.ui.partDay
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.assemble_day.data.remote.NetworkResult
+import com.example.assemble_day.data.remote.dto.toPartDayList
+import com.example.assemble_day.data.remote.dto.toPartDayTarget
 import com.example.assemble_day.domain.model.AssembleDay
 import com.example.assemble_day.domain.model.Label
-import com.example.assemble_day.domain.model.PartDayTarget
 import com.example.assemble_day.domain.model.PartDay
+import com.example.assemble_day.domain.model.PartDayTarget
+import com.example.assemble_day.domain.repository.TargetRepository
+import com.example.assemble_day.ui.common.toLocalDateFormat
+import com.example.assemble_day.ui.common.toStringFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.time.LocalDate
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PartDayViewModel @Inject constructor() : ViewModel() {
+class PartDayViewModel @Inject constructor(private val targetRepository: TargetRepository) :
+    ViewModel() {
 
-    private var selectedLabelForNewTarget: Label? = null
-    private var newTargetTitle = ""
+    private var currentAssembleDay: AssembleDay? = null
+    private val assembleId get() = currentAssembleDay?.id ?: 1
 
-    private val _loadedPartDayListStateFlow = MutableStateFlow(listOf<PartDay>())
-    val loadedPartDayListStateFlow = _loadedPartDayListStateFlow.asStateFlow()
+    private var _currentPartDayDate = ""
+    val currentPartDayDate get() = _currentPartDayDate
+
+    private val _loadedPartDayMapStateFlow = MutableStateFlow(mapOf<String, PartDay>())
+    val loadedPartDayListStateFlow = _loadedPartDayMapStateFlow.asStateFlow()
 
     private var _isInitPartDayList = true
     val isInitPartDayList get() = _isInitPartDayList
@@ -46,31 +57,27 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
 
     private var selectedTargetLabelPosition = -1
 
-    init {
-        createDummyAssembleDay()
+    fun setCurrentAssembleDay(assembleDay: AssembleDay) {
+        currentAssembleDay = assembleDay
+        createPartDayList()
     }
 
-    private fun createDummyAssembleDay() {
-        val loadedAssembleDay =
-            AssembleDay("Test 입니다", LocalDate.of(2022, 8, 19), LocalDate.of(2022, 8, 30))
-        val partDayList = mutableListOf<PartDay>()
-        val size = loadedAssembleDay.end.compareTo(loadedAssembleDay.start)
-        var count = 0L
-        repeat(size) {
-            val date = loadedAssembleDay.start.plusDays(count)
-            partDayList.add(
-                PartDay(
-                    date,
-                    loadedAssembleDay,
-                    createDummyTarget(date.dayOfMonth)
-                )
-            )
-            count++
+    private fun createPartDayList() {
+        currentAssembleDay?.let { assembleDay ->
+            val partDayList = mutableMapOf<String, PartDay>()
+            val startDay = assembleDay.assembleStartAt.toLocalDateFormat()
+            val endDay = assembleDay.assembleEndAt.toLocalDateFormat()
+            val size = endDay.compareTo(startDay)
+
+            repeat(size) { count ->
+                val date = startDay.plusDays(count.toLong()).toStringFormat()
+                partDayList[date] = PartDay(date, 0)
+            }
+            _loadedPartDayMapStateFlow.value = partDayList
         }
-        _loadedPartDayListStateFlow.value = partDayList
     }
 
-    private fun createDummyTarget(day: Int): List<PartDayTarget> {
+    /*private fun createDummyTarget(day: Int): List<PartDayTarget> {
         initialTargetList.clear()
         val dummyTargetList = mutableListOf<PartDayTarget>()
         val firstLabel = Label(1, "BE", "dev-team", "#1e90ff", "BRIGHT")
@@ -94,13 +101,48 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         dummyTargetList.add(PartDayTarget(thirdLabel, "$day 잘가"))
 
         return dummyTargetList
+    }*/
+
+    private fun getPartDays() {
+        viewModelScope.launch {
+            val targetCounts = targetRepository.getTargetCounts(assembleId)
+            when (targetCounts) {
+                is NetworkResult.Success -> {
+                    val partDayMap = _loadedPartDayMapStateFlow.value.toMutableMap()
+                    val partDayList = targetCounts.data.toPartDayList()
+                    partDayList.forEach { partDay ->
+                        partDayMap[partDay.date] = PartDay(partDay.date, partDay.count)
+                    }
+                    _loadedPartDayMapStateFlow.value = partDayMap
+                }
+            }
+        }
     }
 
-    fun selectPartDay(selectedPartDay: PartDay) {
-        val targetList = selectedPartDay.targetList
-        initialTargetList.clear()
-        initialTargetList.addAll(targetList)
-        _loadedTargetStateFlow.value = targetList
+/*    private suspend fun getTargets() {
+        val today = LocalDate.now()
+        val targetList = targetRepository.getTargets(today)
+        when (targetList) {
+            is NetworkResult.Success -> {
+                _loadedTargetStateFlow.value = targetList.data.targets
+            }
+        }
+    }*/
+
+    fun selectPartDay(selectedPartDayDate: String) {
+        getPartDays()
+        viewModelScope.launch {
+            _currentPartDayDate = selectedPartDayDate
+            val targetList = targetRepository.getTargets(assembleId, _currentPartDayDate)
+            when (targetList) {
+                is NetworkResult.Success -> {
+                    val partDayTargetList = targetList.data.toPartDayTarget()
+                    initialTargetList.clear()
+                    initialTargetList.addAll(partDayTargetList)
+                    _loadedTargetStateFlow.value = partDayTargetList
+                }
+            }
+        }
     }
 
     fun setInitPartDayListFlag() {
@@ -115,7 +157,7 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
     fun filterLabel(selectedLabel: Label?) {
         selectedLabel?.let {
             val filteredTargetList = initialTargetList.filter { target ->
-                target.label.name == selectedLabel.name
+                target.labelId == selectedLabel.id
             }
             _loadedTargetStateFlow.value = filteredTargetList
         } ?: kotlin.run {
@@ -131,7 +173,7 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         selectedLabel?.let { label ->
             val updatedList = _loadedTargetStateFlow.value.toMutableList()
             updatedList[selectedTargetLabelPosition] =
-                updatedList[selectedTargetLabelPosition].copy(label = label)
+                updatedList[selectedTargetLabelPosition].copy(labelId = label.id)
             _loadedTargetStateFlow.value = updatedList
         }
     }
@@ -144,18 +186,39 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    /* fun createNewTarget(selectedLabel: Label?) {
+     _createTargetFlagSharedFlow.tryEmit(selectedLabel != null)
+     selectedLabel?.let {
+         val newTarget =
+             PartDayTarget(title = _inputTargetTitleStateFlow.value, label = selectedLabel, labelId = selectedLabel.id, targetAt = "2022-7-02")
+         initialTargetList.add(0, newTarget)
+         _loadedTargetStateFlow.value = initialTargetList.toList()
+     }
+ }*/
+
     fun createNewTarget(selectedLabel: Label?) {
         _createTargetFlagSharedFlow.tryEmit(selectedLabel != null)
-        selectedLabel?.let {
-            val newTarget =
-                PartDayTarget(title = _inputTargetTitleStateFlow.value, label = selectedLabel)
-            initialTargetList.add(0, newTarget)
-            _loadedTargetStateFlow.value = initialTargetList.toList()
+        selectedLabel?.let { label ->
+            viewModelScope.launch {
+                val newTarget =
+                    PartDayTarget(
+                        title = _inputTargetTitleStateFlow.value,
+                        labelId = label.id,
+                        targetAt = _currentPartDayDate
+                    )
+                println("new $newTarget")
+                val requestCreateTarget = targetRepository.createTarget(assembleId, newTarget)
+                when (requestCreateTarget) {
+                    is NetworkResult.Success -> {
+                        selectPartDay(_currentPartDayDate)
+                    }
+                }
+            }
         }
     }
 
     private fun validateTargetTitle(title: String): Boolean {
-        _validateTargetFlagSharedFlow.tryEmit(title.isNotBlank() && title.isNotEmpty())
+//        _validateTargetFlagSharedFlow.tryEmit(title.isNotBlank() && title.isNotEmpty())
         return title.isNotEmpty() && title.isNotBlank()
     }
 
@@ -176,6 +239,7 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
             }
         }
         _loadedTargetStateFlow.value = targetList
+        // TODO target 업데이트 put 요청
     }
 
     fun deleteTarget(selectedPosition: Int) {
@@ -189,23 +253,25 @@ class PartDayViewModel @Inject constructor() : ViewModel() {
         droppedTargetPosition: Int,
         itemPosition: Int
     ) {
-        if (!doesDropTargetToSamePartDay(droppedTarget, itemPosition)) {
-            deleteTarget(droppedTargetPosition)
-            val initialPartDayList = _loadedPartDayListStateFlow.value.toMutableList()
-            val itemTargetList =
-                _loadedPartDayListStateFlow.value[itemPosition].targetList.toMutableList()
-            itemTargetList.add(droppedTarget)
-            initialPartDayList[itemPosition] =
-                _loadedPartDayListStateFlow.value[itemPosition].copy(targetList = itemTargetList)
-            _loadedPartDayListStateFlow.value = initialPartDayList
-        }
+//        if (!doesDropTargetToSamePartDay(droppedTarget, itemPosition)) {
+//            deleteTarget(droppedTargetPosition)
+//            val initialPartDayList = _loadedPartDayListStateFlow.value.toMutableList()
+//            val itemTargetList =
+//                _loadedPartDayListStateFlow.value[itemPosition].targetList.toMutableList()
+//            itemTargetList.add(droppedTarget)
+//            initialPartDayList[itemPosition] =
+//                _loadedPartDayListStateFlow.value[itemPosition].copy(targetList = itemTargetList)
+//            _loadedPartDayListStateFlow.value = initialPartDayList
+//        }
+        // TODO Target 이동 Put 요청
     }
 
     private fun doesDropTargetToSamePartDay(
         droppedTarget: PartDayTarget,
         itemPosition: Int
     ): Boolean {
-        return _loadedPartDayListStateFlow.value[itemPosition].targetList.contains(droppedTarget)
+//        return _loadedPartDayListStateFlow.value[itemPosition].targetList.contains(droppedTarget)
+        return _loadedTargetStateFlow.value.contains(droppedTarget)
     }
 }
 

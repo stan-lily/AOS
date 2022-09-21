@@ -52,20 +52,20 @@ class PartDayDetailAdapter(
 
         private fun setTargetLabelBtnOnClickListener() {
             binding.btnTargetLabel.setOnClickListener {
-                itemClick.invoke(TargetItemSelection.labelSection, adapterPosition)
+                itemClick.invoke(TargetItemSelection.LabelSection, adapterPosition)
             }
         }
 
         private fun setTargetOnClickListener() {
             binding.clTarget.setOnClickListener {
-                itemClick.invoke(TargetItemSelection.targetSelection, adapterPosition)
+                itemClick.invoke(TargetItemSelection.TargetSelection, adapterPosition)
             }
         }
 
         private fun setTargetUpdateBtnOnClickListener() {
             binding.btnTargetUpdate.setOnClickListener {
                 itemClick.invoke(
-                    TargetItemSelection.targetUpdateBtnSelection(binding.etTarget.text.toString()),
+                    TargetItemSelection.TargetUpdateBtnSelection(binding.etTarget.text.toString()),
                     adapterPosition
                 )
             }
@@ -73,7 +73,7 @@ class PartDayDetailAdapter(
 
         private fun setTargetDeleteBtnOnClickListener() {
             binding.btnTargetDelete.setOnClickListener {
-                itemClick.invoke(TargetItemSelection.targetDeletBtnSelection, adapterPosition)
+                itemClick.invoke(TargetItemSelection.TargetDeleteBtnSelection, adapterPosition)
             }
         }
 
@@ -101,7 +101,7 @@ class PartDayDetailAdapter(
     companion object PartDayDetailDiffUtil : DiffUtil.ItemCallback<PartDayTarget>() {
 
         override fun areItemsTheSame(oldItem: PartDayTarget, newItem: PartDayTarget): Boolean {
-            return oldItem.label == newItem.label && oldItem.title == newItem.title
+            return oldItem.labelId == newItem.labelId && oldItem.title == newItem.title
         }
 
         override fun areContentsTheSame(

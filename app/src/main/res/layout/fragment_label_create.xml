@@ -32,6 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:toolbarNavigationIcon="@drawable/ic_back"
+            app:secondActionText="@string/action_item_delete"
             app:toolbarTitle="@string/title_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -167,7 +168,6 @@
             android:layout_height="0dp"
             android:layout_margin="16dp"
             android:background="@drawable/background_grey_r20"
-
             app:layout_constraintDimensionRatio="328:160"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -176,7 +176,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_label_background_color_preview"
             style="@style/Body2.Grey03.Alpha10"
-            backgroundColor="@{backgroundColor}"
+            labelBackgroundTint="@{backgroundColor}"
             fontColor="@{fontColor}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
